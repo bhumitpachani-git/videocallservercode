@@ -60,6 +60,7 @@ app.get('/health', (req, res) => res.json({ status: 'ok', rooms: rooms.size }));
 io.on('connection', (socket) => {
   socket.on('join-room', async ({ roomId, username, password, recorder = false }, callback) => {
     try {
+      // Faster room access/creation
       const room = await getOrCreateRoom(roomId, password);
       if (room.password && room.password !== password) return callback({ error: 'Invalid password' });
 
@@ -77,13 +78,13 @@ io.on('connection', (socket) => {
 
       socket.join(roomId);
       
-      // Send response immediately with cached capabilities
+      // Respond IMMEDIATELY with cached global capabilities
       callback({ 
         rtpCapabilities: globalRtpCapabilities, 
         isHost: room.hostId === socket.id 
       });
       
-      // Broadcase join event asynchronously
+      // Handle notifications asynchronously after user is already "in"
       setImmediate(() => {
         socket.to(roomId).emit('user-joined', { socketId: socket.id, username });
       });
