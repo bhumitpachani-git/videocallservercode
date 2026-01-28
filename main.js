@@ -10,15 +10,32 @@ const logger = require('./src/utils/logger');
 const roomManager = require('./src/services/room.service');
 const { startRecording, stopRecording } = require('./src/services/recording.service');
 
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
+
 const app = express();
+app.use(helmet()); // Professional security headers
 app.use(cors());
 app.use(express.json());
 
+// Rate limiting to prevent attacks
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100
+});
+app.use(limiter);
+
 const server = http.createServer(app);
-const io = socketIO(server, { cors: { origin: '*' } });
+const io = socketIO(server, { 
+  cors: { origin: '*' },
+  pingTimeout: 60000,
+  pingInterval: 25000
+});
 
 // Health Check
 app.get('/health', (req, res) => res.json({ status: 'ok', uptime: process.uptime() }));
+
+const { joinRoomSchema, transportSchema, recordingSchema } = require('./src/utils/validation');
 
 // Socket Handler
 io.on('connection', (socket) => {
@@ -26,15 +43,18 @@ io.on('connection', (socket) => {
 
   socket.on('join-room', async (data, callback) => {
     try {
-      const result = await roomManager.joinRoom(socket, data);
+      const { error, value } = joinRoomSchema.validate(data);
+      if (error) throw new Error(error.details[0].message);
+
+      const result = await roomManager.joinRoom(socket, value);
       callback(result);
-      socket.to(data.roomId).emit('user-joined', { 
+      socket.to(value.roomId).emit('user-joined', { 
         socketId: socket.id, 
-        username: data.recorder ? 'System Recorder' : data.username 
+        username: value.recorder ? 'System Recorder' : value.username 
       });
     } catch (error) {
       logger.error(`Join room error: ${error.message}`);
-      callback({ error: error.message });
+      callback({ error: 'Internal server error' }); // Professional error masking
     }
   });
 
