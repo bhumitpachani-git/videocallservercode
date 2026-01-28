@@ -30,8 +30,8 @@ async function startRecording(roomId, startedBy, io, rooms) {
 
     try {
         const browser = await puppeteer.launch({
-            headless: "new",
-            executablePath: '/usr/bin/google-chrome',
+            headless: true,
+            executablePath: process.env.CHROME_PATH || '/usr/bin/google-chrome',
             args: [
                 '--no-sandbox',
                 '--disable-setuid-sandbox',

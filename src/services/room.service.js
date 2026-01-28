@@ -38,6 +38,9 @@ class RoomManager {
       };
       this.rooms.set(roomId, room);
       
+      // Auto-cleanup room if empty after 5 minutes
+      room.cleanupTimeout = null;
+      
       await logUserJoin(roomId, {
           action: 'ROOM_CREATED',
           hasPassword: !!password,
@@ -52,6 +55,13 @@ class RoomManager {
   async joinRoom(socket, { roomId, username, password, recorder = false }) {
     const room = await this.getOrCreateRoom(roomId, password);
     
+    // Clear cleanup timer if someone joins
+    if (room.cleanupTimeout) {
+      clearTimeout(room.cleanupTimeout);
+      room.cleanupTimeout = null;
+      logger.info(`Cleanup timer cancelled for room ${roomId}`);
+    }
+
     if (room.password && room.password !== password) {
       throw new Error('Invalid password');
     }
@@ -92,8 +102,16 @@ class RoomManager {
       if (room.peers.has(socketId)) {
         room.peers.delete(socketId);
         logger.info(`User ${socketId} removed from room ${roomId}`);
+        
         if (room.peers.size === 0) {
-          // Optional: Cleanup room after some timeout
+          logger.info(`Room ${roomId} is empty, starting cleanup timer`);
+          room.cleanupTimeout = setTimeout(() => {
+            if (room.peers.size === 0) {
+              room.router.close();
+              this.rooms.delete(roomId);
+              logger.info(`Room ${roomId} cleaned up due to inactivity`);
+            }
+          }, 5 * 60 * 1000); // 5 minutes
         }
         break;
       }
