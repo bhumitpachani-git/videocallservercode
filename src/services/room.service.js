@@ -31,6 +31,7 @@ class RoomManager {
         whiteboard: { strokes: [], background: '#ffffff' },
         notes: '',
         polls: new Map(),
+        chatMessages: [],
         createdAt: new Date(),
         settings: {
           video: { res: '720p', fps: 30, bitrate: 2500 },

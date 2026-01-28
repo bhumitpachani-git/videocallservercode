@@ -8,37 +8,203 @@ module.exports = (io, roomManager) => {
   io.on('connection', (socket) => {
     logger.info(`New connection: ${socket.id}`);
 
+    let currentRoomId = null;
+    let currentUsername = null;
+
     socket.on('join-room', async (data, callback) => {
       try {
         const { error, value } = joinRoomSchema.validate(data);
         if (error) throw new Error(error.details[0].message);
 
-        const result = await roomManager.joinRoom(socket, value);
-        callback(result);
-        
-        // Notify others
-        socket.to(value.roomId).emit('user-joined', { 
-          socketId: socket.id, 
-          username: value.recorder ? 'System Recorder' : value.username 
-        });
+        currentRoomId = value.roomId;
+        currentUsername = value.username;
 
-        // If not a recorder, tell the new user about existing peers
-        if (!value.recorder) {
-          const room = await roomManager.getOrCreateRoom(value.roomId);
-          const peers = [];
+        const result = await roomManager.joinRoom(socket, value);
+        
+        const room = roomManager.rooms.get(value.roomId);
+        const existingPeers = [];
+        const pollsArray = [];
+
+        if (room) {
           for (const [peerId, peer] of room.peers.entries()) {
             if (peerId !== socket.id) {
-              peers.push({
+              existingPeers.push({
                 socketId: peerId,
-                username: peer.username
+                username: peer.username,
+                isHost: peerId === room.hostId
               });
             }
           }
-          socket.emit('get-peers', peers);
+
+          if (room.polls) {
+            for (const [pollId, poll] of room.polls.entries()) {
+              pollsArray.push({
+                id: poll.id,
+                question: poll.question,
+                options: poll.options.map(o => o.text),
+                creatorUsername: poll.creatorUsername,
+                isAnonymous: poll.isAnonymous,
+                allowMultiple: poll.allowMultiple,
+                createdAt: poll.createdAt,
+                results: poll.options.map(o => o.votes),
+                totalVotes: poll.votes ? Array.from(poll.votes.values()).reduce((sum, arr) => sum + arr.length, 0) : 0,
+                active: poll.active
+              });
+            }
+          }
         }
+
+        const isRecording = recordingSessions.has(value.roomId);
+
+        callback({
+          rtpCapabilities: result.rtpCapabilities,
+          peers: existingPeers,
+          whiteboard: room?.whiteboard || { strokes: [], background: '#ffffff' },
+          notes: room?.notes || '',
+          polls: pollsArray,
+          chatMessages: room?.chatMessages || [],
+          isHost: result.isHost,
+          isRecording
+        });
+        
+        socket.to(value.roomId).emit('user-joined', { 
+          socketId: socket.id, 
+          username: value.recorder ? 'System Recorder' : value.username,
+          isHost: result.isHost
+        });
+
       } catch (error) {
         logger.error(`Join room error: ${error.message}`);
-        callback({ error: 'Internal server error' });
+        callback({ error: error.message || 'Internal server error' });
+      }
+    });
+
+    socket.on('mute-participant', ({ roomId, targetSocketId, kind }, callback) => {
+      try {
+        const room = roomManager.rooms.get(roomId);
+        if (!room) throw new Error('Room not found');
+        if (room.hostId !== socket.id) throw new Error('Only host can mute participants');
+
+        io.to(targetSocketId).emit('force-mute', { kind });
+        if (callback) callback({ success: true });
+
+        logger.info(`Host ${currentUsername} muted ${kind} for ${targetSocketId}`);
+      } catch (error) {
+        logger.error(`Mute participant error: ${error.message}`);
+        if (callback) callback({ error: error.message });
+      }
+    });
+
+    socket.on('start-recording', async ({ roomId, username }, callback) => {
+      logger.info(`Recording start request for room ${roomId} by ${username || currentUsername}`);
+
+      try {
+        const room = roomManager.rooms.get(roomId);
+        if (!room) {
+          const error = 'Room not found';
+          socket.emit('recording-error', { error });
+          if (callback) callback({ error });
+          return;
+        }
+
+        if (recordingSessions.has(roomId)) {
+          const error = 'Recording already in progress';
+          socket.emit('recording-error', { error });
+          if (callback) callback({ error });
+          return;
+        }
+
+        const session = await startRecording(roomId, username || currentUsername, io, roomManager.rooms);
+
+        const response = {
+          success: true,
+          recordingId: session.recordingId,
+          startedBy: username || currentUsername,
+          startedAt: session.startedAt || new Date().toISOString()
+        };
+
+        io.to(roomId).emit('recording-started', response);
+        if (callback) callback(response);
+
+        logger.info(`Recording started successfully for room ${roomId}`);
+      } catch (error) {
+        logger.error(`Start recording error: ${error.message}`);
+        const errorMsg = error.message || 'Failed to start recording';
+        socket.emit('recording-error', { error: errorMsg });
+        if (callback) callback({ error: errorMsg });
+      }
+    });
+
+    socket.on('stop-recording', async ({ roomId }, callback) => {
+      logger.info(`Recording stop request for room ${roomId}`);
+
+      try {
+        const result = await stopRecording(roomId);
+
+        const response = {
+          success: true,
+          recordingId: result.recordingId,
+          downloadPath: `/api/recordings/${roomId}/${result.recordingId}-metadata.json`,
+          files: result.files ? result.files.map(f => ({
+            username: f.username,
+            file: f.file,
+            size: f.size,
+            duration: f.duration,
+            downloadPath: `/api/recordings/${roomId}/${f.file}`
+          })) : [{
+            file: result.file,
+            size: result.size,
+            downloadPath: `/api/recordings/${roomId}/${result.file}`
+          }]
+        };
+
+        io.to(roomId).emit('recording-stopped', response);
+        if (callback) callback(response);
+
+        logger.info(`Recording stopped successfully for room ${roomId}`);
+      } catch (error) {
+        logger.error(`Stop recording error: ${error.message}`);
+        const errorMsg = error.message || 'Failed to stop recording';
+        socket.emit('recording-error', { error: errorMsg });
+        if (callback) callback({ error: errorMsg });
+      }
+    });
+
+    socket.on('start-transcription', async (data) => {
+      try {
+        await handleTranscription(socket, io, roomManager.rooms, recordingSessions, data);
+      } catch (error) {
+        logger.error(`Start transcription error: ${error.message}`);
+      }
+    });
+
+    socket.on('audio-chunk', ({ roomId, username, audioData }) => {
+      const session = transcriptionSessions.get(socket.id);
+      if (session && session.audioStream && session.isActive) {
+        try {
+          const buffer = Buffer.from(new Int16Array(audioData).buffer);
+          session.audioStream.write(buffer);
+        } catch (error) {
+          logger.error(`Audio chunk error: ${error.message}`);
+        }
+      }
+    });
+
+    socket.on('stop-transcription', ({ roomId }) => {
+      const session = transcriptionSessions.get(socket.id);
+      if (session) {
+        session.isActive = false;
+        if (session.audioStream) session.audioStream.end();
+        transcriptionSessions.delete(socket.id);
+        logger.info(`Transcription stopped for socket ${socket.id}`);
+      }
+    });
+
+    socket.on('set-target-language', ({ roomId, targetLanguage }) => {
+      const session = transcriptionSessions.get(socket.id);
+      if (session) {
+        session.targetLanguage = targetLanguage;
+        logger.info(`Target language set to ${targetLanguage} for socket ${socket.id}`);
       }
     });
 
@@ -68,8 +234,7 @@ module.exports = (io, roomManager) => {
 
     socket.on('connect-transport', async ({ transportId, dtlsParameters }, callback) => {
       try {
-        const room = Object.values(roomManager.rooms).find(r => r.peers.has(socket.id)) || 
-                     Array.from(roomManager.rooms.values()).find(r => r.peers.has(socket.id));
+        const room = Array.from(roomManager.rooms.values()).find(r => r.peers.has(socket.id));
         const peer = room?.peers.get(socket.id);
         const transport = peer?.transports.get(transportId);
 
@@ -97,11 +262,11 @@ module.exports = (io, roomManager) => {
           
           callback({ id: producer.id });
           
-          // Inform others
           socket.to(room.id).emit('new-producer', {
             socketId: socket.id,
             producerId: producer.id,
-            kind: producer.kind
+            kind: producer.kind,
+            appData: producer.appData
           });
         }
       } catch (error) {
@@ -154,50 +319,265 @@ module.exports = (io, roomManager) => {
       }
     });
 
-    socket.on('start-transcription', async (data) => {
+    socket.on('get-producers', ({ roomId }, callback) => {
       try {
-        await handleTranscription(socket, io, roomManager.rooms, recordingSessions, data);
+        const room = roomManager.rooms.get(roomId);
+        if (!room) {
+          if (callback) callback({ error: 'Room not found' });
+          return;
+        }
+
+        const producers = [];
+        for (const [peerId, peer] of room.peers.entries()) {
+          if (peerId !== socket.id) {
+            for (const [producerId, producer] of peer.producers.entries()) {
+              producers.push({
+                socketId: peerId,
+                producerId: producerId,
+                kind: producer.kind,
+                appData: producer.appData
+              });
+            }
+          }
+        }
+
+        if (callback) callback({ producers });
       } catch (error) {
-        logger.error(`Start transcription error: ${error.message}`);
+        logger.error(`Get producers error: ${error.message}`);
+        if (callback) callback({ error: error.message });
       }
     });
 
-    socket.on('audio-chunk', (chunk) => {
-      const session = transcriptionSessions.get(socket.id);
-      if (session && session.isActive && session.audioStream) {
-        session.audioStream.write(chunk);
+    socket.on('mark-screen-share', ({ roomId, producerId }) => {
+      const room = roomManager.rooms.get(roomId);
+      if (room) {
+        socket.to(roomId).emit('screen-share-started', {
+          socketId: socket.id,
+          producerId,
+          username: currentUsername
+        });
+        logger.info(`${currentUsername} started screen sharing in room ${roomId}`);
       }
     });
 
-    socket.on('stop-transcription', () => {
-      const session = transcriptionSessions.get(socket.id);
-      if (session) {
-        session.isActive = false;
-        if (session.audioStream) session.audioStream.end();
-        transcriptionSessions.delete(socket.id);
+    socket.on('screen-share-stopped', ({ roomId }) => {
+      const room = roomManager.rooms.get(roomId);
+      if (room) {
+        socket.to(roomId).emit('screen-share-ended', {
+          socketId: socket.id,
+          username: currentUsername
+        });
+        logger.info(`${currentUsername} stopped screen sharing in room ${roomId}`);
       }
     });
 
-    socket.on('start-recording', async ({ roomId }, callback) => {
+    socket.on('chat-message', ({ roomId, message }) => {
+      const room = roomManager.rooms.get(roomId);
+      if (room) {
+        const chatMessage = {
+          id: `${socket.id}-${Date.now()}`,
+          socketId: socket.id,
+          username: currentUsername,
+          message,
+          timestamp: new Date().toISOString()
+        };
+
+        if (!room.chatMessages) room.chatMessages = [];
+        room.chatMessages.push(chatMessage);
+
+        io.to(roomId).emit('chat-message', chatMessage);
+      }
+    });
+
+    socket.on('send-chat-message', ({ roomId, message }) => {
+      const room = roomManager.rooms.get(roomId);
+      if (room) {
+        const chatMessage = {
+          id: `${socket.id}-${Date.now()}`,
+          socketId: socket.id,
+          username: currentUsername,
+          message,
+          timestamp: new Date().toISOString()
+        };
+
+        if (!room.chatMessages) room.chatMessages = [];
+        room.chatMessages.push(chatMessage);
+
+        io.to(roomId).emit('chat-message', chatMessage);
+      }
+    });
+
+    socket.on('peer-track-status', ({ roomId, kind, enabled }) => {
+      const room = roomManager.rooms.get(roomId);
+      if (room) {
+        socket.to(roomId).emit('peer-track-status', {
+          socketId: socket.id,
+          username: currentUsername,
+          kind,
+          enabled
+        });
+      }
+    });
+
+    socket.on('create-poll', ({ roomId, question, options, isAnonymous, allowMultiple }) => {
       try {
-        const session = await startRecording(roomId, socket.id, io, roomManager.rooms);
-        io.to(roomId).emit('recording-started', { recordingId: session.recordingId });
-        callback({ success: true });
+        const room = roomManager.rooms.get(roomId);
+        if (!room) return;
+
+        const pollId = `poll-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+        const poll = {
+          id: pollId,
+          question,
+          options: options.map(opt => ({ text: opt, votes: 0 })),
+          creator: socket.id,
+          creatorUsername: currentUsername,
+          isAnonymous: isAnonymous || false,
+          allowMultiple: allowMultiple || false,
+          createdAt: new Date().toISOString(),
+          votes: new Map(),
+          active: true
+        };
+
+        if (!room.polls) room.polls = new Map();
+        room.polls.set(pollId, poll);
+
+        io.to(roomId).emit('new-poll', {
+          id: pollId,
+          question,
+          options: poll.options.map(o => o.text),
+          creatorUsername: currentUsername,
+          isAnonymous: poll.isAnonymous,
+          allowMultiple: poll.allowMultiple,
+          createdAt: poll.createdAt
+        });
+
+        logger.info(`Poll created in ${roomId}: ${question}`);
       } catch (error) {
-        logger.error(`Start recording error: ${error.message}`);
-        callback({ error: 'Internal server error' });
+        logger.error(`Create poll error: ${error.message}`);
+        socket.emit('poll-error', { error: error.message });
       }
     });
 
-    socket.on('stop-recording', async ({ roomId }, callback) => {
+    socket.on('submit-vote', ({ roomId, pollId, selectedOptions }) => {
       try {
-        const result = await stopRecording(roomId);
-        io.to(roomId).emit('recording-stopped', result);
-        callback({ success: true, result });
+        const room = roomManager.rooms.get(roomId);
+        if (!room || !room.polls?.has(pollId)) {
+          return socket.emit('poll-error', { error: 'Poll not found' });
+        }
+
+        const poll = room.polls.get(pollId);
+        if (!poll.active) {
+          return socket.emit('poll-error', { error: 'Poll is closed' });
+        }
+
+        if (!Array.isArray(selectedOptions) || selectedOptions.length === 0) {
+          return socket.emit('poll-error', { error: 'Invalid vote' });
+        }
+
+        if (!poll.allowMultiple && selectedOptions.length > 1) {
+          return socket.emit('poll-error', { error: 'Multiple votes not allowed' });
+        }
+
+        if (poll.votes.has(socket.id)) {
+          const prev = poll.votes.get(socket.id);
+          prev.forEach(idx => {
+            if (poll.options[idx]) poll.options[idx].votes--;
+          });
+        }
+
+        selectedOptions.forEach(idx => {
+          if (idx >= 0 && idx < poll.options.length) {
+            poll.options[idx].votes++;
+          }
+        });
+
+        poll.votes.set(socket.id, selectedOptions);
+
+        io.to(roomId).emit('poll-updated', {
+          pollId,
+          results: poll.options.map(o => o.votes),
+          totalVotes: Array.from(poll.votes.values()).reduce((sum, arr) => sum + arr.length, 0)
+        });
+
+        socket.emit('vote-received', { pollId });
       } catch (error) {
-        logger.error(`Stop recording error: ${error.message}`);
-        callback({ error: 'Internal server error' });
+        logger.error(`Submit vote error: ${error.message}`);
+        socket.emit('poll-error', { error: error.message });
       }
+    });
+
+    socket.on('close-poll', ({ roomId, pollId }) => {
+      try {
+        const room = roomManager.rooms.get(roomId);
+        if (!room || !room.polls?.has(pollId)) return;
+
+        const poll = room.polls.get(pollId);
+        if (poll.creator !== socket.id) {
+          return socket.emit('poll-error', { error: 'Only creator can close poll' });
+        }
+
+        poll.active = false;
+
+        io.to(roomId).emit('poll-closed', {
+          pollId,
+          finalResults: poll.options.map(o => o.votes),
+          totalVotes: Array.from(poll.votes.values()).reduce((sum, arr) => sum + arr.length, 0)
+        });
+
+        logger.info(`Poll closed in ${roomId}: ${poll.question}`);
+      } catch (error) {
+        logger.error(`Close poll error: ${error.message}`);
+      }
+    });
+
+    socket.on('whiteboard-clear', ({ roomId }) => {
+      const room = roomManager.rooms.get(roomId);
+      if (!room) return;
+
+      room.whiteboard.strokes = [];
+      io.to(roomId).emit('whiteboard-cleared');
+    });
+
+    socket.on('whiteboard-draw', ({ roomId, stroke }) => {
+      const room = roomManager.rooms.get(roomId);
+      if (!room) return;
+
+      room.whiteboard.strokes.push(stroke);
+      socket.to(roomId).emit('whiteboard-draw', stroke);
+    });
+
+    socket.on('whiteboard-undo', ({ roomId }) => {
+      const room = roomManager.rooms.get(roomId);
+      if (!room || room.whiteboard.strokes.length === 0) return;
+
+      room.whiteboard.strokes.pop();
+      io.to(roomId).emit('whiteboard-undo');
+    });
+
+    socket.on('whiteboard-present', ({ roomId, isPresenting }) => {
+      io.to(roomId).emit('whiteboard-present', {
+        socketId: socket.id,
+        username: currentUsername,
+        isPresenting
+      });
+      logger.info(`${currentUsername} ${isPresenting ? 'started' : 'stopped'} whiteboard presentation`);
+    });
+
+    socket.on('notes-update', ({ roomId, content }) => {
+      const room = roomManager.rooms.get(roomId);
+      if (!room) return;
+
+      room.notes = content;
+      socket.to(roomId).emit('notes-updated', { content });
+    });
+
+    socket.on('notes-present', ({ roomId, isPresenting }) => {
+      io.to(roomId).emit('notes-present', {
+        socketId: socket.id,
+        username: currentUsername,
+        isPresenting
+      });
+      logger.info(`${currentUsername} ${isPresenting ? 'started' : 'stopped'} notes presentation`);
     });
 
     socket.on('update-room-settings', async ({ roomId, settings }, callback) => {
@@ -206,14 +586,23 @@ module.exports = (io, roomManager) => {
         room.settings = { ...room.settings, ...settings };
         await saveRoomDetails({ roomId, settings: room.settings, action: 'SETTINGS_UPDATED' });
         io.to(roomId).emit('room-settings-updated', room.settings);
-        callback({ success: true });
+        if (callback) callback({ success: true });
       } catch (error) {
         logger.error(`Settings update error: ${error.message}`);
-        callback({ error: 'Failed to update settings' });
+        if (callback) callback({ error: 'Failed to update settings' });
       }
     });
 
     socket.on('disconnect', () => {
+      logger.info(`Client disconnected: ${socket.id}`);
+
+      const session = transcriptionSessions.get(socket.id);
+      if (session) {
+        session.isActive = false;
+        if (session.audioStream) session.audioStream.end();
+        transcriptionSessions.delete(socket.id);
+      }
+
       const room = Array.from(roomManager.rooms.values()).find(r => r.peers.has(socket.id));
       const roomId = room?.id;
       
@@ -222,54 +611,15 @@ module.exports = (io, roomManager) => {
       if (roomId) {
         const updatedRoom = roomManager.rooms.get(roomId);
         if (updatedRoom && updatedRoom.hostId) {
-          io.to(roomId).emit('host-migrated', { hostId: updatedRoom.hostId });
+          io.to(roomId).emit('host-changed', { 
+            newHostId: updatedRoom.hostId,
+            username: updatedRoom.peers.get(updatedRoom.hostId)?.username
+          });
         }
-        socket.to(roomId).emit('user-left', { socketId: socket.id });
-      }
-    });
-
-    // Whiteboard
-    socket.on('whiteboard-draw', ({ roomId, stroke }) => {
-      const room = roomManager.rooms.get(roomId);
-      if (room) {
-        room.whiteboard.strokes.push(stroke);
-        socket.to(roomId).emit('whiteboard-update', stroke);
-      }
-    });
-
-    socket.on('whiteboard-clear', ({ roomId }) => {
-      const room = roomManager.rooms.get(roomId);
-      if (room) {
-        room.whiteboard.strokes = [];
-        io.to(roomId).emit('whiteboard-cleared');
-      }
-    });
-
-    // Notes
-    socket.on('update-notes', ({ roomId, notes }) => {
-      const room = roomManager.rooms.get(roomId);
-      if (room) {
-        room.notes = notes;
-        socket.to(roomId).emit('notes-updated', notes);
-      }
-    });
-
-    // Polls
-    socket.on('create-poll', ({ roomId, poll }) => {
-      const room = roomManager.rooms.get(roomId);
-      if (room) {
-        const newPoll = { ...poll, id: Date.now().toString(), votes: {} };
-        room.polls.set(newPoll.id, newPoll);
-        io.to(roomId).emit('poll-created', newPoll);
-      }
-    });
-
-    socket.on('vote-poll', ({ roomId, pollId, optionIndex }) => {
-      const room = roomManager.rooms.get(roomId);
-      const poll = room?.polls.get(pollId);
-      if (poll) {
-        poll.votes[socket.id] = optionIndex;
-        io.to(roomId).emit('poll-updated', poll);
+        socket.to(roomId).emit('user-left', { 
+          socketId: socket.id,
+          username: currentUsername
+        });
       }
     });
   });
