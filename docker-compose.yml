@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  video-server:
+    build: .
+    network_mode: "host" # Crucial for WebRTC media ports
+    restart: always
+    environment:
+      - PORT=5000
+      - ANNOUNCED_IP=${PUBLIC_IP} # Should be your EC2 Public IP
+      - AWS_REGION=${AWS_REGION:-us-east-1}
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+    volumes:
+      - ./recordings:/app/recordings
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
