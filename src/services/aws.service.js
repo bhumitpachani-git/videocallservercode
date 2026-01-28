@@ -70,6 +70,7 @@ async function uploadFileToS3(filePath, s3Key) {
 }
 
 module.exports = {
-    saveRoomDetails,
+    logUserJoin,
+    saveChatTranscript,
     uploadFileToS3
 };

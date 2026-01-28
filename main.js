@@ -4,9 +4,11 @@ const http = require('http');
 const socketIO = require('socket.io');
 const mediasoup = require('mediasoup');
 const cors = require('cors');
+
 const config = require('./src/config');
-const { handleTranscription } = require('./src/services/transcription.service');
-const { recordingSessions, startRecording, stopRecording } = require('./src/services/recording.service');
+const logger = require('./src/utils/logger');
+const roomManager = require('./src/services/room.service');
+const { startRecording, stopRecording } = require('./src/services/recording.service');
 
 const app = express();
 app.use(cors());
@@ -15,123 +17,56 @@ app.use(express.json());
 const server = http.createServer(app);
 const io = socketIO(server, { cors: { origin: '*' } });
 
-// Pre-create worker and shared router for common capabilities
-let worker;
-const rooms = new Map();
-const transcriptionSessions = new Map();
-let globalRtpCapabilities;
+// Health Check
+app.get('/health', (req, res) => res.json({ status: 'ok', uptime: process.uptime() }));
 
-async function createWorker() {
-  worker = await mediasoup.createWorker({
-    logLevel: 'warn',
-    rtcMinPort: 10000,
-    rtcMaxPort: 10100,
-  });
-  worker.on('died', () => setTimeout(() => process.exit(1), 2000));
-  
-  // Pre-create a router to get global capabilities once
-  const tempRouter = await worker.createRouter({ mediaCodecs: config.mediaCodecs });
-  globalRtpCapabilities = tempRouter.rtpCapabilities;
-  tempRouter.close();
-  
-  console.log('[MediaSoup] Worker and capabilities initialized');
-  return worker;
-}
-
-const { saveRoomDetails } = require('./src/services/aws.service');
-
-async function getOrCreateRoom(roomId, password = null) {
-  let room = rooms.get(roomId);
-  if (!room) {
-    const router = await worker.createRouter({ mediaCodecs: config.mediaCodecs });
-    room = {
-      router,
-      peers: new Map(),
-      password,
-      hostId: null,
-      whiteboard: { strokes: [], background: '#ffffff' },
-      notes: ''
-    };
-    rooms.set(roomId, room);
-    
-    // Save new room to DynamoDB
-    await saveRoomDetails({
-        roomId,
-        createdAt: new Date().toISOString(),
-        hasPassword: !!password
-    });
-  }
-  return room;
-}
-
-app.get('/health', (req, res) => res.json({ status: 'ok', rooms: rooms.size }));
-
+// Socket Handler
 io.on('connection', (socket) => {
-  socket.on('join-room', async ({ roomId, username, password, recorder = false }, callback) => {
+  logger.info(`New connection: ${socket.id}`);
+
+  socket.on('join-room', async (data, callback) => {
     try {
-      // Faster room access/creation
-      const room = await getOrCreateRoom(roomId, password);
-      if (room.password && room.password !== password) return callback({ error: 'Invalid password' });
-
-      if (!room.hostId && !recorder) room.hostId = socket.id;
-      
-      const peerData = { 
-        username: recorder ? 'System Recorder' : username, 
-        socketId: socket.id,
-        transports: new Map(), 
-        producers: new Map(), 
-        consumers: new Map(), 
-        joinedAt: Date.now(),
-        isRecorder: !!recorder
-      };
-      room.peers.set(socket.id, peerData);
-
-      // Log join event to DynamoDB
-      const { logUserJoin } = require('./src/services/aws.service');
-      await logUserJoin(roomId, {
-          socketId: socket.id,
-          username: peerData.username,
-          isRecorder: peerData.isRecorder
+      const result = await roomManager.joinRoom(socket, data);
+      callback(result);
+      socket.to(data.roomId).emit('user-joined', { 
+        socketId: socket.id, 
+        username: data.recorder ? 'System Recorder' : data.username 
       });
-
-      socket.join(roomId);
-      
-      // Respond IMMEDIATELY with cached global capabilities
-      callback({ 
-        rtpCapabilities: globalRtpCapabilities, 
-        isHost: room.hostId === socket.id 
-      });
-      
-      // Handle notifications asynchronously after user is already "in"
-      setImmediate(() => {
-        socket.to(roomId).emit('user-joined', { socketId: socket.id, username });
-      });
-    } catch (e) { callback({ error: e.message }); }
-  });
-
-  socket.on('start-transcription', async (data) => {
-    const session = await handleTranscription(socket, io, rooms, recordingSessions, data);
-    if (session) transcriptionSessions.set(socket.id, session);
-  });
-
-  socket.on('audio-chunk', ({ audioData }) => {
-    const session = transcriptionSessions.get(socket.id);
-    if (session?.isActive) session.audioStream.write(Buffer.from(new Int16Array(audioData).buffer));
+    } catch (error) {
+      logger.error(`Join room error: ${error.message}`);
+      callback({ error: error.message });
+    }
   });
 
   socket.on('create-transport', async ({ roomId }, callback) => {
-    const room = rooms.get(roomId);
-    const transport = await room.router.createWebRtcTransport(config.webRtcTransportOptions);
-    room.peers.get(socket.id).transports.set(transport.id, transport);
-    callback({ id: transport.id, iceParameters: transport.iceParameters, iceCandidates: transport.iceCandidates, dtlsParameters: transport.dtlsParameters });
+    try {
+      const room = await roomManager.getOrCreateRoom(roomId);
+      const transport = await room.router.createWebRtcTransport(config.webRtcTransportOptions);
+      
+      const peer = room.peers.get(socket.id);
+      if (peer) peer.transports.set(transport.id, transport);
+
+      callback({
+        id: transport.id,
+        iceParameters: transport.iceParameters,
+        iceCandidates: transport.iceCandidates,
+        dtlsParameters: transport.dtlsParameters
+      });
+    } catch (error) {
+      logger.error(`Transport creation error: ${error.message}`);
+      callback({ error: error.message });
+    }
   });
 
   socket.on('start-recording', async ({ roomId }, callback) => {
     try {
-      const session = await startRecording(roomId, socket.id, io, rooms);
+      const session = await startRecording(roomId, socket.id, io, roomManager.rooms);
       io.to(roomId).emit('recording-started', { recordingId: session.recordingId });
       callback({ success: true });
-    } catch (e) { callback({ error: e.message }); }
+    } catch (error) {
+      logger.error(`Start recording error: ${error.message}`);
+      callback({ error: error.message });
+    }
   });
 
   socket.on('stop-recording', async ({ roomId }, callback) => {
@@ -139,18 +74,34 @@ io.on('connection', (socket) => {
       const result = await stopRecording(roomId);
       io.to(roomId).emit('recording-stopped', result);
       callback({ success: true, result });
-    } catch (e) { callback({ error: e.message }); }
+    } catch (error) {
+      logger.error(`Stop recording error: ${error.message}`);
+      callback({ error: error.message });
+    }
   });
 
   socket.on('disconnect', () => {
-    transcriptionSessions.get(socket.id)?.audioStream?.end();
-    transcriptionSessions.delete(socket.id);
+    roomManager.handleDisconnect(socket.id);
   });
 });
 
-async function startServer() {
-  await createWorker();
-  server.listen(config.PORT, '0.0.0.0', () => console.log(`Server running on port ${config.PORT}`));
+async function bootstrap() {
+  try {
+    const worker = await mediasoup.createWorker({
+      logLevel: config.mediasoup?.logLevel || 'warn',
+      rtcMinPort: config.mediasoup?.rtcMinPort || 10000,
+      rtcMaxPort: config.mediasoup?.rtcMaxPort || 10100,
+    });
+
+    await roomManager.initialize(worker);
+
+    server.listen(config.PORT, '0.0.0.0', () => {
+      logger.info(`🚀 Powerful Backend running on port ${config.PORT}`);
+    });
+  } catch (error) {
+    logger.error(`Bootstrap failed: ${error.message}`);
+    process.exit(1);
+  }
 }
 
-startServer();
+bootstrap();
