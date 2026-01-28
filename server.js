@@ -58,19 +58,20 @@ async function getOrCreateRoom(roomId, password = null) {
 app.get('/health', (req, res) => res.json({ status: 'ok', rooms: rooms.size }));
 
 io.on('connection', (socket) => {
-  socket.on('join-room', async ({ roomId, username, password }, callback) => {
+  socket.on('join-room', async ({ roomId, username, password, recorder = false }, callback) => {
     try {
       const room = await getOrCreateRoom(roomId, password);
       if (room.password && room.password !== password) return callback({ error: 'Invalid password' });
 
-      if (!room.hostId) room.hostId = socket.id;
+      if (!room.hostId && !recorder) room.hostId = socket.id;
       
       const peerData = { 
-        username, 
+        username: recorder ? 'System Recorder' : username, 
         transports: new Map(), 
         producers: new Map(), 
         consumers: new Map(), 
-        joinedAt: Date.now() 
+        joinedAt: Date.now(),
+        isRecorder: !!recorder
       };
       room.peers.set(socket.id, peerData);
 
@@ -104,6 +105,22 @@ io.on('connection', (socket) => {
     const transport = await room.router.createWebRtcTransport(config.webRtcTransportOptions);
     room.peers.get(socket.id).transports.set(transport.id, transport);
     callback({ id: transport.id, iceParameters: transport.iceParameters, iceCandidates: transport.iceCandidates, dtlsParameters: transport.dtlsParameters });
+  });
+
+  socket.on('start-recording', async ({ roomId }, callback) => {
+    try {
+      const session = await startRecording(roomId, socket.id, io, rooms);
+      io.to(roomId).emit('recording-started', { recordingId: session.recordingId });
+      callback({ success: true });
+    } catch (e) { callback({ error: e.message }); }
+  });
+
+  socket.on('stop-recording', async ({ roomId }, callback) => {
+    try {
+      const result = await stopRecording(roomId);
+      io.to(roomId).emit('recording-stopped', result);
+      callback({ success: true, result });
+    } catch (e) { callback({ error: e.message }); }
   });
 
   socket.on('disconnect', () => {
