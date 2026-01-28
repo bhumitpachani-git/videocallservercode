@@ -69,8 +69,27 @@ async function uploadFileToS3(filePath, s3Key) {
     }
 }
 
+async function saveRoomDetails(roomData) {
+    try {
+        const command = new PutCommand({
+            TableName: DYNAMO_TABLE,
+            Item: {
+                pk: `ROOM#${roomData.roomId}`,
+                sk: 'METADATA',
+                type: 'ROOM_METADATA',
+                ...roomData,
+                updatedAt: new Date().toISOString()
+            }
+        });
+        await docClient.send(command);
+    } catch (error) {
+        console.error('[AWS] Error saving room details:', error);
+    }
+}
+
 module.exports = {
     logUserJoin,
     saveChatTranscript,
+    saveRoomDetails,
     uploadFileToS3
 };

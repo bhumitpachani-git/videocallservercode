@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Room Management - Professional Settings</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        .setting-card { transition: all 0.2s ease-in-out; }
+        .setting-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen text-slate-800">
+    <div class="max-w-4xl mx-auto px-4 py-12">
+        <div class="flex items-center justify-between mb-10">
+            <div>
+                <h1 class="text-3xl font-bold text-slate-900">Room Management</h1>
+                <p class="text-slate-500 mt-1">Configure professional audio and video quality per room</p>
+            </div>
+            <div id="room-badge" class="bg-indigo-100 text-indigo-700 px-4 py-2 rounded-full font-semibold text-sm">
+                Room: <span id="display-room-id">Loading...</span>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <!-- Video Settings -->
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 setting-card">
+                <div class="flex items-center gap-3 mb-6">
+                    <span class="material-icons text-indigo-600">videocam</span>
+                    <h2 class="text-xl font-bold">Video Quality</h2>
+                </div>
+                
+                <div class="space-y-6">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-600 mb-2">Resolution</label>
+                        <select id="video-res" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all">
+                            <option value="1080p">Ultra HD (1080p)</option>
+                            <option value="720p" selected>High Definition (720p)</option>
+                            <option value="480p">Standard (480p)</option>
+                            <option value="360p">Low Bandwidth (360p)</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-slate-600 mb-2">Frame Rate (FPS)</label>
+                        <select id="video-fps" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all">
+                            <option value="60">60 FPS (Ultra Smooth)</option>
+                            <option value="30" selected>30 FPS (Standard)</option>
+                            <option value="24">24 FPS (Cinematic)</option>
+                            <option value="15">15 FPS (Power Saver)</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-slate-600 mb-2">Bitrate (kbps)</label>
+                        <input type="range" id="video-bitrate" min="500" max="8000" step="100" value="2500" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-indigo-600">
+                        <div class="flex justify-between text-xs text-slate-400 mt-2">
+                            <span>500k</span>
+                            <span id="video-bitrate-val" class="text-indigo-600 font-bold">2500k</span>
+                            <span>8000k</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Audio Settings -->
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 setting-card">
+                <div class="flex items-center gap-3 mb-6">
+                    <span class="material-icons text-indigo-600">mic</span>
+                    <h2 class="text-xl font-bold">Audio Quality</h2>
+                </div>
+
+                <div class="space-y-6">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-600 mb-2">Sample Rate</label>
+                        <select id="audio-rate" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all">
+                            <option value="48000" selected>48 kHz (Studio Quality)</option>
+                            <option value="44100">44.1 kHz (Standard)</option>
+                            <option value="32000">32 kHz (Voice Optimized)</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-slate-600 mb-2">Channels</label>
+                        <div class="flex gap-4">
+                            <label class="flex-1 cursor-pointer">
+                                <input type="radio" name="audio-channels" value="2" checked class="sr-only peer">
+                                <div class="text-center py-2 border rounded-lg peer-checked:bg-indigo-50 peer-checked:border-indigo-500 peer-checked:text-indigo-700 hover:bg-slate-50 transition-all">Stereo</div>
+                            </label>
+                            <label class="flex-1 cursor-pointer">
+                                <input type="radio" name="audio-channels" value="1" class="sr-only peer">
+                                <div class="text-center py-2 border rounded-lg peer-checked:bg-indigo-50 peer-checked:border-indigo-500 peer-checked:text-indigo-700 hover:bg-slate-50 transition-all">Mono</div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="p-4 bg-indigo-50 rounded-xl">
+                        <label class="flex items-center gap-3 cursor-pointer">
+                            <input type="checkbox" id="audio-echo" checked class="w-4 h-4 text-indigo-600 bg-white border-slate-300 rounded focus:ring-indigo-500">
+                            <span class="text-sm font-semibold text-indigo-900">Echo Cancellation</span>
+                        </label>
+                        <p class="text-xs text-indigo-600 mt-1 ml-7">Professional background noise reduction</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-12 flex justify-end gap-4">
+            <button class="px-8 py-3 rounded-xl font-bold text-slate-600 hover:bg-slate-200 transition-all">Discard Changes</button>
+            <button id="save-settings" class="px-10 py-3 bg-indigo-600 text-white rounded-xl font-bold shadow-lg shadow-indigo-200 hover:bg-indigo-700 active:scale-95 transition-all flex items-center gap-2">
+                <span class="material-icons text-sm">save</span>
+                Apply Professional Settings
+            </button>
+        </div>
+
+        <div id="toast" class="fixed bottom-8 left-1/2 -translate-x-1/2 bg-slate-900 text-white px-6 py-3 rounded-full text-sm font-bold shadow-2xl opacity-0 transition-all translate-y-4 pointer-events-none">
+            Settings applied successfully!
+        </div>
+    </div>
+
+    <script>
+        // UI Logic
+        const urlParams = new URLSearchParams(window.location.search);
+        const roomId = urlParams.get('roomId') || 'Default-Room';
+        document.getElementById('display-room-id').innerText = roomId;
+
+        const bitrateInput = document.getElementById('video-bitrate');
+        const bitrateVal = document.getElementById('video-bitrate-val');
+        bitrateInput.oninput = (e) => bitrateVal.innerText = `${e.target.value}k`;
+
+        document.getElementById('save-settings').onclick = async () => {
+            const btn = document.getElementById('save-settings');
+            const toast = document.getElementById('toast');
+            
+            btn.innerHTML = '<span class="material-icons animate-spin text-sm">sync</span> Applying...';
+            btn.disabled = true;
+
+            // Mock saving to backend/dynamo
+            await new Promise(r => setTimeout(r, 800));
+
+            btn.innerHTML = '<span class="material-icons text-sm">save</span> Apply Professional Settings';
+            btn.disabled = false;
+            
+            toast.classList.remove('opacity-0', 'translate-y-4');
+            toast.classList.add('opacity-100', 'translate-y-0');
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-4');
+                toast.classList.remove('opacity-100', 'translate-y-0');
+            }, 3000);
+        };
+    </script>
+</body>
+</html>

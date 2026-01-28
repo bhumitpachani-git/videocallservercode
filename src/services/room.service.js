@@ -30,7 +30,11 @@ class RoomManager {
         hostId: null,
         whiteboard: { strokes: [], background: '#ffffff' },
         notes: '',
-        createdAt: new Date()
+        createdAt: new Date(),
+        settings: {
+          video: { res: '720p', fps: 30, bitrate: 2500 },
+          audio: { rate: 48000, channels: 2, echoCancellation: true }
+        }
       };
       this.rooms.set(roomId, room);
       

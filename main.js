@@ -36,6 +36,9 @@ const io = socketIO(server, {
 // Health Check
 app.get('/health', (req, res) => res.json({ status: 'ok', uptime: process.uptime() }));
 
+// Serve static settings page
+app.use(express.static('public'));
+
 const { joinRoomSchema, transportSchema, recordingSchema } = require('./src/utils/validation');
 
 // Socket Handler
@@ -103,6 +106,26 @@ io.on('connection', (socket) => {
 
   socket.on('disconnect', () => {
     roomManager.handleDisconnect(socket.id);
+  });
+
+  socket.on('update-room-settings', async ({ roomId, settings }, callback) => {
+    try {
+      const room = await roomManager.getOrCreateRoom(roomId);
+      room.settings = { ...room.settings, ...settings };
+      
+      const { saveRoomDetails } = require('./src/services/aws.service');
+      await saveRoomDetails({
+          roomId,
+          settings: room.settings,
+          action: 'SETTINGS_UPDATED'
+      });
+      
+      io.to(roomId).emit('room-settings-updated', room.settings);
+      callback({ success: true });
+    } catch (error) {
+      logger.error(`Settings update error: ${error.message}`);
+      callback({ error: 'Failed to update settings' });
+    }
   });
 });
 
