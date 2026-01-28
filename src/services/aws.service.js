@@ -10,22 +10,41 @@ const docClient = DynamoDBDocumentClient.from(ddbClient);
 const s3Client = new S3Client(config.AWS);
 
 const S3_BUCKET = process.env.S3_BUCKET_NAME;
-const DYNAMO_TABLE = process.env.DYNAMO_TABLE_NAME || 'MeetingRooms';
+const DYNAMO_TABLE = process.env.DYNAMO_TABLE_NAME || 'MeetingLogs';
 
-async function saveRoomDetails(roomData) {
+async function logUserJoin(roomId, userDetails) {
     try {
         const command = new PutCommand({
             TableName: DYNAMO_TABLE,
             Item: {
-                roomId: roomData.roomId,
-                ...roomData,
-                updatedAt: new Date().toISOString()
+                pk: `ROOM#${roomId}`,
+                sk: `JOIN#${userDetails.socketId}#${Date.now()}`,
+                type: 'USER_JOIN',
+                ...userDetails,
+                timestamp: new Date().toISOString()
             }
         });
         await docClient.send(command);
-        console.log(`[AWS] Room details saved: ${roomData.roomId}`);
     } catch (error) {
-        console.error('[AWS] Error saving room details:', error);
+        console.error('[AWS] Error logging user join:', error);
+    }
+}
+
+async function saveChatTranscript(roomId, transcript) {
+    try {
+        const command = new PutCommand({
+            TableName: DYNAMO_TABLE,
+            Item: {
+                pk: `ROOM#${roomId}`,
+                sk: `TRANSCRIPT#${Date.now()}`,
+                type: 'CHAT_TRANSCRIPT',
+                transcript,
+                timestamp: new Date().toISOString()
+            }
+        });
+        await docClient.send(command);
+    } catch (error) {
+        console.error('[AWS] Error saving transcript:', error);
     }
 }
 

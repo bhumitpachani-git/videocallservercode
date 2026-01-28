@@ -77,6 +77,7 @@ io.on('connection', (socket) => {
       
       const peerData = { 
         username: recorder ? 'System Recorder' : username, 
+        socketId: socket.id,
         transports: new Map(), 
         producers: new Map(), 
         consumers: new Map(), 
@@ -84,6 +85,14 @@ io.on('connection', (socket) => {
         isRecorder: !!recorder
       };
       room.peers.set(socket.id, peerData);
+
+      // Log join event to DynamoDB
+      const { logUserJoin } = require('./src/services/aws.service');
+      await logUserJoin(roomId, {
+          socketId: socket.id,
+          username: peerData.username,
+          isRecorder: peerData.isRecorder
+      });
 
       socket.join(roomId);
       
