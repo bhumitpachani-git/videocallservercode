@@ -18,7 +18,7 @@ async function startRecording(roomId, startedBy, io, rooms) {
     const Config = {
         followNewTab: true,
         fps: 30,
-        ffmpeg_Path: null, 
+        ffmpeg_Path: process.env.FFMPEG_PATH || null, 
         videoFrame: {
             width: 1920,
             height: 1080,
@@ -31,7 +31,7 @@ async function startRecording(roomId, startedBy, io, rooms) {
     try {
         const browser = await puppeteer.launch({
             headless: true,
-            executablePath: process.env.CHROME_PATH || '/usr/bin/google-chrome',
+            executablePath: process.env.CHROME_PATH || 'chromium',
             args: [
                 '--no-sandbox',
                 '--disable-setuid-sandbox',

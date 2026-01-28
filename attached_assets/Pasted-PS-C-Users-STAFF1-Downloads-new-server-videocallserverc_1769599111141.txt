@@ -1,0 +1,67 @@
+PS C:\Users\STAFF1\Downloads\new server\videocallservercode-main> npm start
+
+> video-server@1.0.0 start
+> node src/app.js
+
+[dotenv@17.2.3] injecting env (8) from .env -- tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' }
+info: RoomManager initialized with global capabilities {"timestamp":"2026-01-28T11:00:59.191Z"}
+info: 🚀 Powerful Backend running on port 5000 {"timestamp":"2026-01-28T11:00:59.212Z"}
+info: New connection: JYftBeEjZmeeMhAfAAAB {"timestamp":"2026-01-28T11:02:14.668Z"}
+info: New room created: room123 {"timestamp":"2026-01-28T11:02:15.735Z"}
+info: User WisePanda34 (JYftBeEjZmeeMhAfAAAB) is now host of room room123 {"timestamp":"2026-01-28T11:02:15.739Z"}
+info: User WisePanda34 joined room room123 {"timestamp":"2026-01-28T11:02:15.748Z"}
+info: New connection: RNZrMkEvA8EaXBXPAAAD {"timestamp":"2026-01-28T11:02:54.302Z"}
+info: User HappyDolphin61 joined room room123 {"timestamp":"2026-01-28T11:02:54.374Z"}
+info: Client disconnected: RNZrMkEvA8EaXBXPAAAD {"timestamp":"2026-01-28T11:03:03.283Z"}
+info: User RNZrMkEvA8EaXBXPAAAD removed from room room123 {"timestamp":"2026-01-28T11:03:03.294Z"}
+info: New connection: Tps6QUN4Z19DanIkAAAF {"timestamp":"2026-01-28T11:03:11.585Z"}
+info: User BrightPanda24 joined room room123 {"timestamp":"2026-01-28T11:03:11.631Z"}
+info: Host WisePanda34 muted audio for Tps6QUN4Z19DanIkAAAF {"timestamp":"2026-01-28T11:03:40.584Z"}
+info: WisePanda34 started whiteboard presentation {"timestamp":"2026-01-28T11:04:00.649Z"}
+info: WisePanda34 stopped whiteboard presentation {"timestamp":"2026-01-28T11:04:09.657Z"}
+info: WisePanda34 started notes presentation {"timestamp":"2026-01-28T11:04:14.375Z"}
+info: WisePanda34 stopped notes presentation {"timestamp":"2026-01-28T11:04:21.622Z"}
+info: Poll created in room123: 11111111 {"timestamp":"2026-01-28T11:04:30.936Z"}
+[Transcription] Starting for WisePanda34 in room room123, speaking: auto, target: en
+[Transcription] Starting for BrightPanda24 in room room123, speaking: auto, target: en
+info: Target language set to hi for socket JYftBeEjZmeeMhAfAAAB {"timestamp":"2026-01-28T11:04:51.518Z"}
+[Translation] zh → hi for WisePanda34: "यह वह है"
+[Translation] zh → hi for WisePanda34: "यह वह है।"
+[Translation] en → hi for WisePanda34: "नमस्ते"
+[Translation] en → hi for WisePanda34: "नमस्ते"
+[Translation] en → hi for WisePanda34: "उह"
+[Translation] en → hi for WisePanda34: "आप कैसे हैं"
+[Translation] en → hi for WisePanda34: "आप कैसे हैं"
+info: Client disconnected: JYftBeEjZmeeMhAfAAAB {"timestamp":"2026-01-28T11:05:06.378Z"}
+info: User JYftBeEjZmeeMhAfAAAB removed from room room123 {"timestamp":"2026-01-28T11:05:06.382Z"}
+info: Host migrated to Tps6QUN4Z19DanIkAAAF in room room123 {"timestamp":"2026-01-28T11:05:06.388Z"}
+info: New connection: b3_5zT-xXQwadmvQAAAH {"timestamp":"2026-01-28T11:05:10.827Z"}
+info: User BoldEagle37 joined room room123 {"timestamp":"2026-01-28T11:05:10.848Z"}
+info: BoldEagle37 started screen sharing in room room123 {"timestamp":"2026-01-28T11:05:26.539Z"}
+info: BoldEagle37 stopped screen sharing in room room123 {"timestamp":"2026-01-28T11:05:41.352Z"}
+info: Host BrightPanda24 muted video for b3_5zT-xXQwadmvQAAAH {"timestamp":"2026-01-28T11:06:07.101Z"}
+info: Host BrightPanda24 muted video for b3_5zT-xXQwadmvQAAAH {"timestamp":"2026-01-28T11:06:10.912Z"}
+info: Client disconnected: b3_5zT-xXQwadmvQAAAH {"timestamp":"2026-01-28T11:06:40.474Z"}
+info: User b3_5zT-xXQwadmvQAAAH removed from room room123 {"timestamp":"2026-01-28T11:06:40.496Z"}
+info: Client disconnected: Tps6QUN4Z19DanIkAAAF {"timestamp":"2026-01-28T11:06:42.182Z"}
+info: User Tps6QUN4Z19DanIkAAAF removed from room room123 {"timestamp":"2026-01-28T11:06:42.184Z"}
+info: Room room123 is empty, starting cleanup timer {"timestamp":"2026-01-28T11:06:42.186Z"}
+info: New room created: :roomId {"timestamp":"2026-01-28T11:07:46.296Z"}
+info: Room room123 cleaned up due to inactivity {"timestamp":"2026-01-28T11:11:42.205Z"}
+info: New connection: buGaUGootovksE3nAAAJ {"timestamp":"2026-01-28T11:12:36.752Z"}
+info: New room created: room123 {"timestamp":"2026-01-28T11:12:37.727Z"}
+info: User CleverWolf26 (buGaUGootovksE3nAAAJ) is now host of room room123 {"timestamp":"2026-01-28T11:12:37.727Z"}
+info: User CleverWolf26 joined room room123 {"timestamp":"2026-01-28T11:12:37.730Z"}
+info: New connection: XxirsNPYIAyz6V4NAAAL {"timestamp":"2026-01-28T11:12:43.724Z"}
+info: User CoolEagle88 joined room room123 {"timestamp":"2026-01-28T11:12:43.757Z"}
+info: Recording start request for room room123 by CleverWolf26 {"timestamp":"2026-01-28T11:13:03.506Z"}
+[Recording] Starting professional recording for room: room123
+[Recording] Failed to start: Error: Browser was not found at the configured executablePath (/usr/bin/google-chrome)
+    at ChromeLauncher.launch (C:\Users\STAFF1\Downloads\new server\videocallservercode-main\node_modules\puppeteer-core\lib\cjs\puppeteer\node\BrowserLauncher.js:90:19)
+    at async startRecording (C:\Users\STAFF1\Downloads\new server\videocallservercode-main\src\services\recording.service.js:32:25)
+    at async Socket.<anonymous> (C:\Users\STAFF1\Downloads\new server\videocallservercode-main\src\services\socket.handler.js:142:25)
+error: Start recording error: Browser was not found at the configured executablePath (/usr/bin/google-chrome) {"timestamp":"2026-01-28T11:13:03.568Z"}
+
+
+
+

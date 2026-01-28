@@ -4,6 +4,7 @@ expertMode = true
 
 [nix]
 channel = "stable-25_05"
+packages = ["chromium"]
 
 [workflows]
 runButton = "Project"
@@ -44,3 +45,9 @@ externalPort = 4200
 [deployment]
 deploymentTarget = "autoscale"
 run = ["node", "server.js"]
+
+[userenv]
+
+[userenv.shared]
+CHROME_PATH = "/nix/store/qa9cnw4v5xkxyip6mb9kxqfq1z4x2dx1-chromium-138.0.7204.100/bin/chromium"
+FFMPEG_PATH = "/nix/store/gmcxladhxrdk9wh012bjisa2w4ny34lm-replit-runtime-path/bin/ffmpeg"
