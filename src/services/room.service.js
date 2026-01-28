@@ -83,6 +83,24 @@ class RoomManager {
     room.peers.set(socket.id, peerData);
     socket.join(roomId);
 
+    // Sync active producers to the new peer
+    const activeProducers = [];
+    for (const [peerId, peer] of room.peers.entries()) {
+      if (peerId !== socket.id) {
+        for (const [producerId, producer] of peer.producers.entries()) {
+          activeProducers.push({
+            socketId: peerId,
+            producerId: producerId,
+            kind: producer.kind
+          });
+        }
+      }
+    }
+    
+    if (activeProducers.length > 0) {
+      socket.emit('active-producers', activeProducers);
+    }
+
     // Async logging
     logUserJoin(roomId, {
       socketId: socket.id,

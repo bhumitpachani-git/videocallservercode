@@ -1,0 +1,86 @@
+const { joinRoomSchema, transportSchema, recordingSchema } = require('../utils/validation');
+const logger = require('../utils/logger');
+const { startRecording, stopRecording } = require('./recording.service');
+const { saveRoomDetails } = require('./aws.service');
+
+module.exports = (io, roomManager) => {
+  io.on('connection', (socket) => {
+    logger.info(`New connection: ${socket.id}`);
+
+    socket.on('join-room', async (data, callback) => {
+      try {
+        const { error, value } = joinRoomSchema.validate(data);
+        if (error) throw new Error(error.details[0].message);
+
+        const result = await roomManager.joinRoom(socket, value);
+        callback(result);
+        socket.to(value.roomId).emit('user-joined', { 
+          socketId: socket.id, 
+          username: value.recorder ? 'System Recorder' : value.username 
+        });
+      } catch (error) {
+        logger.error(`Join room error: ${error.message}`);
+        callback({ error: 'Internal server error' });
+      }
+    });
+
+    socket.on('create-transport', async ({ roomId }, callback) => {
+      try {
+        const room = await roomManager.getOrCreateRoom(roomId);
+        const transport = await room.router.createWebRtcTransport(require('../config').webRtcTransportOptions);
+        
+        const peer = room.peers.get(socket.id);
+        if (peer) peer.transports.set(transport.id, transport);
+
+        callback({
+          id: transport.id,
+          iceParameters: transport.iceParameters,
+          iceCandidates: transport.iceCandidates,
+          dtlsParameters: transport.dtlsParameters
+        });
+      } catch (error) {
+        logger.error(`Transport creation error: ${error.message}`);
+        callback({ error: 'Internal server error' });
+      }
+    });
+
+    socket.on('start-recording', async ({ roomId }, callback) => {
+      try {
+        const session = await startRecording(roomId, socket.id, io, roomManager.rooms);
+        io.to(roomId).emit('recording-started', { recordingId: session.recordingId });
+        callback({ success: true });
+      } catch (error) {
+        logger.error(`Start recording error: ${error.message}`);
+        callback({ error: 'Internal server error' });
+      }
+    });
+
+    socket.on('stop-recording', async ({ roomId }, callback) => {
+      try {
+        const result = await stopRecording(roomId);
+        io.to(roomId).emit('recording-stopped', result);
+        callback({ success: true, result });
+      } catch (error) {
+        logger.error(`Stop recording error: ${error.message}`);
+        callback({ error: 'Internal server error' });
+      }
+    });
+
+    socket.on('update-room-settings', async ({ roomId, settings }, callback) => {
+      try {
+        const room = await roomManager.getOrCreateRoom(roomId);
+        room.settings = { ...room.settings, ...settings };
+        await saveRoomDetails({ roomId, settings: room.settings, action: 'SETTINGS_UPDATED' });
+        io.to(roomId).emit('room-settings-updated', room.settings);
+        callback({ success: true });
+      } catch (error) {
+        logger.error(`Settings update error: ${error.message}`);
+        callback({ error: 'Failed to update settings' });
+      }
+    });
+
+    socket.on('disconnect', () => {
+      roomManager.handleDisconnect(socket.id);
+    });
+  });
+};

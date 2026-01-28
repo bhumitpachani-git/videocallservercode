@@ -38,6 +38,9 @@ const webRtcTransportOptions = {
       announcedIp: process.env.ANNOUNCED_IP || "127.0.0.1"
     }
   ],
+  initialAvailableOutgoingBitrate: 1000000,
+  minimumAvailableOutgoingBitrate: 600000,
+  maxSctpMessageSize: 262144,
   enableUdp: true,
   enableTcp: true,
   preferUdp: true,
