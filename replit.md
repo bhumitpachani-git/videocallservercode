@@ -3,10 +3,11 @@
 ## Overview
 A video server application using MediaSoup and Socket.IO for real-time video streaming with WebRTC. Features AWS Transcribe for live transcription and AWS Translate for real-time translation.
 
-## Project Structure
-- `server.js` - Main Express server with MediaSoup WebRTC, Socket.IO, and AWS integration
-- `recording-service.js` - Recording functionality for video sessions
-- `package.json` - Node.js dependencies
+## Project Architecture
+- `server.js`: Main entry point, sets up Express and Socket.IO.
+- `src/config/`: Application configuration and media settings.
+- `src/services/`: Core business logic (transcription, translation).
+- `recording-service.js`: Specialized service for video recording.
 
 ## Running the Server
 The server runs on port 5000 and includes:
