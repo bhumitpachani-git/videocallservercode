@@ -69,6 +69,8 @@ async function startRecording(roomId, startedBy, io, rooms) {
     }
 }
 
+const { saveRoomDetails, uploadFileToS3 } = require('./aws.service');
+
 async function stopRecording(roomId) {
     const session = recordingSessions.get(roomId);
     if (!session) return;
@@ -78,12 +80,29 @@ async function stopRecording(roomId) {
         await session.browser.close();
         
         const stats = fs.statSync(session.outputPath);
+        
+        // Upload to S3 if configured
+        let s3Url = null;
+        if (process.env.S3_BUCKET_NAME) {
+            const s3Key = `recordings/${roomId}/${session.recordingId}.mp4`;
+            s3Url = await uploadFileToS3(session.outputPath, s3Key);
+        }
+
         const result = {
             recordingId: session.recordingId,
             file: path.basename(session.outputPath),
             size: stats.size,
-            path: session.outputPath
+            path: session.outputPath,
+            s3Url
         };
+
+        // Update DynamoDB with recording info
+        await saveRoomDetails({
+            roomId,
+            lastRecordingId: session.recordingId,
+            lastRecordingUrl: s3Url,
+            lastRecordingSize: stats.size
+        });
 
         recordingSessions.delete(roomId);
         return result;

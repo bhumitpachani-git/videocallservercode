@@ -38,6 +38,8 @@ async function createWorker() {
   return worker;
 }
 
+const { saveRoomDetails } = require('./src/services/aws.service');
+
 async function getOrCreateRoom(roomId, password = null) {
   let room = rooms.get(roomId);
   if (!room) {
@@ -51,6 +53,13 @@ async function getOrCreateRoom(roomId, password = null) {
       notes: ''
     };
     rooms.set(roomId, room);
+    
+    // Save new room to DynamoDB
+    await saveRoomDetails({
+        roomId,
+        createdAt: new Date().toISOString(),
+        hasPassword: !!password
+    });
   }
   return room;
 }
