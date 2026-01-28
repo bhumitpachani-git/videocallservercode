@@ -14,7 +14,8 @@ const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 
 const app = express();
-app.use(helmet()); // Professional security headers
+app.set('trust proxy', 1); // Trust Replit/AWS proxy for rate limiting
+app.use(helmet()); 
 app.use(cors());
 app.use(express.json());
 

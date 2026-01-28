@@ -29,13 +29,15 @@ async function startRecording(roomId, startedBy, io, rooms) {
     try {
         const browser = await puppeteer.launch({
             headless: "new",
+            executablePath: '/usr/bin/google-chrome', // Use system chrome
             args: [
                 '--no-sandbox',
                 '--disable-setuid-sandbox',
                 '--use-fake-ui-for-media-stream',
                 '--use-fake-device-for-media-stream',
                 '--allow-file-access-from-files',
-                '--disable-web-security'
+                '--disable-web-security',
+                '--autoplay-policy=no-user-gesture-required'
             ]
         });
 
