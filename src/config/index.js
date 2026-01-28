@@ -53,5 +53,10 @@ module.exports = {
     }
   },
   mediaCodecs,
-  webRtcTransportOptions
+  webRtcTransportOptions,
+  plainTransportOptions: {
+    listenIp: { ip: '127.0.0.1', announcedIp: null },
+    rtcpMux: false,
+    comedia: true
+  }
 };

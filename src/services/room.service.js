@@ -102,6 +102,15 @@ class RoomManager {
       if (room.peers.has(socketId)) {
         room.peers.delete(socketId);
         logger.info(`User ${socketId} removed from room ${roomId}`);
+
+        // Cleanup transcription session if exists
+        const { transcriptionSessions } = require('./transcription.service');
+        const session = transcriptionSessions.get(socketId);
+        if (session) {
+          session.isActive = false;
+          if (session.audioStream) session.audioStream.end();
+          transcriptionSessions.delete(socketId);
+        }
         
         if (room.peers.size === 0) {
           logger.info(`Room ${roomId} is empty, starting cleanup timer`);

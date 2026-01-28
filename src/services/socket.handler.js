@@ -1,7 +1,8 @@
 const { joinRoomSchema, transportSchema, recordingSchema } = require('../utils/validation');
 const logger = require('../utils/logger');
-const { startRecording, stopRecording } = require('./recording.service');
+const { startRecording, stopRecording, recordingSessions } = require('./recording.service');
 const { saveRoomDetails } = require('./aws.service');
+const { handleTranscription, transcriptionSessions } = require('./transcription.service');
 
 module.exports = (io, roomManager) => {
   io.on('connection', (socket) => {
@@ -41,6 +42,30 @@ module.exports = (io, roomManager) => {
       } catch (error) {
         logger.error(`Transport creation error: ${error.message}`);
         callback({ error: 'Internal server error' });
+      }
+    });
+
+    socket.on('start-transcription', async (data) => {
+      try {
+        await handleTranscription(socket, io, roomManager.rooms, recordingSessions, data);
+      } catch (error) {
+        logger.error(`Start transcription error: ${error.message}`);
+      }
+    });
+
+    socket.on('audio-chunk', (chunk) => {
+      const session = transcriptionSessions.get(socket.id);
+      if (session && session.isActive && session.audioStream) {
+        session.audioStream.write(chunk);
+      }
+    });
+
+    socket.on('stop-transcription', () => {
+      const session = transcriptionSessions.get(socket.id);
+      if (session) {
+        session.isActive = false;
+        if (session.audioStream) session.audioStream.end();
+        transcriptionSessions.delete(socket.id);
       }
     });
 
