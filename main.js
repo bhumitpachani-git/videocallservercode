@@ -6,7 +6,7 @@ const mediasoup = require('mediasoup');
 const cors = require('cors');
 const config = require('./src/config');
 const { handleTranscription } = require('./src/services/transcription.service');
-const { recordingSessions, startRecording, stopRecording, startRecordingForPeer } = require('./recording-service');
+const { recordingSessions, startRecording, stopRecording } = require('./src/services/recording.service');
 
 const app = express();
 app.use(cors());
