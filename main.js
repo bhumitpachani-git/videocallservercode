@@ -41,6 +41,10 @@ app.use(express.static('public'));
 
 const { joinRoomSchema, transportSchema, recordingSchema } = require('./src/utils/validation');
 
+// Routes
+const roomRoutes = require('./src/routes/room.routes');
+app.use('/api/rooms', roomRoutes);
+
 // Socket Handler
 io.on('connection', (socket) => {
   logger.info(`New connection: ${socket.id}`);
