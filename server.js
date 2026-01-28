@@ -15,9 +15,11 @@ app.use(express.json());
 const server = http.createServer(app);
 const io = socketIO(server, { cors: { origin: '*' } });
 
+// Pre-create worker and shared router for common capabilities
 let worker;
 const rooms = new Map();
 const transcriptionSessions = new Map();
+let globalRtpCapabilities;
 
 async function createWorker() {
   worker = await mediasoup.createWorker({
@@ -26,22 +28,31 @@ async function createWorker() {
     rtcMaxPort: 10100,
   });
   worker.on('died', () => setTimeout(() => process.exit(1), 2000));
+  
+  // Pre-create a router to get global capabilities once
+  const tempRouter = await worker.createRouter({ mediaCodecs: config.mediaCodecs });
+  globalRtpCapabilities = tempRouter.rtpCapabilities;
+  tempRouter.close();
+  
+  console.log('[MediaSoup] Worker and capabilities initialized');
   return worker;
 }
 
 async function getOrCreateRoom(roomId, password = null) {
-  if (!rooms.has(roomId)) {
+  let room = rooms.get(roomId);
+  if (!room) {
     const router = await worker.createRouter({ mediaCodecs: config.mediaCodecs });
-    rooms.set(roomId, {
+    room = {
       router,
       peers: new Map(),
       password,
       hostId: null,
       whiteboard: { strokes: [], background: '#ffffff' },
       notes: ''
-    });
+    };
+    rooms.set(roomId, room);
   }
-  return rooms.get(roomId);
+  return room;
 }
 
 app.get('/health', (req, res) => res.json({ status: 'ok', rooms: rooms.size }));
@@ -49,15 +60,32 @@ app.get('/health', (req, res) => res.json({ status: 'ok', rooms: rooms.size }));
 io.on('connection', (socket) => {
   socket.on('join-room', async ({ roomId, username, password }, callback) => {
     try {
-      let room = await getOrCreateRoom(roomId, password);
+      const room = await getOrCreateRoom(roomId, password);
       if (room.password && room.password !== password) return callback({ error: 'Invalid password' });
 
       if (!room.hostId) room.hostId = socket.id;
-      room.peers.set(socket.id, { username, transports: new Map(), producers: new Map(), consumers: new Map(), joinedAt: Date.now() });
+      
+      const peerData = { 
+        username, 
+        transports: new Map(), 
+        producers: new Map(), 
+        consumers: new Map(), 
+        joinedAt: Date.now() 
+      };
+      room.peers.set(socket.id, peerData);
 
       socket.join(roomId);
-      callback({ rtpCapabilities: room.router.rtpCapabilities, isHost: room.hostId === socket.id });
-      socket.to(roomId).emit('user-joined', { socketId: socket.id, username });
+      
+      // Send response immediately with cached capabilities
+      callback({ 
+        rtpCapabilities: globalRtpCapabilities, 
+        isHost: room.hostId === socket.id 
+      });
+      
+      // Broadcase join event asynchronously
+      setImmediate(() => {
+        socket.to(roomId).emit('user-joined', { socketId: socket.id, username });
+      });
     } catch (e) { callback({ error: e.message }); }
   });
 
