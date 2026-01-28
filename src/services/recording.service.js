@@ -18,18 +18,20 @@ async function startRecording(roomId, startedBy, io, rooms) {
     const Config = {
         followNewTab: true,
         fps: 30,
-        ffmpeg_Path: null, // Uses system ffmpeg
+        ffmpeg_Path: null, 
         videoFrame: {
             width: 1920,
             height: 1080,
         },
         aspectRatio: '16:9',
+        videoBitrate: '8000k', // Enterprise quality bitrate
+        audioBitrate: '192k'
     };
 
     try {
         const browser = await puppeteer.launch({
             headless: "new",
-            executablePath: '/usr/bin/google-chrome', // Use system chrome
+            executablePath: '/usr/bin/google-chrome',
             args: [
                 '--no-sandbox',
                 '--disable-setuid-sandbox',
@@ -37,7 +39,10 @@ async function startRecording(roomId, startedBy, io, rooms) {
                 '--use-fake-device-for-media-stream',
                 '--allow-file-access-from-files',
                 '--disable-web-security',
-                '--autoplay-policy=no-user-gesture-required'
+                '--autoplay-policy=no-user-gesture-required',
+                '--window-size=1920,1080',
+                '--force-device-scale-factor=1',
+                '--high-dpi-support=1'
             ]
         });
 
@@ -49,7 +54,17 @@ async function startRecording(roomId, startedBy, io, rooms) {
         const protocol = domain.includes('localhost') ? 'http' : 'https';
         const joinUrl = `${protocol}://${domain}/room/${roomId}?recorder=true`;
         
-        await page.goto(joinUrl, { waitUntil: 'networkidle2' });
+        await page.goto(joinUrl, { waitUntil: 'networkidle2', timeout: 60000 });
+        
+        // Ensure UI is clean for recording
+        await page.evaluate(() => {
+            const style = document.createElement('style');
+            style.innerHTML = `
+                #recorder-controls, .recording-ignore { display: none !important; }
+                body { overflow: hidden !important; }
+            `;
+            document.head.appendChild(style);
+        });
 
         const recorder = new PuppeteerScreenRecorder(page, Config);
         await recorder.start(outputPath);
