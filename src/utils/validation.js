@@ -15,8 +15,23 @@ const recordingSchema = Joi.object({
   roomId: Joi.string().required()
 });
 
+const whiteboardSchema = Joi.object({
+  roomId: Joi.string().required(),
+  stroke: Joi.object().required()
+});
+
+const pollSchema = Joi.object({
+  roomId: Joi.string().required(),
+  poll: Joi.object({
+    question: Joi.string().required(),
+    options: Joi.array().items(Joi.string()).min(2).required()
+  }).required()
+});
+
 module.exports = {
   joinRoomSchema,
   transportSchema,
-  recordingSchema
+  recordingSchema,
+  whiteboardSchema,
+  pollSchema
 };

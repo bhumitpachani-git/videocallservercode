@@ -214,7 +214,63 @@ module.exports = (io, roomManager) => {
     });
 
     socket.on('disconnect', () => {
+      const room = Array.from(roomManager.rooms.values()).find(r => r.peers.has(socket.id));
+      const roomId = room?.id;
+      
       roomManager.handleDisconnect(socket.id);
+
+      if (roomId) {
+        const updatedRoom = roomManager.rooms.get(roomId);
+        if (updatedRoom && updatedRoom.hostId) {
+          io.to(roomId).emit('host-migrated', { hostId: updatedRoom.hostId });
+        }
+        socket.to(roomId).emit('user-left', { socketId: socket.id });
+      }
+    });
+
+    // Whiteboard
+    socket.on('whiteboard-draw', ({ roomId, stroke }) => {
+      const room = roomManager.rooms.get(roomId);
+      if (room) {
+        room.whiteboard.strokes.push(stroke);
+        socket.to(roomId).emit('whiteboard-update', stroke);
+      }
+    });
+
+    socket.on('whiteboard-clear', ({ roomId }) => {
+      const room = roomManager.rooms.get(roomId);
+      if (room) {
+        room.whiteboard.strokes = [];
+        io.to(roomId).emit('whiteboard-cleared');
+      }
+    });
+
+    // Notes
+    socket.on('update-notes', ({ roomId, notes }) => {
+      const room = roomManager.rooms.get(roomId);
+      if (room) {
+        room.notes = notes;
+        socket.to(roomId).emit('notes-updated', notes);
+      }
+    });
+
+    // Polls
+    socket.on('create-poll', ({ roomId, poll }) => {
+      const room = roomManager.rooms.get(roomId);
+      if (room) {
+        const newPoll = { ...poll, id: Date.now().toString(), votes: {} };
+        room.polls.set(newPoll.id, newPoll);
+        io.to(roomId).emit('poll-created', newPoll);
+      }
+    });
+
+    socket.on('vote-poll', ({ roomId, pollId, optionIndex }) => {
+      const room = roomManager.rooms.get(roomId);
+      const poll = room?.polls.get(pollId);
+      if (poll) {
+        poll.votes[socket.id] = optionIndex;
+        io.to(roomId).emit('poll-updated', poll);
+      }
     });
   });
 };

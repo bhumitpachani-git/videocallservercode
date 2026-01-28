@@ -30,6 +30,7 @@ class RoomManager {
         hostId: null,
         whiteboard: { strokes: [], background: '#ffffff' },
         notes: '',
+        polls: new Map(),
         createdAt: new Date(),
         settings: {
           video: { res: '720p', fps: 30, bitrate: 2500 },
@@ -81,6 +82,14 @@ class RoomManager {
     };
 
     room.peers.set(socket.id, peerData);
+
+    // Initial state sync
+    socket.emit('sync-state', {
+      whiteboard: room.whiteboard,
+      notes: room.notes,
+      polls: Array.from(room.polls.values())
+    });
+
     socket.join(roomId);
 
     // Sync active producers to the new peer
@@ -120,6 +129,26 @@ class RoomManager {
       if (room.peers.has(socketId)) {
         room.peers.delete(socketId);
         logger.info(`User ${socketId} removed from room ${roomId}`);
+
+        // Handle Host Migration
+        if (room.hostId === socketId) {
+          room.hostId = null;
+          if (room.peers.size > 0) {
+            let oldestPeerId = null;
+            let oldestJoinTime = Infinity;
+
+            for (const [peerId, peer] of room.peers.entries()) {
+              if (!peer.isRecorder && peer.joinedAt < oldestJoinTime) {
+                oldestJoinTime = peer.joinedAt;
+                oldestPeerId = peerId;
+              }
+            }
+            if (oldestPeerId) {
+              room.hostId = oldestPeerId;
+              logger.info(`Host migrated to ${oldestPeerId} in room ${roomId}`);
+            }
+          }
+        }
 
         // Cleanup transcription session if exists
         const { transcriptionSessions } = require('./transcription.service');
