@@ -111,6 +111,7 @@ async function handleTranscription(socket, io, rooms, recordingSessions, { roomI
                 actualLanguage,
                 peerTargetLang
               );
+              console.log(`[Translation] ${actualLanguage} → ${peerTargetLang} for ${peer.username}: "${translatedText}"`);
             } catch (error) {
               console.error('[Translation] Error:', error);
               translatedText = transcript;
