@@ -22,7 +22,7 @@ const {
 // CONFIGURATION
 // ============================================================================
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
 const AWS_REGION = process.env.AWS_REGION || 'us-east-1';
 
 const LANGUAGE_CODE_MAP = {
