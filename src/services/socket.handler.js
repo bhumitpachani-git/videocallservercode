@@ -11,71 +11,96 @@ module.exports = (io, roomManager) => {
     let currentRoomId = null;
     let currentUsername = null;
 
-    socket.on('join-room', async (data, callback) => {
+    socket.on('join-room', async ({ roomId, username, password }, callback) => {
       try {
-        const { error, value } = joinRoomSchema.validate(data);
-        if (error) throw new Error(error.details[0].message);
+        let room = roomManager.rooms.get(roomId);
 
-        currentRoomId = value.roomId;
-        currentUsername = value.username;
+        if (room && room.password && room.password !== password) {
+          return callback({ error: 'Invalid password' });
+        }
 
-        const result = await roomManager.joinRoom(socket, value);
-        
-        const room = roomManager.rooms.get(value.roomId);
+        if (!room) {
+          room = await roomManager.getOrCreateRoom(roomId, password);
+        }
+
+        currentRoomId = roomId;
+        currentUsername = username;
+
+        if (!room.hostId) {
+          room.hostId = socket.id;
+          logger.info(`User ${username} (${socket.id}) is now host of room ${roomId}`);
+        }
+        const isUserHost = room.hostId === socket.id;
+
+        room.peers.set(socket.id, {
+          username,
+          transports: new Map(),
+          producers: new Map(),
+          consumers: new Map(),
+          isHost: isUserHost,
+          joinedAt: Date.now()
+        });
+
+        socket.join(roomId);
+
+        const rtpCapabilities = room.router.rtpCapabilities;
+
         const existingPeers = [];
-        const pollsArray = [];
-
-        if (room) {
-          for (const [peerId, peer] of room.peers.entries()) {
-            if (peerId !== socket.id) {
-              existingPeers.push({
-                socketId: peerId,
-                username: peer.username,
-                isHost: peerId === room.hostId
-              });
-            }
+        room.peers.forEach((peer, peerId) => {
+          if (peerId !== socket.id) {
+            existingPeers.push({
+              socketId: peerId,
+              username: peer.username,
+              isHost: peerId === room.hostId
+            });
           }
+        });
 
-          if (room.polls) {
-            for (const [pollId, poll] of room.polls.entries()) {
-              pollsArray.push({
-                id: poll.id,
-                question: poll.question,
-                options: poll.options.map(o => o.text),
-                creatorUsername: poll.creatorUsername,
-                isAnonymous: poll.isAnonymous,
-                allowMultiple: poll.allowMultiple,
-                createdAt: poll.createdAt,
-                results: poll.options.map(o => o.votes),
-                totalVotes: poll.votes ? Array.from(poll.votes.values()).reduce((sum, arr) => sum + arr.length, 0) : 0,
-                active: poll.active
-              });
-            }
+        const pollsArray = room.polls ? Array.from(room.polls.values()).map(p => ({
+          id: p.id,
+          question: p.question,
+          options: p.options.map(o => o.text),
+          creatorUsername: p.creatorUsername,
+          isAnonymous: p.isAnonymous,
+          allowMultiple: p.allowMultiple,
+          createdAt: p.createdAt,
+          results: p.options.map(o => o.votes),
+          totalVotes: p.votes ? Array.from(p.votes.values()).reduce((sum, arr) => sum + arr.length, 0) : 0,
+          active: p.active
+        })) : [];
+
+        const isRecording = recordingSessions.has(roomId);
+
+        callback({
+          rtpCapabilities,
+          peers: existingPeers,
+          whiteboard: room.whiteboard,
+          notes: room.notes,
+          polls: pollsArray,
+          chatMessages: room.chatMessages || [],
+          isHost: isUserHost,
+          isRecording
+        });
+
+        socket.to(roomId).emit('user-joined', {
+          socketId: socket.id,
+          username,
+          isHost: isUserHost
+        });
+
+        if (isRecording) {
+          const recordingSession = recordingSessions.get(roomId);
+          if (recordingSession) {
+            setTimeout(async () => {
+              logger.info(`[Recording] New peer ${socket.id} joined during recording`);
+            }, 3000);
           }
         }
 
-        const isRecording = recordingSessions.has(value.roomId);
-
-        callback({
-          rtpCapabilities: result.rtpCapabilities,
-          peers: existingPeers,
-          whiteboard: room?.whiteboard || { strokes: [], background: '#ffffff' },
-          notes: room?.notes || '',
-          polls: pollsArray,
-          chatMessages: room?.chatMessages || [],
-          isHost: result.isHost,
-          isRecording
-        });
-        
-        socket.to(value.roomId).emit('user-joined', { 
-          socketId: socket.id, 
-          username: value.recorder ? 'System Recorder' : value.username,
-          isHost: result.isHost
-        });
-
+        logger.info(`User ${username} joined room ${roomId}`);
       } catch (error) {
         logger.error(`Join room error: ${error.message}`);
-        callback({ error: error.message || 'Internal server error' });
+        callback({ error: error.message });
       }
     });
 
