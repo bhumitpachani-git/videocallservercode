@@ -1,5 +1,5 @@
 const { DynamoDBClient } = require("@aws-sdk/client-dynamodb");
-const { DynamoDBDocumentClient, PutCommand, GetCommand, UpdateCommand } = require("@aws-sdk/lib-dynamodb");
+const { DynamoDBDocumentClient, PutCommand, GetCommand, UpdateCommand, QueryCommand } = require("@aws-sdk/lib-dynamodb");
 const { S3Client, PutObjectCommand } = require("@aws-sdk/client-s3");
 const { Upload } = require("@aws-sdk/lib-storage");
 const fs = require('fs');
@@ -87,9 +87,28 @@ async function saveRoomDetails(roomData) {
     }
 }
 
+async function getRoomHistory(roomId) {
+    try {
+        const command = new QueryCommand({
+            TableName: DYNAMO_TABLE,
+            KeyConditionExpression: "pk = :pk",
+            ExpressionAttributeValues: {
+                ":pk": `ROOM#${roomId}`
+            },
+            ScanIndexForward: false // Latest first
+        });
+        const response = await docClient.send(command);
+        return response.Items || [];
+    } catch (error) {
+        console.error('[AWS] Error fetching room history:', error);
+        return [];
+    }
+}
+
 module.exports = {
     logUserJoin,
     saveChatTranscript,
     saveRoomDetails,
-    uploadFileToS3
+    uploadFileToS3,
+    getRoomHistory
 };

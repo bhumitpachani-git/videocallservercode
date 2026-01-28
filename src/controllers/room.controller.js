@@ -1,6 +1,38 @@
 const roomManager = require('../services/room.service');
-const { logUserJoin, saveChatTranscript } = require('../services/aws.service');
+const { logUserJoin, saveChatTranscript, getRoomHistory } = require('../services/aws.service');
 const logger = require('../utils/logger');
+
+exports.getAdminRoom = async (req, res) => {
+  try {
+    const { roomId } = req.params;
+    const liveRoom = roomManager.rooms.get(roomId);
+    const history = await getRoomHistory(roomId);
+
+    const adminData = {
+      roomId,
+      isLive: !!liveRoom,
+      liveDetails: liveRoom ? {
+        activeParticipants: liveRoom.peers.size,
+        participants: Array.from(liveRoom.peers.values()).map(p => ({
+          username: p.username,
+          joinedAt: p.joinedAt
+        })),
+        createdAt: liveRoom.createdAt,
+        settings: liveRoom.settings
+      } : null,
+      history: history.map(item => ({
+        type: item.type,
+        timestamp: item.timestamp,
+        details: item
+      }))
+    };
+
+    res.json(adminData);
+  } catch (error) {
+    logger.error(`Admin API error for room ${req.params.roomId}:`, error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
 
 exports.getRoom = async (req, res) => {
   try {
