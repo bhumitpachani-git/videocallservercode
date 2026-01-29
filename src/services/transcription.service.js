@@ -32,6 +32,7 @@ const AWS_TO_SHORT_CODE = Object.fromEntries(
 const transcriptionSessions = new Map();
 
 async function handleTranscription(socket, io, rooms, recordingSessions, { roomId, username, targetLanguage = 'en', speakingLanguage = 'en' }) {
+  // Use the explicitly provided speakingLanguage from the user
   const actualSpeakingLanguage = speakingLanguage === 'auto' ? 'en' : speakingLanguage;
   console.log(`[Transcription] Starting for ${username} in room ${roomId}, speaking: ${actualSpeakingLanguage}, target: ${targetLanguage}`);
 
@@ -48,7 +49,7 @@ async function handleTranscription(socket, io, rooms, recordingSessions, { roomI
     roomId,
     username,
     targetLanguage,
-    speakingLanguage: actualSpeakingLanguage,
+    speakingLanguage: actualSpeakingLanguage, // Store what the user actually said they are speaking
     audioStream,
     isActive: true,
   };
@@ -56,6 +57,8 @@ async function handleTranscription(socket, io, rooms, recordingSessions, { roomI
   transcriptionSessions.set(socket.id, session);
 
   try {
+    const awsLanguageCode = LANGUAGE_CODE_MAP[actualSpeakingLanguage] || 'en-US';
+    
     const transcribeParams = {
       MediaEncoding: 'pcm',
       MediaSampleRateHertz: 16000,
@@ -66,7 +69,7 @@ async function handleTranscription(socket, io, rooms, recordingSessions, { roomI
           }
         }
       })(),
-      LanguageCode: LANGUAGE_CODE_MAP[actualSpeakingLanguage] || 'en-US'
+      LanguageCode: awsLanguageCode
     };
 
     const command = new StartStreamTranscriptionCommand(transcribeParams);
@@ -88,7 +91,8 @@ async function handleTranscription(socket, io, rooms, recordingSessions, { roomI
 
         if (!transcript || transcript.trim() === '') continue;
 
-        const actualLanguage = actualSpeakingLanguage;
+        // CRITICAL: Use the language the speaker is actually using, not a default
+        const speakerLanguage = currentSession.speakingLanguage;
 
         // Send to each peer with their own translation
         for (const [peerId, peer] of room.peers.entries()) {
@@ -98,15 +102,15 @@ async function handleTranscription(socket, io, rooms, recordingSessions, { roomI
           let translatedText = transcript;
           let shouldTranslate = false;
 
-          if (peerId !== socket.id && peerTargetLang !== 'auto' && peerTargetLang !== actualLanguage) {
+          if (peerId !== socket.id && peerTargetLang !== 'auto' && peerTargetLang !== speakerLanguage) {
             shouldTranslate = true;
             try {
               translatedText = await translateText(
                 transcript,
-                actualLanguage,
+                speakerLanguage,
                 peerTargetLang
               );
-              console.log(`[Translation] ${actualLanguage} → ${peerTargetLang} for ${peer.username}: "${translatedText}"`);
+              console.log(`[Translation] ${speakerLanguage} → ${peerTargetLang} for ${peer.username}: "${translatedText}"`);
             } catch (error) {
               console.error('[Translation] Error:', error);
               translatedText = transcript;
@@ -124,8 +128,8 @@ async function handleTranscription(socket, io, rooms, recordingSessions, { roomI
             originalText: transcript,
             translatedText: (peerId === socket.id) ? undefined : (shouldTranslate && translatedText !== transcript ? translatedText : undefined),
             displayedText: finalDisplayedText, // UI should use this for main display
-            originalLanguage: actualLanguage,
-            targetLanguage: (peerId === socket.id) ? actualLanguage : peerTargetLang,
+            originalLanguage: speakerLanguage,
+            targetLanguage: (peerId === socket.id) ? speakerLanguage : peerTargetLang,
             isFinal,
             timestamp: new Date().toISOString(),
           };
