@@ -396,7 +396,7 @@ module.exports = (io, roomManager) => {
       }
     });
 
-    socket.on('chat-message', ({ roomId, message }) => {
+    socket.on('chat-message', async ({ roomId, message }) => {
       const room = roomManager.rooms.get(roomId);
       if (room) {
         const chatMessage = {
@@ -411,10 +411,13 @@ module.exports = (io, roomManager) => {
         room.chatMessages.push(chatMessage);
 
         io.to(roomId).emit('chat-message', chatMessage);
+        
+        // Auto-save to DynamoDB
+        await saveChatTranscript(roomId, room.chatMessages).catch(err => logger.error('Chat auto-save failed:', err));
       }
     });
 
-    socket.on('send-chat-message', ({ roomId, message }) => {
+    socket.on('send-chat-message', async ({ roomId, message }) => {
       const room = roomManager.rooms.get(roomId);
       if (room) {
         const chatMessage = {
@@ -429,6 +432,9 @@ module.exports = (io, roomManager) => {
         room.chatMessages.push(chatMessage);
 
         io.to(roomId).emit('chat-message', chatMessage);
+
+        // Auto-save to DynamoDB
+        await saveChatTranscript(roomId, room.chatMessages).catch(err => logger.error('Chat auto-save failed:', err));
       }
     });
 
@@ -563,20 +569,28 @@ module.exports = (io, roomManager) => {
       io.to(roomId).emit('whiteboard-cleared');
     });
 
-    socket.on('whiteboard-draw', ({ roomId, stroke }) => {
+    socket.on('whiteboard-draw', async ({ roomId, stroke }) => {
       const room = roomManager.rooms.get(roomId);
       if (!room) return;
 
       room.whiteboard.strokes.push(stroke);
       socket.to(roomId).emit('whiteboard-draw', stroke);
+      
+      // Auto-save room details (whiteboard state)
+      await saveRoomDetails({ roomId, whiteboard: room.whiteboard, action: 'WHITEBOARD_UPDATE' })
+        .catch(err => logger.error('Whiteboard auto-save failed:', err));
     });
 
-    socket.on('whiteboard-undo', ({ roomId }) => {
+    socket.on('whiteboard-undo', async ({ roomId }) => {
       const room = roomManager.rooms.get(roomId);
       if (!room || room.whiteboard.strokes.length === 0) return;
 
       room.whiteboard.strokes.pop();
       io.to(roomId).emit('whiteboard-undo');
+
+      // Auto-save room details (whiteboard state)
+      await saveRoomDetails({ roomId, whiteboard: room.whiteboard, action: 'WHITEBOARD_UNDO' })
+        .catch(err => logger.error('Whiteboard undo auto-save failed:', err));
     });
 
     socket.on('whiteboard-present', ({ roomId, isPresenting }) => {
@@ -588,12 +602,16 @@ module.exports = (io, roomManager) => {
       logger.info(`${currentUsername} ${isPresenting ? 'started' : 'stopped'} whiteboard presentation`);
     });
 
-    socket.on('notes-update', ({ roomId, content }) => {
+    socket.on('notes-update', async ({ roomId, content }) => {
       const room = roomManager.rooms.get(roomId);
       if (!room) return;
 
       room.notes = content;
       socket.to(roomId).emit('notes-updated', { content });
+
+      // Auto-save room details (notes state)
+      await saveRoomDetails({ roomId, notes: room.notes, action: 'NOTES_UPDATE' })
+        .catch(err => logger.error('Notes auto-save failed:', err));
     });
 
     socket.on('notes-present', ({ roomId, isPresenting }) => {
