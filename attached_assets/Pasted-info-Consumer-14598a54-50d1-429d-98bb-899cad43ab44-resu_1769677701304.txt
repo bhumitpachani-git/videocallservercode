@@ -1,0 +1,25 @@
+info: Consumer 14598a54-50d1-429d-98bb-899cad43ab44 resumed for peer bcY_kfcE92m0h-LqAAAH {"timestamp":"2026-01-29T09:07:35.853Z"}
+info: Consumer d98aa17f-86ca-4a82-bb6e-3e35a98eba93 resumed for peer bcY_kfcE92m0h-LqAAAH {"timestamp":"2026-01-29T09:07:36.199Z"}
+info: Consumer 5b11ca17-e049-4a8f-ad35-cb7cbd9089ce resumed for peer eLg9c7DJ6dwWFhjXAAAF {"timestamp":"2026-01-29T09:07:36.451Z"}
+info: Recording start request for room room1234 by HappyEagle67 {"timestamp":"2026-01-29T09:07:45.763Z"}
+info: [Recording] Starting recording for room: room1234 {"timestamp":"2026-01-29T09:07:45.840Z"}
+info: [Recording] Created consumer for video producer e5e76ad0-f71f-453a-a258-b98a3aec2c87 {"timestamp":"2026-01-29T09:07:45.871Z"}
+info: [Recording] Created consumer for audio producer 13ef9932-2a36-460c-99a8-80fba831bc8b {"timestamp":"2026-01-29T09:07:45.897Z"}
+info: [Recording] Starting FFmpeg for eLg9c7DJ6dwWFhjXAAAF: ffmpeg -loglevel warning -protocol_whitelist file,udp,rtp,pipe -i C:\Users\STAFF1\Downloads\videocallservercode\recordings\room1234\eLg9c7DJ6dwWFhjXAAAF-video.sdp -i C:\Users\STAFF1\Downloads\videocallservercode\recordings\room1234\eLg9c7DJ6dwWFhjXAAAF-audio.sdp -c:v libx264 -preset ultrafast -tune zerolatency -c:a aac -ar 48000 -ac 2 -f mp4 -movflags +frag_keyframe+empty_moov+default_base_moof -y C:\Users\STAFF1\Downloads\videocallservercode\recordings\room1234\room1234-1769677665857-BoldWolf46-eLg9c7DJ.mp4 {"timestamp":"2026-01-29T09:07:45.951Z"}
+info: [Recording] Started recording for peer eLg9c7DJ6dwWFhjXAAAF (BoldWolf46) {"timestamp":"2026-01-29T09:07:46.091Z"}
+info: [Recording] Created consumer for video producer cba47149-a2d0-4887-926f-5354d2a2559e {"timestamp":"2026-01-29T09:07:46.172Z"}
+info: [Recording] Created consumer for audio producer 127ba7df-5906-4b70-9590-046a1e483ff9 {"timestamp":"2026-01-29T09:07:46.194Z"}
+info: [Recording] Starting FFmpeg for bcY_kfcE92m0h-LqAAAH: ffmpeg -loglevel warning -protocol_whitelist file,udp,rtp,pipe -i C:\Users\STAFF1\Downloads\videocallservercode\recordings\room1234\bcY_kfcE92m0h-LqAAAH-video.sdp -i C:\Users\STAFF1\Downloads\videocallservercode\recordings\room1234\bcY_kfcE92m0h-LqAAAH-audio.sdp -c:v libx264 -preset ultrafast -tune zerolatency -c:a aac -ar 48000 -ac 2 -f mp4 -movflags +frag_keyframe+empty_moov+default_base_moof -y C:\Users\STAFF1\Downloads\videocallservercode\recordings\room1234\room1234-1769677665857-HappyEagle67-bcY_kfcE.mp4 {"timestamp":"2026-01-29T09:07:46.214Z"}
+info: [Recording] Started recording for peer bcY_kfcE92m0h-LqAAAH (HappyEagle67) {"timestamp":"2026-01-29T09:07:46.336Z"}
+info: [Recording] Started for room room1234, recording ID: room1234-1769677665857 {"timestamp":"2026-01-29T09:07:46.336Z"}
+info: Recording started successfully for room room1234 {"timestamp":"2026-01-29T09:07:46.339Z"}
+error: [Recording] FFmpeg error for bcY_kfcE92m0h-LqAAAH: [in#1 @ 0000022467157280] Error opening input: Invalid data found when processing input
+Error opening input file C:\Users\STAFF1\Downloads\videocallservercode\recordings\room1234\bcY_kfcE92m0h-LqAAAH-audio.sdp.
+Error opening input files: Invalid data found when processing input
+ {"timestamp":"2026-01-29T09:07:58.210Z"}
+info: [Recording] FFmpeg closed for bcY_kfcE92m0h-LqAAAH with code 3199971767 {"timestamp":"2026-01-29T09:07:58.252Z"}
+error: [Recording] FFmpeg error for eLg9c7DJ6dwWFhjXAAAF: [in#1 @ 000001a4549f7280] Error opening input: Invalid data found when processing input
+Error opening input file C:\Users\STAFF1\Downloads\videocallservercode\recordings\room1234\eLg9c7DJ6dwWFhjXAAAF-audio.sdp.
+Error opening input files: Invalid data found when processing input
+ {"timestamp":"2026-01-29T09:07:58.316Z"}
+info: [Recording] FFmpeg closed for eLg9c7DJ6dwWFhjXAAAF with code 3199971767 {"timestamp":"2026-01-29T09:07:58.333Z"}
