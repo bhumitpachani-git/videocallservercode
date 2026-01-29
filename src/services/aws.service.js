@@ -18,15 +18,16 @@ const s3Client = new S3Client({
 const S3_BUCKET = process.env.S3_BUCKET_NAME;
 const DYNAMO_TABLE = process.env.DYNAMO_TABLE_NAME || 'MeetingLogs';
 
-async function logUserJoin(roomId, userDetails) {
+async function logUserJoin(roomId, sessionId, userDetails) {
     try {
         const command = new PutCommand({
             TableName: DYNAMO_TABLE,
             Item: {
                 aavrtiadmin: "aavrtiadmin",
                 pk: `ROOM#${roomId}`,
-                sk: `JOIN#${userDetails.socketId}#${Date.now()}`,
+                sk: `SESSION#${sessionId}#JOIN#${userDetails.socketId}#${Date.now()}`,
                 type: 'USER_JOIN',
+                sessionId,
                 ...userDetails,
                 timestamp: new Date().toISOString()
             }
@@ -37,7 +38,7 @@ async function logUserJoin(roomId, userDetails) {
     }
 }
 
-async function saveChatTranscript(roomId, transcript) {
+async function saveChatTranscript(roomId, sessionId, transcript) {
     setImmediate(async () => {
         try {
             const command = new PutCommand({
@@ -45,8 +46,9 @@ async function saveChatTranscript(roomId, transcript) {
                 Item: {
                     aavrtiadmin: "aavrtiadmin",
                     pk: `ROOM#${roomId}`,
-                    sk: `TRANSCRIPT#${Date.now()}`,
+                    sk: `SESSION#${sessionId}#TRANSCRIPT#${Date.now()}`,
                     type: 'CHAT_TRANSCRIPT',
+                    sessionId,
                     transcript,
                     timestamp: new Date().toISOString()
                 }
@@ -84,15 +86,16 @@ async function uploadFileToS3(filePath, s3Key) {
     }
 }
 
-async function saveRoomDetails(roomData) {
+async function saveRoomDetails(roomId, sessionId, roomData) {
     try {
         const command = new PutCommand({
             TableName: DYNAMO_TABLE,
             Item: {
                 aavrtiadmin: "aavrtiadmin",
-                pk: `ROOM#${roomData.roomId}`,
-                sk: 'METADATA',
+                pk: `ROOM#${roomId}`,
+                sk: `SESSION#${sessionId}#METADATA`,
                 type: 'ROOM_METADATA',
+                sessionId,
                 ...roomData,
                 updatedAt: new Date().toISOString()
             }

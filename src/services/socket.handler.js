@@ -389,7 +389,7 @@ module.exports = (io, roomManager) => {
         io.to(roomId).emit('chat-message', chatMessage);
         
         // Auto-save to DynamoDB (Non-blocking)
-        saveChatTranscript(roomId, room.chatMessages);
+        saveChatTranscript(roomId, room.sessionId, room.chatMessages);
       }
     });
 
@@ -410,7 +410,7 @@ module.exports = (io, roomManager) => {
         io.to(roomId).emit('chat-message', chatMessage);
 
         // Auto-save to DynamoDB (Non-blocking)
-        saveChatTranscript(roomId, room.chatMessages);
+        saveChatTranscript(roomId, room.sessionId, room.chatMessages);
       }
     });
 
@@ -553,7 +553,7 @@ module.exports = (io, roomManager) => {
       socket.to(roomId).emit('whiteboard-draw', stroke);
       
       // Auto-save room details (whiteboard state)
-      await saveRoomDetails({ roomId, whiteboard: room.whiteboard, action: 'WHITEBOARD_UPDATE' })
+      await saveRoomDetails(roomId, room.sessionId, { whiteboard: room.whiteboard, action: 'WHITEBOARD_UPDATE' })
         .catch(err => logger.error('Whiteboard auto-save failed:', err));
     });
 
@@ -565,7 +565,7 @@ module.exports = (io, roomManager) => {
       io.to(roomId).emit('whiteboard-undo');
 
       // Auto-save room details (whiteboard state)
-      await saveRoomDetails({ roomId, whiteboard: room.whiteboard, action: 'WHITEBOARD_UNDO' })
+      await saveRoomDetails(roomId, room.sessionId, { whiteboard: room.whiteboard, action: 'WHITEBOARD_UNDO' })
         .catch(err => logger.error('Whiteboard undo auto-save failed:', err));
     });
 
@@ -586,7 +586,7 @@ module.exports = (io, roomManager) => {
       socket.to(roomId).emit('notes-updated', { content });
 
       // Auto-save room details (notes state)
-      await saveRoomDetails({ roomId, notes: room.notes, action: 'NOTES_UPDATE' })
+      await saveRoomDetails(roomId, room.sessionId, { notes: room.notes, action: 'NOTES_UPDATE' })
         .catch(err => logger.error('Notes auto-save failed:', err));
     });
 
@@ -603,7 +603,7 @@ module.exports = (io, roomManager) => {
       try {
         const room = await roomManager.getOrCreateRoom(roomId);
         room.settings = { ...room.settings, ...settings };
-        await saveRoomDetails({ roomId, settings: room.settings, action: 'SETTINGS_UPDATED' });
+        await saveRoomDetails(roomId, room.sessionId, { settings: room.settings, action: 'SETTINGS_UPDATED' });
         io.to(roomId).emit('room-settings-updated', room.settings);
         if (callback) callback({ success: true });
       } catch (error) {

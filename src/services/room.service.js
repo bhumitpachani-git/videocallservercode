@@ -43,6 +43,7 @@ class RoomManager {
 
       room = {
         id: roomId,
+        sessionId: `SESS-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
         router,
         peers: new Map(),
         password,
@@ -62,7 +63,7 @@ class RoomManager {
       room.cleanupTimeout = null;
       
       setImmediate(() => {
-        logUserJoin(roomId, {
+        saveRoomDetails(roomId, room.sessionId, {
             action: 'ROOM_CREATED',
             hasPassword: !!password,
             timestamp: new Date().toISOString()
@@ -142,7 +143,7 @@ class RoomManager {
       }
 
       // 3. Log Join
-      logUserJoin(roomId, {
+      logUserJoin(roomId, room.sessionId, {
         socketId: socket.id,
         username: peerData.username,
         isRecorder: peerData.isRecorder,
