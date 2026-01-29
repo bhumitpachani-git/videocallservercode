@@ -422,7 +422,22 @@ module.exports = (io, roomManager) => {
           socketId: socket.id,
           username: currentUsername
         });
-        logger.info(`${currentUsername} stopped screen sharing in room ${roomId}`);
+        
+        // Re-sync all producers in the room to ensure video recovery
+        const producers = [];
+        for (const [peerId, peer] of room.peers.entries()) {
+          for (const [producerId, producer] of peer.producers.entries()) {
+            producers.push({
+              socketId: peerId,
+              producerId: producerId,
+              kind: producer.kind,
+              appData: producer.appData
+            });
+          }
+        }
+        io.to(roomId).emit('active-producers', producers);
+
+        logger.info(`${currentUsername} stopped screen sharing in room ${roomId}. Re-syncing producers.`);
       }
     });
 
