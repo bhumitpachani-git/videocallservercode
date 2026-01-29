@@ -1,6 +1,6 @@
 const mediasoup = require('mediasoup');
 const config = require('../config');
-const { logUserJoin } = require('./aws.service');
+const { logUserJoin, saveRoomDetails } = require('./aws.service');
 const logger = require('../utils/logger');
 
 class RoomManager {
