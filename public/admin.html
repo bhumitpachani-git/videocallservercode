@@ -320,15 +320,15 @@
                             </div>
                             <div class="col-md-2">
                                 <div class="fw-bold small text-uppercase text-muted">Vibe</div>
-                                <div id="vibe-${room.id}"><span class="badge bg-soft-info">Neutral</span></div>
+                                <div><span class="badge ${getVibeColor(room.currentVibe)}">${room.currentVibe || 'Neutral'}</span></div>
                             </div>
                             <div class="col-md-2 text-end">
-                                <button class="btn btn-sm btn-outline-primary" type="button" data-bs-toggle="collapse" data-bs-target="#peers-${room.id}">
+                                <button class="btn btn-sm btn-outline-primary" type="button" data-bs-toggle="collapse" data-bs-target="#peers-${room.id.replace(/\s+/g, '-')}">
                                     Details <i class="fas fa-chevron-down ms-1"></i>
                                 </button>
                             </div>
                         </div>
-                        <div class="collapse mt-3 pt-3 border-top" id="peers-${room.id}">
+                        <div class="collapse mt-3 pt-3 border-top" id="peers-${room.id.replace(/\s+/g, '-')}">
                             <div class="row">
                                 <div class="col-md-6">
                                     <h6 class="fw-bold small text-uppercase mb-3">Live Participants</h6>
@@ -358,6 +358,12 @@
             } catch (e) { console.error('Admin Fetch Error:', e); }
         }
 
+        function getVibeColor(vibe) {
+            if (vibe === 'positive') return 'bg-success';
+            if (vibe === 'negative') return 'bg-danger';
+            return 'bg-soft-info';
+        }
+
         function showSection(section, event) {
             document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
             if (event) {
@@ -382,7 +388,7 @@
             results.innerHTML = '<div class="text-center p-5"><div class="spinner-border text-primary"></div></div>';
             
             try {
-                const res = await fetch(\`/api/rooms/\${roomId}/history\`);
+                const res = await fetch(`/api/rooms/${roomId}/history`);
                 const data = await res.json();
                 
                 if (data.length === 0) {
