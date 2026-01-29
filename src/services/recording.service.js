@@ -137,7 +137,8 @@ async function startRecording(roomId, startedBy, io, rooms) {
         '-y',
         '-loglevel', 'warning',
         '-protocol_whitelist', 'pipe,udp,rtp,file,crypto',
-        '-thread_queue_size', '1024',
+        '-thread_queue_size', '4096', // Increased buffer
+        '-fflags', '+genpts+discardcorrupt+igndts', // Better RTP handling
         '-f', 'sdp',
         '-i', 'pipe:0'
     ];
@@ -227,6 +228,9 @@ async function startRecording(roomId, startedBy, io, rooms) {
     session.ffmpegProcess = ffmpegProcess;
     session.ffmpegIn = ffmpegProcess.stdin;
 
+    // IMPORTANT: Wait for FFmpeg to start listening BEFORE connecting transports
+    await new Promise(r => setTimeout(r, 2000));
+
     ffmpegProcess.on('error', (err) => {
         logger.error(`[Recording] FFmpeg process error for room ${roomId}: ${err.message}`);
         stopRecording(roomId).catch(() => {});
@@ -254,6 +258,9 @@ async function startRecording(roomId, startedBy, io, rooms) {
         session.consumers.set(consumer.id, consumer);
 
         await transport.connect({ ip: '127.0.0.1', port: item.ffmpegPort });
+        
+        // Small delay before resume to ensure binding is ready
+        await new Promise(r => setTimeout(r, 500));
         await consumer.resume();
         logger.info(`[Recording] Audio peer ${item.peer.id} connected to combined recorder on port ${item.ffmpegPort}`);
     }
@@ -266,6 +273,9 @@ async function startRecording(roomId, startedBy, io, rooms) {
         session.consumers.set(consumer.id, consumer);
 
         await transport.connect({ ip: '127.0.0.1', port: item.ffmpegPort });
+        
+        // Small delay before resume to ensure binding is ready
+        await new Promise(r => setTimeout(r, 500));
         await consumer.resume();
         logger.info(`[Recording] Video peer ${item.peer.id} connected to combined recorder on port ${item.ffmpegPort}`);
     }
