@@ -60,6 +60,7 @@ async function startRecording(roomId, startedBy, io, rooms) {
     const session = {
         recordingId,
         roomId,
+        sessionId: room.sessionId,
         startedAt: new Date().toISOString(),
         startedBy,
         transports: new Map(),
@@ -414,7 +415,7 @@ async function stopRecording(roomId) {
         await uploadFileToS3(metadataPath, s3Key).catch(() => {});
     }
 
-    await saveRoomDetails({
+    await saveRoomDetails(roomId, session.sessionId || 'N/A', {
         roomId,
         lastRecording: metadata,
         type: 'RECORDING_COMPLETED'
