@@ -112,7 +112,7 @@ class RoomManager {
       socket.emit('active-producers', activeProducers);
     }
 
-    // Async logging
+    // Async logging - fire and forget
     logUserJoin(roomId, {
       socketId: socket.id,
       username: peerData.username,

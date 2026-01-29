@@ -32,8 +32,9 @@ const io = socketIO(server, {
   cors: { origin: '*' }, 
   pingTimeout: 30000, 
   pingInterval: 10000,
-  transports: ['websocket'], // Force WebSocket for instant connection
-  allowEIO3: true
+  transports: ['websocket'],
+  allowEIO3: true,
+  perMessageDeflate: false // Disable compression for faster signaling
 });
 
 socketHandler(io, roomManager);
