@@ -30,11 +30,11 @@ app.get('/health', (req, res) => res.json({ status: 'ok', uptime: process.uptime
 const server = http.createServer(app);
 const io = socketIO(server, { 
   cors: { origin: '*' }, 
-  pingTimeout: 30000, 
-  pingInterval: 10000,
+  pingTimeout: 10000, // Reduced from 30s to detect drops faster
+  pingInterval: 2000,  // Reduced from 10s to 2s for "instant" feel
   transports: ['websocket'],
   allowEIO3: true,
-  perMessageDeflate: false // Disable compression for faster signaling
+  perMessageDeflate: false
 });
 
 socketHandler(io, roomManager);

@@ -38,12 +38,13 @@ const webRtcTransportOptions = {
       announcedIp: process.env.ANNOUNCED_IP || "127.0.0.1"
     }
   ],
-  initialAvailableOutgoingBitrate: 1000000,
-  minimumAvailableOutgoingBitrate: 600000,
+  initialAvailableOutgoingBitrate: 2000000, // Doubled for faster initial ramp
+  minimumAvailableOutgoingBitrate: 1000000,
   maxSctpMessageSize: 262144,
   enableUdp: true,
-  enableTcp: true,
+  enableTcp: false, // Force UDP only for lowest latency
   preferUdp: true,
+  disableIceLite: false,
 };
 
 module.exports = {

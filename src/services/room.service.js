@@ -94,7 +94,7 @@ class RoomManager {
 
     socket.join(roomId);
 
-    // Sync active producers to the new peer
+    // Sync active producers to the new peer - do this BEFORE emitting join to others
     const activeProducers = [];
     for (const [peerId, peer] of room.peers.entries()) {
       if (peerId !== socket.id) {
