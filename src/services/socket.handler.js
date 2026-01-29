@@ -426,37 +426,6 @@ module.exports = (io, roomManager) => {
         
         // Auto-save to DynamoDB (Non-blocking)
         saveChatTranscript(roomId, room.chatMessages);
-
-        // AI Sentiment & Insights
-        const { OpenAI } = require('openai');
-        const openai = new OpenAI();
-        setImmediate(async () => {
-          try {
-            const resp = await openai.chat.completions.create({
-              model: "gpt-4o-mini",
-              messages: [
-                { role: "system", content: "Analyze sentiment: positive, neutral, or negative." },
-                { role: "user", content: message }
-              ],
-              max_tokens: 10
-            });
-            const sentiment = resp.choices[0].message.content.toLowerCase().trim();
-            room.currentVibe = sentiment;
-            io.to(roomId).emit('vibe-update', { sentiment, socketId: socket.id });
-            
-            if (room.chatMessages.length % 5 === 0) {
-              const summary = await openai.chat.completions.create({
-                model: "gpt-4o-mini",
-                messages: [
-                  { role: "system", content: "Summarize the last 5 messages." },
-                  { role: "user", content: room.chatMessages.slice(-5).map(m => m.message).join('\n') }
-                ],
-                max_tokens: 50
-              });
-              io.to(roomId).emit('meeting-insight', { summary: summary.choices[0].message.content.trim() });
-            }
-          } catch (e) { logger.error('AI Error:', e); }
-        });
       }
     });
 
@@ -478,22 +447,6 @@ module.exports = (io, roomManager) => {
 
         // Auto-save to DynamoDB (Non-blocking)
         saveChatTranscript(roomId, room.chatMessages);
-        
-        // AI Sentiment
-        const { OpenAI } = require('openai');
-        const openai = new OpenAI();
-        setImmediate(async () => {
-          try {
-            const resp = await openai.chat.completions.create({
-              model: "gpt-4o-mini",
-              messages: [{ role: "system", content: "Sentiment only." }, { role: "user", content: message }],
-              max_tokens: 10
-            });
-            const sentiment = resp.choices[0].message.content.toLowerCase().trim();
-            room.currentVibe = sentiment;
-            io.to(roomId).emit('vibe-update', { sentiment, socketId: socket.id });
-          } catch (e) { logger.error('AI Error:', e); }
-        });
       }
     });
 
