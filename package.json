@@ -32,7 +32,7 @@
     "joi": "^18.0.2",
     "mediasoup": "^3.13.0",
     "moment": "^2.30.1",
-    "puppeteer": "^24.34.0",
+    "puppeteer": "^19.0.0",
     "puppeteer-screen-recorder": "^3.0.6",
     "puppeteer-stream": "^3.0.22",
     "socket.io": "^4.5.4",
