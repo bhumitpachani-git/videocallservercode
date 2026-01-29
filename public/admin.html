@@ -3,98 +3,208 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aavrti Powerful Admin Dashboard</title>
+    <title>Aavrti Pro Admin | Enterprise Control</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        body { background-color: #f4f7f6; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        .sidebar { height: 100vh; background: #2c3e50; color: white; padding-top: 20px; position: fixed; width: 250px; }
-        .main-content { margin-left: 250px; padding: 20px; }
-        .card { border: none; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); margin-bottom: 20px; }
-        .stat-card { text-align: center; padding: 20px; }
-        .stat-card h2 { margin: 0; color: #2c3e50; }
-        .stat-card p { color: #7f8c8d; margin: 0; }
-        .room-row:hover { background-color: #f1f2f6; cursor: pointer; }
-        .badge-room { background-color: #3498db; }
+        :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --dark: #212529;
+            --light: #f8f9fa;
+            --danger: #ef233c;
+            --success: #2ec4b6;
+        }
+        body { 
+            background-color: #f0f2f5; 
+            font-family: 'Inter', -apple-system, sans-serif; 
+            color: var(--dark);
+        }
+        .sidebar { 
+            height: 100vh; 
+            background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%); 
+            color: white; 
+            padding: 24px; 
+            position: fixed; 
+            width: 260px;
+            box-shadow: 4px 0 10px rgba(0,0,0,0.1);
+        }
+        .main-content { margin-left: 260px; padding: 40px; }
+        .nav-link {
+            color: rgba(255,255,255,0.7);
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+        }
+        .nav-link i { margin-right: 12px; width: 20px; }
+        .nav-link:hover, .nav-link.active {
+            background: rgba(255,255,255,0.1);
+            color: white;
+        }
+        .glass-card {
+            background: white;
+            border: none;
+            border-radius: 16px;
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05);
+            transition: transform 0.2s;
+        }
+        .glass-card:hover { transform: translateY(-2px); }
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: 16px;
+        }
+        .bg-soft-primary { background: #e0e7ff; color: var(--primary); }
+        .bg-soft-success { background: #d1fae5; color: var(--success); }
+        .bg-soft-danger { background: #fee2e2; color: var(--danger); }
+        .bg-soft-warning { background: #fef3c7; color: #d97706; }
+        
+        .room-card {
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 20px;
+            background: white;
+            margin-bottom: 20px;
+        }
+        .peer-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 6px;
+        }
+        .animate-pulse {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: .5; }
+        }
+        pre { background: #f8f9fa; padding: 15px; border-radius: 8px; border: 1px solid #e2e8f0; }
     </style>
 </head>
 <body>
     <div class="sidebar">
-        <h3 class="text-center mb-4">Aavrti Admin</h3>
-        <ul class="nav flex-column">
-            <li class="nav-item"><a class="nav-link text-white active" href="#">Dashboard</a></li>
-            <li class="nav-item"><a class="nav-link text-white" href="#" onclick="showHistory()">Historical Logs</a></li>
-        </ul>
+        <div class="d-flex align-items-center mb-5">
+            <i class="fas fa-video fa-2x me-3 text-primary"></i>
+            <h4 class="mb-0 fw-bold">Aavrti Pro</h4>
+        </div>
+        <nav>
+            <a href="#" class="nav-link active" onclick="showSection('live', event)">
+                <i class="fas fa-chart-line"></i> Dashboard
+            </a>
+            <a href="#" class="nav-link" onclick="showSection('history', event)">
+                <i class="fas fa-history"></i> Global Logs
+            </a>
+            <a href="#" class="nav-link" onclick="refreshData()">
+                <i class="fas fa-sync-alt"></i> Refresh Data
+            </a>
+        </nav>
+        <div style="position: absolute; bottom: 30px; width: calc(100% - 48px);">
+            <div class="p-3 rounded bg-dark" style="font-size: 0.8rem; opacity: 0.8;">
+                <p class="mb-1 text-muted">Server Status</p>
+                <div class="d-flex align-items-center">
+                    <span class="status-dot bg-success animate-pulse"></span>
+                    <span class="text-white">Active & Healthy</span>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="main-content">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h1>Live Server Monitoring</h1>
-            <div id="server-status"><span class="badge bg-success">System Online</span></div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-3">
-                <div class="card stat-card">
-                    <h2 id="total-rooms">0</h2>
-                    <p>Active Rooms</p>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="card stat-card">
-                    <h2 id="total-users">0</h2>
-                    <p>Live Participants</p>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="card stat-card">
-                    <h2 id="uptime">0m</h2>
-                    <p>Server Uptime</p>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="card stat-card">
-                    <h2 id="cpu-load">0%</h2>
-                    <p>CPU Load</p>
-                </div>
-            </div>
-        </div>
-
         <div id="live-section">
-            <div class="card">
-                <div class="card-header bg-white d-flex justify-content-between">
-                    <h5 class="mb-0">Active Meeting Rooms</h5>
-                    <button class="btn btn-sm btn-primary" onclick="refreshData()">Refresh Live</button>
+            <header class="mb-5 d-flex justify-content-between align-items-end">
+                <div>
+                    <h1 class="fw-bold mb-1">Infrastructure Overview</h1>
+                    <p class="text-muted">Real-time health and usage monitoring for your media server.</p>
                 </div>
-                <div class="card-body p-0">
-                    <table class="table table-hover mb-0">
-                        <thead class="table-light">
-                            <tr>
-                                <th>Room ID</th>
-                                <th>Host</th>
-                                <th>Participants</th>
-                                <th>Features Active</th>
-                                <th>Created At</th>
-                            </tr>
-                        </thead>
-                        <tbody id="rooms-table"></tbody>
-                    </table>
+                <div class="text-end">
+                    <div id="last-updated" class="text-muted small">Last updated: Just now</div>
+                </div>
+            </header>
+
+            <div class="row g-4 mb-5">
+                <div class="col-md-3">
+                    <div class="card glass-card p-4">
+                        <div class="stat-icon bg-soft-primary"><i class="fas fa-door-open"></i></div>
+                        <h2 class="fw-bold mb-0" id="total-rooms">0</h2>
+                        <p class="text-muted small fw-medium">Active Meeting Rooms</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card glass-card p-4">
+                        <div class="stat-icon bg-soft-success"><i class="fas fa-users"></i></div>
+                        <h2 class="fw-bold mb-0" id="total-users">0</h2>
+                        <p class="text-muted small fw-medium">Live Participants</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card glass-card p-4">
+                        <div class="stat-icon bg-soft-warning"><i class="fas fa-clock"></i></div>
+                        <h2 class="fw-bold mb-0" id="uptime">0m</h2>
+                        <p class="text-muted small fw-medium">Uptime Duration</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card glass-card p-4">
+                        <div class="stat-icon bg-soft-danger"><i class="fas fa-microchip"></i></div>
+                        <h2 class="fw-bold mb-0" id="cpu-load">0.00</h2>
+                        <p class="text-muted small fw-medium">Average CPU Load</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h4 class="fw-bold mb-0">Active Meeting Details</h4>
+                    </div>
+                    <div id="rooms-container">
+                        <!-- Detailed Room Cards -->
+                    </div>
                 </div>
             </div>
         </div>
 
         <div id="history-section" style="display:none;">
-            <div class="card">
-                <div class="card-header bg-dark text-white">
-                    <h5 class="mb-0">DynamoDB Historical Room Logs</h5>
-                </div>
-                <div class="card-body">
-                    <div class="input-group mb-3">
-                        <input type="text" id="history-room-id" class="form-control" placeholder="Enter Room ID...">
-                        <button class="btn btn-primary" type="button" onclick="fetchHistory()">Fetch History</button>
+            <header class="mb-5">
+                <h1 class="fw-bold mb-1">Audit Trail & Logs</h1>
+                <p class="text-muted">Retrieve detailed meeting logs from AWS DynamoDB infrastructure.</p>
+            </header>
+
+            <div class="card glass-card p-4 mb-4">
+                <div class="row g-3">
+                    <div class="col-md-10">
+                        <input type="text" id="history-room-id" class="form-control form-control-lg" placeholder="Enter Room Identifier (e.g. room-777)">
                     </div>
-                    <div id="history-results" style="max-height: 500px; overflow-y: auto;"></div>
+                    <div class="col-md-2">
+                        <button class="btn btn-primary btn-lg w-100" onclick="fetchHistory()">Fetch Logs</button>
+                    </div>
                 </div>
             </div>
+            
+            <div id="history-results"></div>
         </div>
     </div>
 
@@ -103,51 +213,143 @@
             try {
                 const res = await fetch('/api/rooms/metrics');
                 const data = await res.json();
+                
                 document.getElementById('total-rooms').innerText = data.totalRooms;
                 document.getElementById('total-users').innerText = data.totalUsers;
                 document.getElementById('uptime').innerText = Math.floor(data.uptime / 60) + 'm';
-                document.getElementById('cpu-load').innerText = data.cpuLoad + '%';
-                
-                const table = document.getElementById('rooms-table');
-                table.innerHTML = data.rooms.map(room => `
-                    <tr>
-                        <td><span class="badge badge-room">${room.id}</span></td>
-                        <td>${room.hostUsername}</td>
-                        <td>${room.userCount}</td>
-                        <td>
-                            ${room.isRecording ? '<span class="badge bg-danger">REC</span>' : ''}
-                            ${room.hasWhiteboard ? '<span class="badge bg-info">Board</span>' : ''}
-                        </td>
-                        <td>${new Date(room.createdAt).toLocaleTimeString()}</td>
-                    </tr>
+                document.getElementById('cpu-load').innerText = data.cpuLoad;
+                document.getElementById('last-updated').innerText = 'Last updated: ' + new Date().toLocaleTimeString();
+
+                const container = document.getElementById('rooms-container');
+                if (data.rooms.length === 0) {
+                    container.innerHTML = `
+                        <div class="card glass-card p-5 text-center">
+                            <i class="fas fa-ghost fa-3x text-muted mb-3"></i>
+                            <h5 class="text-muted">No active meetings currently found.</h5>
+                        </div>`;
+                    return;
+                }
+
+                container.innerHTML = data.rooms.map(room => `
+                    <div class="room-card glass-card">
+                        <div class="row align-items-center">
+                            <div class="col-md-3">
+                                <h5 class="fw-bold mb-1"><i class="fas fa-hashtag text-primary me-2"></i>${room.id}</h5>
+                                <div class="small text-muted">Created: ${new Date(room.createdAt).toLocaleTimeString()}</div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="fw-bold small text-uppercase text-muted">Host</div>
+                                <div><i class="fas fa-crown text-warning me-1"></i>${room.hostUsername}</div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="fw-bold small text-uppercase text-muted">Participants</div>
+                                <div><i class="fas fa-users me-1"></i>${room.userCount} Active</div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="fw-bold small text-uppercase text-muted">Services Active</div>
+                                <div class="d-flex gap-2 mt-1">
+                                    ${room.isRecording ? '<span class="badge bg-danger">Recording</span>' : ''}
+                                    ${room.hasWhiteboard ? '<span class="badge bg-info">Board</span>' : ''}
+                                    <span class="badge bg-success">WebRTC</span>
+                                </div>
+                            </div>
+                            <div class="col-md-2 text-end">
+                                <button class="btn btn-sm btn-outline-primary" type="button" data-bs-toggle="collapse" data-bs-target="#peers-${room.id}">
+                                    Details <i class="fas fa-chevron-down ms-1"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="collapse mt-3 pt-3 border-top" id="peers-${room.id}">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h6 class="fw-bold small text-uppercase mb-3">Live Participants</h6>
+                                    <div class="d-flex flex-wrap gap-3">
+                                        ${room.participants.map(p => `
+                                            <div class="d-flex align-items-center bg-light p-2 rounded">
+                                                <div class="peer-avatar me-2">${p.username.charAt(0).toUpperCase()}</div>
+                                                <div>
+                                                    <div class="small fw-bold">${p.username} ${p.isHost ? '(Host)' : ''}</div>
+                                                    <div class="extra-small text-muted" style="font-size: 0.7rem;">Streams: ${p.producerCount}</div>
+                                                </div>
+                                            </div>
+                                        `).join('')}
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <h6 class="fw-bold small text-uppercase mb-3">Room Config</h6>
+                                    <div class="bg-light p-3 rounded small">
+                                        Resolution: ${room.settings?.video?.res || '720p'} @ ${room.settings?.video?.fps || 30}fps<br>
+                                        Audio: ${room.settings?.audio?.rate || 48000}Hz
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 `).join('');
-            } catch (e) { console.error(e); }
+            } catch (e) { console.error('Admin Fetch Error:', e); }
         }
 
-        function showHistory() {
-            document.getElementById('live-section').style.display = 'none';
-            document.getElementById('history-section').style.display = 'block';
+        function showSection(section, event) {
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+            if (event) {
+                event.target.closest('.nav-link').classList.add('active');
+            } else {
+                // Find by text if called directly without event
+                const links = document.querySelectorAll('.nav-link');
+                links.forEach(l => {
+                    if (l.innerText.toLowerCase().includes(section)) l.classList.add('active');
+                });
+            }
+            
+            document.getElementById('live-section').style.display = section === 'live' ? 'block' : 'none';
+            document.getElementById('history-section').style.display = section === 'history' ? 'block' : 'none';
         }
 
         async function fetchHistory() {
             const roomId = document.getElementById('history-room-id').value;
+            if (!roomId) return;
+            
             const results = document.getElementById('history-results');
-            results.innerHTML = 'Loading...';
+            results.innerHTML = '<div class="text-center p-5"><div class="spinner-border text-primary"></div></div>';
+            
             try {
                 const res = await fetch(\`/api/rooms/\${roomId}/history\`);
                 const data = await res.json();
-                results.innerHTML = data.map(item => \`
-                    <div class="border-bottom py-2">
-                        <span class="badge bg-secondary">\${item.type}</span>
-                        <small class="text-muted">\${new Date(item.timestamp).toLocaleString()}</small>
-                        <pre class="bg-light p-2 mt-1">\${JSON.stringify(item, null, 2)}</pre>
+                
+                if (data.length === 0) {
+                    results.innerHTML = '<div class="card glass-card p-5 text-center">No audit logs found for this room identifier.</div>';
+                    return;
+                }
+
+                results.innerHTML = data.map(item => `
+                    <div class="card glass-card p-3 mb-3 border-start border-4 ${getBorderColor(item.type)}">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="badge ${getBadgeColor(item.type)}">${item.type}</span>
+                            <span class="text-muted small"><i class="far fa-clock me-1"></i>${new Date(item.timestamp).toLocaleString()}</span>
+                        </div>
+                        <pre class="m-0 small">${JSON.stringify(item, null, 2)}</pre>
                     </div>
-                \`).join('') || 'No history found.';
-            } catch (e) { results.innerHTML = 'Error fetching history'; }
+                `).join('');
+            } catch (e) { results.innerHTML = '<div class="alert alert-danger">Critical infrastructure query failed.</div>'; }
+        }
+
+        function getBorderColor(type) {
+            if (type.includes('JOIN')) return 'border-success';
+            if (type.includes('ERROR')) return 'border-danger';
+            if (type.includes('RECORDING')) return 'border-warning';
+            return 'border-primary';
+        }
+
+        function getBadgeColor(type) {
+            if (type.includes('JOIN')) return 'bg-success';
+            if (type.includes('ERROR')) return 'bg-danger';
+            if (type.includes('RECORDING')) return 'bg-danger';
+            return 'bg-secondary';
         }
 
         setInterval(refreshData, 5000);
         refreshData();
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

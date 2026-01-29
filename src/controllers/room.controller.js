@@ -11,7 +11,15 @@ exports.getSystemMetrics = async (req, res) => {
       userCount: room.peers.size,
       isRecording: !!room.recordingId,
       hasWhiteboard: room.whiteboard?.strokes.length > 0,
-      createdAt: room.createdAt
+      createdAt: room.createdAt,
+      participants: Array.from(room.peers.values()).map(p => ({
+        username: p.username,
+        joinedAt: p.joinedAt,
+        isHost: room.hostId === p.id,
+        isRecorder: p.isRecorder,
+        producerCount: p.producers.size
+      })),
+      settings: room.settings
     }));
 
     res.json({
