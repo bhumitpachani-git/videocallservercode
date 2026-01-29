@@ -1,0 +1,562 @@
+ 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 313 with pts 1260, dts 1260, duration 20 at relative offset 247761 in cluster at offset 609. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 8295 with pts 1261, dts 1261, duration 0 at relative offset 248081 in cluster at offset 609. TrackNumber 1, keyframe 0
+[webm @ 0000021c1d1475c0] Writing block of size 321 with pts 1280, dts 1280, duration 20 at relative offset 256383 in cluster at offset 609. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 8245 with pts 1292, dts 1292, duration 0 at relative offset 256711 in cluster at offset 609. TrackNumber 1, keyframe 0 {"timestamp":"2026-01-29T10:50:50.932Z"}
+info: [FFmpeg T2blyE7g6sP3NCLJAAAD] frame=  342 fps= 14 q=-1.0 size=    2560KiB time=00:00:27.63 bitrate= 758.9kbits/s speed= 1.1x elapsed=0:00:25.05   [webm @ 000002b06cf575c0] Writing block of size 321 with pts 27620, dts 27620, duration 20 at relative offset 267125 in cluster at offset 2824220. TrackNumber 2, keyframe 1
+[webm @ 000002b06cf575c0] Writing block of size 6477 with pts 27634, dts 27634, duration 0 at relative offset 267453 in cluster at offset 2824220. TrackNumber 1, keyframe 0
+[webm @ 000002b06cf575c0] Writing block of size 321 with pts 27640, dts 27640, duration 20 at relative offset 273937 in cluster at offset 2824220. TrackNumber 2, keyframe 1
+[webm @ 000002b06cf575c0] Writing block of size 321 with pts 27660, dts 27660, duration 20 at relative offset 274265 in cluster at offset 2824220. TrackNumber 2, keyframe 1
+[webm @ 000002b06cf575c0] Writing block of size 321 with pts 27680, dts 27680, duration 20 at relative offset 274593 in cluster at offset 2824220. TrackNumber 2, keyframe 1
+[webm @ 000002b06cf575c0] Writing block of size 8160 with pts 27697, dts 27697, duration 0 at relative offset 274921 in cluster at offset 2824220. TrackNumber 1, keyframe 0
+[webm @ 000002b06cf575c0] Writing block of size 321 with pts 27700, dts 27700, duration 20 at relative offset 283088 in cluster at offset 2824220. TrackNumber 2, keyframe 1
+[webm @ 000002b06cf575c0] Writing block of size 321 with pts 27720, dts 27720, duration 20 at relative offset 283416 in cluster at offset 2824220. TrackNumber 2, keyframe 1
+[webm @ 000002b06cf575c0] Writing block of size 8435 with pts 27728, dts 27728, duration 0 at relative offset 283744 in cluster at offset 2824220. TrackNumber 1, keyframe 0
+[webm @ 000002b06cf575c0] Writing block of size 321 with pts 27740, dts 27740, duration 20 at relative offset 292186 in cluster at offset 2824220. TrackNumber 2, keyframe 1
+[webm @ 000002b06cf575c0] Writing block of size 321 with pts 27760, dts 27760, duration 20 at relative offset 292514 in cluster at offset 2824220. TrackNumber 2, keyframe 1
+[webm @ 000002b06cf575c0] Writing block of size 321 with pts 27780, dts 27780, duration 20 at relative offset 292842 in cluster at offset 2824220. TrackNumber 2, keyframe 1 {"timestamp":"2026-01-29T10:50:51.131Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF] [webm @ 0000021c1d1475c0] Writing block of size 321 with pts 1300, dts 1300, duration 20 at relative offset 264963 in cluster at offset 609. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 321 with pts 1320, dts 1320, duration 20 at relative offset 265291 in cluster at offset 609. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 321 with pts 1340, dts 1340, duration 20 at relative offset 265619 in cluster at offset 609. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 8328 with pts 1342, dts 1342, duration 0 at relative offset 265947 in cluster at offset 609. TrackNumber 1, keyframe 0
+[webm @ 0000021c1d1475c0] Writing block of size 321 with pts 1360, dts 1360, duration 20 at relative offset 274282 in cluster at offset 609. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 8022 with pts 1373, dts 1373, duration 0 at relative offset 274610 in cluster at offset 609. TrackNumber 1, keyframe 0
+[webm @ 0000021c1d1475c0] Writing block of size 321 with pts 1380, dts 1380, duration 20 at relative offset 282639 in cluster at offset 609. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 321 with pts 1400, dts 1400, duration 20 at relative offset 282967 in cluster at offset 609. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 8427 with pts 1405, dts 1405, duration 0 at relative offset 283295 in cluster at offset 609. TrackNumber 1, keyframe 0
+[webm @ 0000021c1d1475c0] Writing block of size 321 with pts 1420, dts 1420, duration 20 at relative offset 291729 in cluster at offset 609. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 7980 with pts 1437, dts 1437, duration 0 at relative offset 292057 in cluster at offset 609. TrackNumber 1, keyframe 0
+[webm @ 0000021c1d1475c0] Writing block of size 321 with pts 1440, dts 1440, duration 20 at relative offset 300044 in cluster at offset 609. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 321 with pts 1460, dts 1460, duration 20 at relative offset 300372 in cluster at offset 609. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 321 with pts 1480, dts 1480, duration 20 at relative offset 300700 in cluster at offset 609. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 8048 with pts 1500, dts 1500, duration 0 at relative offset 301028 in cluster at offset 609. TrackNumber 1, keyframe 0 {"timestamp":"2026-01-29T10:50:51.168Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF] [webm @ 0000021c1d1475c0] Writing block of size 504 with pts 1500, dts 1500, duration 20 at relative offset 309083 in cluster at offset 609. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 319 with pts 1520, dts 1520, duration 20 at relative offset 309594 in cluster at offset 609. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 307 with pts 1540, dts 1540, duration 20 at relative offset 309920 in cluster at offset 609. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 474 with pts 1560, dts 1560, duration 20 at relative offset 310234 in cluster at offset 609. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 8209 with pts 1565, dts 1565, duration 0 at relative offset 310715 in cluster at offset 609. TrackNumber 1, keyframe 0 {"timestamp":"2026-01-29T10:50:51.211Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF] [webm @ 0000021c1d1475c0] Writing block of size 309 with pts 1580, dts 1580, duration 20 at relative offset 318931 in cluster at offset 609. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 8128 with pts 1597, dts 1597, duration 0 at relative offset 319247 in cluster at offset 609. TrackNumber 1, keyframe 0 {"timestamp":"2026-01-29T10:50:51.260Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF] [webm @ 0000021c1d1475c0] Writing block of size 307 with pts 1600, dts 1600, duration 20 at relative offset 327382 in cluster at offset 609. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 307 with pts 1620, dts 1620, duration 20 at relative offset 327696 in cluster at offset 609. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 9016 with pts 1629, dts 1629, duration 0 at relative offset 328010 in cluster at offset 609. TrackNumber 1, keyframe 0
+[webm @ 0000021c1d1475c0] Writing block of size 307 with pts 1640, dts 1640, duration 20 at relative offset 337033 in cluster at offset 609. TrackNumber 2, keyframe 1 {"timestamp":"2026-01-29T10:50:51.330Z"}
+info: [FFmpeg T2blyE7g6sP3NCLJAAAD] [vost#0:0/copy @ 000002b06d000140] Non-monotonic DTS; previous: 28194, current: 28150; changing to 28194. This may result in incorrect timestamps in the output file.
+[vost#0:0/copy @ 000002b06d000140] Non-monotonic DTS; previous: 28194, current: 28182; changing to 28194. This may result in incorrect timestamps in the output file. {"timestamp":"2026-01-29T10:50:51.429Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF] [webm @ 0000021c1d1475c0] Writing block of size 306 with pts 1660, dts 1660, duration 20 at relative offset 337347 in cluster at offset 609. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 307 with pts 1680, dts 1680, duration 20 at relative offset 337660 in cluster at offset 609. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 8085 with pts 1693, dts 1693, duration 0 at relative offset 337974 in cluster at offset 609. TrackNumber 1, keyframe 0
+[webm @ 0000021c1d1475c0] Writing block of size 301 with pts 1700, dts 1700, duration 20 at relative offset 346066 in cluster at offset 609. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 309 with pts 1720, dts 1720, duration 20 at relative offset 346374 in cluster at offset 609. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 8561 with pts 1725, dts 1725, duration 0 at relative offset 346690 in cluster at offset 609. TrackNumber 1, keyframe 0
+[webm @ 0000021c1d1475c0] Writing block of size 308 with pts 1740, dts 1740, duration 20 at relative offset 355258 in cluster at offset 609. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 8537 with pts 1758, dts 1758, duration 0 at relative offset 355573 in cluster at offset 609. TrackNumber 1, keyframe 0
+[webm @ 0000021c1d1475c0] Writing block of size 310 with pts 1760, dts 1760, duration 20 at relative offset 364117 in cluster at offset 609. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 309 with pts 1780, dts 1780, duration 20 at relative offset 364434 in cluster at offset 609. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 307 with pts 1800, dts 1800, duration 20 at relative offset 364750 in cluster at offset 609. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 8785 with pts 1805, dts 1805, duration 0 at relative offset 365064 in cluster at offset 609. TrackNumber 1, keyframe 0
+[webm @ 0000021c1d1475c0] Writing block of size 308 with pts 1820, dts 1820, duration 20 at relative offset 373856 in cluster at offset 609. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 8666 with pts 1837, dts 1837, duration 0 at relative offset 374171 in cluster at offset 609. TrackNumber 1, keyframe 0 {"timestamp":"2026-01-29T10:50:51.468Z"}
+info: [FFmpeg T2blyE7g6sP3NCLJAAAD] frame=  354 fps= 14 q=-1.0 size=    2560KiB time=00:00:27.82 bitrate= 753.8kbits/s speed=1.09x elapsed=0:00:25.59   [webm @ 000002b06cf575c0] Writing block of size 1 with pts 27800, dts 27800, duration 20 at relative offset 293170 in cluster at offset 2824220. TrackNumber 2, keyframe 1
+[webm @ 000002b06cf575c0] Writing block of size 6935 with pts 27809, dts 27809, duration 0 at relative offset 293177 in cluster at offset 2824220. TrackNumber 1, keyframe 0
+[webm @ 000002b06cf575c0] Writing block of size 7040 with pts 27873, dts 27873, duration 0 at relative offset 300119 in cluster at offset 2824220. TrackNumber 1, keyframe 0
+[webm @ 000002b06cf575c0] Writing block of size 6652 with pts 27936, dts 27936, duration 0 at relative offset 307166 in cluster at offset 2824220. TrackNumber 1, keyframe 0
+[webm @ 000002b06cf575c0] Writing block of size 8717 with pts 28001, dts 28001, duration 0 at relative offset 313825 in cluster at offset 2824220. TrackNumber 1, keyframe 0
+[webm @ 000002b06cf575c0] Writing block of size 6778 with pts 28065, dts 28065, duration 0 at relative offset 322549 in cluster at offset 2824220. TrackNumber 1, keyframe 0
+[webm @ 000002b06cf575c0] Writing block of size 6407 with pts 28129, dts 28129, duration 0 at relative offset 329334 in cluster at offset 2824220. TrackNumber 1, keyframe 0
+[webm @ 000002b06cf575c0] Writing block of size 6210 with pts 28161, dts 28161, duration 0 at relative offset 335748 in cluster at offset 2824220. TrackNumber 1, keyframe 0
+[webm @ 000002b06cf575c0] Writing block of size 8567 with pts 28194, dts 28194, duration 0 at relative offset 341965 in cluster at offset 2824220. TrackNumber 1, keyframe 0
+[webm @ 000002b06cf575c0] Writing block of size 6400 with pts 28194, dts 28194, duration 0 at relative offset 350539 in cluster at offset 2824220. TrackNumber 1, keyframe 0
+[webm @ 000002b06cf575c0] Writing block of size 6272 with pts 28194, dts 28194, duration 0 at relative offset 356946 in cluster at offset 2824220. TrackNumber 1, keyframe 0
+[webm @ 000002b06cf575c0] Writing block of size 302 with pts 28200, dts 28200, duration 20 at relative offset 363225 in cluster at offset 2824220. TrackNumber 2, keyframe 1
+[webm @ 000002b06cf575c0] Writing block of size 8645 with pts 28214, dts 28214, duration 0 at relative offset 363534 in cluster at offset 2824220. TrackNumber 1, keyframe 0 {"timestamp":"2026-01-29T10:50:51.476Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF] [webm @ 0000021c1d1475c0] Writing block of size 309 with pts 1840, dts 1840, duration 20 at relative offset 382844 in cluster at offset 609. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 306 with pts 1860, dts 1860, duration 20 at relative offset 383160 in cluster at offset 609. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 8558 with pts 1869, dts 1869, duration 0 at relative offset 383473 in cluster at offset 609. TrackNumber 1, keyframe 0 {"timestamp":"2026-01-29T10:50:51.592Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF] [webm @ 0000021c1d1475c0] Writing block of size 309 with pts 1880, dts 1880, duration 20 at relative offset 392038 in cluster at offset 609. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 8731 with pts 1900, dts 1900, duration 0 at relative offset 392354 in cluster at offset 609. TrackNumber 1, keyframe 0 {"timestamp":"2026-01-29T10:50:51.656Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF] [webm @ 0000021c1d1475c0] Writing block of size 313 with pts 1900, dts 1900, duration 20 at relative offset 401092 in cluster at offset 609. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 306 with pts 1920, dts 1920, duration 20 at relative offset 401412 in cluster at offset 609. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 306 with pts 1940, dts 1940, duration 20 at relative offset 401725 in cluster at offset 609. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 308 with pts 1960, dts 1960, duration 20 at relative offset 402038 in cluster at offset 609. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 308 with pts 1980, dts 1980, duration 20 at relative offset 402353 in cluster at offset 609. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 313 with pts 2000, dts 2000, duration 20 at relative offset 402668 in cluster at offset 609. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 318 with pts 2020, dts 2020, duration 20 at relative offset 402988 in cluster at offset 609. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 317 with pts 2040, dts 2040, duration 20 at relative offset 403313 in cluster at offset 609. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 315 with pts 2060, dts 2060, duration 20 at relative offset 403637 in cluster at offset 609. TrackNumber 2, keyframe 1 {"timestamp":"2026-01-29T10:50:51.698Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF] [webm @ 0000021c1d1475c0] Writing block of size 307 with pts 2080, dts 2080, duration 20 at relative offset 403959 in cluster at offset 609. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 317 with pts 2100, dts 2100, duration 20 at relative offset 404273 in cluster at offset 609. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 321 with pts 2120, dts 2120, duration 20 at relative offset 404597 in cluster at offset 609. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 9188 with pts 2135, dts 2135, duration 0 at relative offset 404925 in cluster at offset 609. TrackNumber 1, keyframe 0 {"timestamp":"2026-01-29T10:50:51.763Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF] [webm @ 0000021c1d1475c0] Writing block of size 321 with pts 2140, dts 2140, duration 20 at relative offset 414120 in cluster at offset 609. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 321 with pts 2160, dts 2160, duration 20 at relative offset 414448 in cluster at offset 609. TrackNumber 2, keyframe 1
+frame=   45 fps= 42 q=-1.0 size=       1KiB time=00:00:02.19 bitrate=   2.2kbits/s speed=2.07x elapsed=0:00:01.06 {"timestamp":"2026-01-29T10:50:51.812Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF] [webm @ 0000021c1d1475c0] Writing block of size 321 with pts 2180, dts 2180, duration 20 at relative offset 414776 in cluster at offset 609. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 8336 with pts 2199, dts 2199, duration 0 at relative offset 415104 in cluster at offset 609. TrackNumber 1, keyframe 0 {"timestamp":"2026-01-29T10:50:51.834Z"}
+info: [FFmpeg T2blyE7g6sP3NCLJAAAD] [webm @ 000002b06cf575c0] Writing block of size 1 with pts 28220, dts 28220, duration 20 at relative offset 372186 in cluster at offset 2824220. TrackNumber 2, keyframe 1
+[webm @ 000002b06cf575c0] Writing block of size 6414 with pts 28245, dts 28245, duration 0 at relative offset 372193 in cluster at offset 2824220. TrackNumber 1, keyframe 0
+[webm @ 000002b06cf575c0] Writing block of size 8732 with pts 28278, dts 28278, duration 0 at relative offset 378614 in cluster at offset 2824220. TrackNumber 1, keyframe 0
+[webm @ 000002b06cf575c0] Writing block of size 6597 with pts 28310, dts 28310, duration 0 at relative offset 387353 in cluster at offset 2824220. TrackNumber 1, keyframe 0
+[webm @ 000002b06cf575c0] Writing block of size 6721 with pts 28342, dts 28342, duration 0 at relative offset 393957 in cluster at offset 2824220. TrackNumber 1, keyframe 0
+[webm @ 000002b06cf575c0] Writing block of size 6398 with pts 28375, dts 28375, duration 0 at relative offset 400685 in cluster at offset 2824220. TrackNumber 1, keyframe 0
+[webm @ 000002b06cf575c0] Writing block of size 8697 with pts 28407, dts 28407, duration 0 at relative offset 407090 in cluster at offset 2824220. TrackNumber 1, keyframe 0
+[webm @ 000002b06cf575c0] Writing block of size 6631 with pts 28439, dts 28439, duration 0 at relative offset 415794 in cluster at offset 2824220. TrackNumber 1, keyframe 0
+[webm @ 000002b06cf575c0] Writing block of size 6624 with pts 28565, dts 28565, duration 0 at relative offset 422432 in cluster at offset 2824220. TrackNumber 1, keyframe 0
+[webm @ 000002b06cf575c0] Writing block of size 8863 with pts 28614, dts 28614, duration 0 at relative offset 429063 in cluster at offset 2824220. TrackNumber 1, keyframe 0 {"timestamp":"2026-01-29T10:50:51.882Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF] [webm @ 0000021c1d1475c0] Writing block of size 321 with pts 2200, dts 2200, duration 20 at relative offset 423447 in cluster at offset 609. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 321 with pts 2220, dts 2220, duration 20 at relative offset 423775 in cluster at offset 609. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 321 with pts 2240, dts 2240, duration 20 at relative offset 424103 in cluster at offset 609. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 321 with pts 2260, dts 2260, duration 20 at relative offset 424431 in cluster at offset 609. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 8353 with pts 2262, dts 2262, duration 0 at relative offset 424759 in cluster at offset 609. TrackNumber 1, keyframe 0
+[webm @ 0000021c1d1475c0] Writing block of size 321 with pts 2280, dts 2280, duration 20 at relative offset 433119 in cluster at offset 609. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 321 with pts 2300, dts 2300, duration 20 at relative offset 433447 in cluster at offset 609. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 321 with pts 2320, dts 2320, duration 20 at relative offset 433775 in cluster at offset 609. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 8212 with pts 2325, dts 2325, duration 0 at relative offset 434103 in cluster at offset 609. TrackNumber 1, keyframe 0 {"timestamp":"2026-01-29T10:50:51.962Z"}
+info: [FFmpeg T2blyE7g6sP3NCLJAAAD] [webm @ 000002b06cf575c0] Writing block of size 321 with pts 28620, dts 28620, duration 20 at relative offset 437933 in cluster at offset 2824220. TrackNumber 2, keyframe 1
+frame=  366 fps= 14 q=-1.0 size=    2560KiB time=00:00:28.66 bitrate= 731.7kbits/s speed= 1.1x elapsed=0:00:26.14 {"timestamp":"2026-01-29T10:50:52.097Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF] [webm @ 0000021c1d1475c0] Writing block of size 321 with pts 2340, dts 2340, duration 20 at relative offset 442322 in cluster at offset 609. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 321 with pts 2360, dts 2360, duration 20 at relative offset 442650 in cluster at offset 609. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 321 with pts 2380, dts 2380, duration 20 at relative offset 442978 in cluster at offset 609. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 321 with pts 2400, dts 2400, duration 20 at relative offset 443306 in cluster at offset 609. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 321 with pts 2420, dts 2420, duration 20 at relative offset 443634 in cluster at offset 609. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 8561 with pts 2438, dts 2438, duration 0 at relative offset 443962 in cluster at offset 609. TrackNumber 1, keyframe 0
+[webm @ 0000021c1d1475c0] Writing block of size 321 with pts 2440, dts 2440, duration 20 at relative offset 452530 in cluster at offset 609. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 321 with pts 2460, dts 2460, duration 20 at relative offset 452858 in cluster at offset 609. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 8819 with pts 2470, dts 2470, duration 0 at relative offset 453186 in cluster at offset 609. TrackNumber 1, keyframe 0 {"timestamp":"2026-01-29T10:50:52.170Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF] [webm @ 0000021c1d1475c0] Writing block of size 321 with pts 2480, dts 2480, duration 20 at relative offset 462012 in cluster at offset 609. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 321 with pts 2500, dts 2500, duration 20 at relative offset 462340 in cluster at offset 609. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 321 with pts 2520, dts 2520, duration 20 at relative offset 462668 in cluster at offset 609. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 321 with pts 2540, dts 2540, duration 20 at relative offset 462996 in cluster at offset 609. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 321 with pts 2560, dts 2560, duration 20 at relative offset 463324 in cluster at offset 609. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 8346 with pts 2565, dts 2565, duration 0 at relative offset 463652 in cluster at offset 609. TrackNumber 1, keyframe 0 {"timestamp":"2026-01-29T10:50:52.294Z"}
+info: [FFmpeg T2blyE7g6sP3NCLJAAAD] [webm @ 000002b06cf575c0] Writing block of size 1 with pts 28640, dts 28640, duration 20 at relative offset 438261 in cluster at offset 2824220. TrackNumber 2, keyframe 1
+[webm @ 000002b06cf575c0] Writing block of size 6815 with pts 28645, dts 28645, duration 0 at relative offset 438268 in cluster at offset 2824220. TrackNumber 1, keyframe 0
+[webm @ 000002b06cf575c0] Writing block of size 6462 with pts 28678, dts 28678, duration 0 at relative offset 445090 in cluster at offset 2824220. TrackNumber 1, keyframe 0
+[webm @ 000002b06cf575c0] Writing block of size 8369 with pts 28710, dts 28710, duration 0 at relative offset 451559 in cluster at offset 2824220. TrackNumber 1, keyframe 0
+[webm @ 000002b06cf575c0] Writing block of size 6136 with pts 28774, dts 28774, duration 0 at relative offset 459935 in cluster at offset 2824220. TrackNumber 1, keyframe 0
+[webm @ 000002b06cf575c0] Writing block of size 8210 with pts 28805, dts 28805, duration 0 at relative offset 466078 in cluster at offset 2824220. TrackNumber 1, keyframe 0
+[webm @ 000002b06cf575c0] Writing block of size 6177 with pts 28837, dts 28837, duration 0 at relative offset 474295 in cluster at offset 2824220. TrackNumber 1, keyframe 0
+[webm @ 000002b06cf575c0] Writing block of size 8314 with pts 28870, dts 28870, duration 0 at relative offset 480479 in cluster at offset 2824220. TrackNumber 1, keyframe 0
+[webm @ 000002b06cf575c0] Writing block of size 6315 with pts 28902, dts 28902, duration 0 at relative offset 488800 in cluster at offset 2824220. TrackNumber 1, keyframe 0
+[webm @ 000002b06cf575c0] Writing block of size 8521 with pts 28934, dts 28934, duration 0 at relative offset 495122 in cluster at offset 2824220. TrackNumber 1, keyframe 0
+[webm @ 000002b06cf575c0] Writing block of size 6450 with pts 28999, dts 28999, duration 0 at relative offset 503650 in cluster at offset 2824220. TrackNumber 1, keyframe 0
+[webm @ 000002b06cf575c0] Writing block of size 8233 with pts 29030, dts 29030, duration 0 at relative offset 510107 in cluster at offset 2824220. TrackNumber 1, keyframe 0 {"timestamp":"2026-01-29T10:50:52.332Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF] [webm @ 0000021c1d1475c0] Writing block of size 321 with pts 2580, dts 2580, duration 20 at relative offset 472005 in cluster at offset 609. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 321 with pts 2600, dts 2600, duration 20 at relative offset 472333 in cluster at offset 609. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 321 with pts 2620, dts 2620, duration 20 at relative offset 472661 in cluster at offset 609. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 321 with pts 2640, dts 2640, duration 20 at relative offset 472989 in cluster at offset 609. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 321 with pts 2660, dts 2660, duration 20 at relative offset 473317 in cluster at offset 609. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 321 with pts 2680, dts 2680, duration 20 at relative offset 473645 in cluster at offset 609. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 321 with pts 2700, dts 2700, duration 20 at relative offset 473973 in cluster at offset 609. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 321 with pts 2720, dts 2720, duration 20 at relative offset 474301 in cluster at offset 609. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 8910 with pts 2726, dts 2726, duration 0 at relative offset 474629 in cluster at offset 609. TrackNumber 1, keyframe 0
+[webm @ 0000021c1d1475c0] Writing block of size 321 with pts 2740, dts 2740, duration 20 at relative offset 483546 in cluster at offset 609. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 321 with pts 2760, dts 2760, duration 20 at relative offset 483874 in cluster at offset 609. TrackNumber 2, keyframe 1 {"timestamp":"2026-01-29T10:50:52.402Z"}
+info: [FFmpeg T2blyE7g6sP3NCLJAAAD] [webm @ 000002b06cf575c0] Writing block of size 321 with pts 29040, dts 29040, duration 20 at relative offset 518347 in cluster at offset 2824220. TrackNumber 2, keyframe 1 {"timestamp":"2026-01-29T10:50:52.462Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF] [webm @ 0000021c1d1475c0] Writing block of size 321 with pts 2780, dts 2780, duration 20 at relative offset 484202 in cluster at offset 609. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 321 with pts 2800, dts 2800, duration 20 at relative offset 484530 in cluster at offset 609. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 321 with pts 2820, dts 2820, duration 20 at relative offset 484858 in cluster at offset 609. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 8471 with pts 2838, dts 2838, duration 0 at relative offset 485186 in cluster at offset 609. TrackNumber 1, keyframe 0
+[webm @ 0000021c1d1475c0] Writing block of size 321 with pts 2840, dts 2840, duration 20 at relative offset 493664 in cluster at offset 609. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Starting new cluster with timestamp 2860 at offset 494608 bytes
+[webm @ 0000021c1d1475c0] Writing block of size 321 with pts 2860, dts 2860, duration 20 at relative offset 4 in cluster at offset 494608. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 11675 with pts 2870, dts 2870, duration 0 at relative offset 332 in cluster at offset 494608. TrackNumber 1, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 321 with pts 2880, dts 2880, duration 20 at relative offset 12014 in cluster at offset 494608. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 321 with pts 2900, dts 2900, duration 20 at relative offset 12342 in cluster at offset 494608. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 259 with pts 2902, dts 2902, duration 0 at relative offset 12670 in cluster at offset 494608. TrackNumber 1, keyframe 0 {"timestamp":"2026-01-29T10:50:52.549Z"}
+info: [FFmpeg T2blyE7g6sP3NCLJAAAD] frame=  381 fps= 14 q=-1.0 size=    2560KiB time=00:00:29.08 bitrate= 721.2kbits/s speed=1.09x elapsed=0:00:26.70 {"timestamp":"2026-01-29T10:50:52.660Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF] [webm @ 0000021c1d1475c0] Writing block of size 321 with pts 2920, dts 2920, duration 20 at relative offset 12936 in cluster at offset 494608. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 341 with pts 2934, dts 2934, duration 0 at relative offset 13264 in cluster at offset 494608. TrackNumber 1, keyframe 0
+[webm @ 0000021c1d1475c0] Writing block of size 321 with pts 2940, dts 2940, duration 20 at relative offset 13612 in cluster at offset 494608. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 321 with pts 2960, dts 2960, duration 20 at relative offset 13940 in cluster at offset 494608. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 541 with pts 2965, dts 2965, duration 0 at relative offset 14268 in cluster at offset 494608. TrackNumber 1, keyframe 0
+[webm @ 0000021c1d1475c0] Writing block of size 321 with pts 2980, dts 2980, duration 20 at relative offset 14816 in cluster at offset 494608. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 1231 with pts 2999, dts 2999, duration 0 at relative offset 15144 in cluster at offset 494608. TrackNumber 1, keyframe 0
+[webm @ 0000021c1d1475c0] Writing block of size 355 with pts 3000, dts 3000, duration 20 at relative offset 16382 in cluster at offset 494608. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 316 with pts 3020, dts 3020, duration 20 at relative offset 16744 in cluster at offset 494608. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 2372 with pts 3029, dts 3029, duration 0 at relative offset 17067 in cluster at offset 494608. TrackNumber 1, keyframe 0
+[webm @ 0000021c1d1475c0] Writing block of size 313 with pts 3040, dts 3040, duration 20 at relative offset 19446 in cluster at offset 494608. TrackNumber 2, keyframe 1 {"timestamp":"2026-01-29T10:50:52.691Z"}
+info: [FFmpeg T2blyE7g6sP3NCLJAAAD] [webm @ 000002b06cf575c0] Writing block of size 1 with pts 29060, dts 29060, duration 20 at relative offset 518675 in cluster at offset 2824220. TrackNumber 2, keyframe 1
+[webm @ 000002b06cf575c0] Writing block of size 6472 with pts 29078, dts 29078, duration 0 at relative offset 518682 in cluster at offset 2824220. TrackNumber 1, keyframe 0
+[webm @ 000002b06cf575c0] Writing block of size 8597 with pts 29110, dts 29110, duration 0 at relative offset 525161 in cluster at offset 2824220. TrackNumber 1, keyframe 0
+[webm @ 000002b06cf575c0] Writing block of size 6490 with pts 29142, dts 29142, duration 0 at relative offset 533765 in cluster at offset 2824220. TrackNumber 1, keyframe 0
+[webm @ 000002b06cf575c0] Writing block of size 6420 with pts 29174, dts 29174, duration 0 at relative offset 540262 in cluster at offset 2824220. TrackNumber 1, keyframe 0
+[webm @ 000002b06cf575c0] Writing block of size 8645 with pts 29205, dts 29205, duration 0 at relative offset 546689 in cluster at offset 2824220. TrackNumber 1, keyframe 0
+[webm @ 000002b06cf575c0] Writing block of size 6576 with pts 29239, dts 29239, duration 0 at relative offset 555341 in cluster at offset 2824220. TrackNumber 1, keyframe 0
+[webm @ 000002b06cf575c0] Writing block of size 6454 with pts 29302, dts 29302, duration 0 at relative offset 561924 in cluster at offset 2824220. TrackNumber 1, keyframe 0
+[webm @ 000002b06cf575c0] Writing block of size 8376 with pts 29334, dts 29334, duration 0 at relative offset 568385 in cluster at offset 2824220. TrackNumber 1, keyframe 0
+[webm @ 000002b06cf575c0] Writing block of size 6616 with pts 29366, dts 29366, duration 0 at relative offset 576768 in cluster at offset 2824220. TrackNumber 1, keyframe 0
+[webm @ 000002b06cf575c0] Writing block of size 8506 with pts 29397, dts 29397, duration 0 at relative offset 583391 in cluster at offset 2824220. TrackNumber 1, keyframe 0
+[webm @ 000002b06cf575c0] Writing block of size 6297 with pts 29431, dts 29431, duration 0 at relative offset 591904 in cluster at offset 2824220. TrackNumber 1, keyframe 0
+[webm @ 000002b06cf575c0] Writing block of size 417 with pts 29460, dts 29460, duration 20 at relative offset 598208 in cluster at offset 2824220. TrackNumber 2, keyframe 1 {"timestamp":"2026-01-29T10:50:52.749Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF] [webm @ 0000021c1d1475c0] Writing block of size 319 with pts 3060, dts 3060, duration 20 at relative offset 19766 in cluster at offset 494608. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 375 with pts 3080, dts 3080, duration 20 at relative offset 20092 in cluster at offset 494608. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 3079 with pts 3094, dts 3094, duration 0 at relative offset 20474 in cluster at offset 494608. TrackNumber 1, keyframe 0
+[webm @ 0000021c1d1475c0] Writing block of size 323 with pts 3100, dts 3100, duration 20 at relative offset 23560 in cluster at offset 494608. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 321 with pts 3120, dts 3120, duration 20 at relative offset 23890 in cluster at offset 494608. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 317 with pts 3140, dts 3140, duration 20 at relative offset 24218 in cluster at offset 494608. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 3656 with pts 3157, dts 3157, duration 0 at relative offset 24542 in cluster at offset 494608. TrackNumber 1, keyframe 0
+[webm @ 0000021c1d1475c0] Writing block of size 316 with pts 3160, dts 3160, duration 20 at relative offset 28205 in cluster at offset 494608. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 315 with pts 3180, dts 3180, duration 20 at relative offset 28528 in cluster at offset 494608. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 4378 with pts 3191, dts 3191, duration 0 at relative offset 28850 in cluster at offset 494608. TrackNumber 1, keyframe 0 {"timestamp":"2026-01-29T10:50:52.828Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF] [webm @ 0000021c1d1475c0] Writing block of size 561 with pts 3200, dts 3200, duration 20 at relative offset 33235 in cluster at offset 494608. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 341 with pts 3220, dts 3220, duration 20 at relative offset 33803 in cluster at offset 494608. TrackNumber 2, keyframe 1 {"timestamp":"2026-01-29T10:50:52.861Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF] [webm @ 0000021c1d1475c0] Writing block of size 314 with pts 3240, dts 3240, duration 20 at relative offset 34151 in cluster at offset 494608. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 5081 with pts 3253, dts 3253, duration 0 at relative offset 34472 in cluster at offset 494608. TrackNumber 1, keyframe 0
+[webm @ 0000021c1d1475c0] Writing block of size 309 with pts 3260, dts 3260, duration 20 at relative offset 39560 in cluster at offset 494608. TrackNumber 2, keyframe 1 {"timestamp":"2026-01-29T10:50:52.899Z"}
+info: Recording stop request for room room1234 {"timestamp":"2026-01-29T10:50:52.961Z"}
+info: [Recording] ==================== Stopping recording for room room1234 ==================== {"timestamp":"2026-01-29T10:50:52.987Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF] [webm @ 0000021c1d1475c0] Writing block of size 305 with pts 3280, dts 3280, duration 20 at relative offset 39876 in cluster at offset 494608. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 307 with pts 3300, dts 3300, duration 20 at relative offset 40188 in cluster at offset 494608. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 4870 with pts 3303, dts 3303, duration 0 at relative offset 40502 in cluster at offset 494608. TrackNumber 1, keyframe 0
+[webm @ 0000021c1d1475c0] Writing block of size 370 with pts 3320, dts 3320, duration 20 at relative offset 45379 in cluster at offset 494608. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 5922 with pts 3336, dts 3336, duration 0 at relative offset 45756 in cluster at offset 494608. TrackNumber 1, keyframe 0
+[webm @ 0000021c1d1475c0] Writing block of size 313 with pts 3340, dts 3340, duration 20 at relative offset 51685 in cluster at offset 494608. TrackNumber 2, keyframe 1
+[vost#0:0/copy @ 0000021c1d20e9c0] Non-monotonic DTS; previous: 3462, current: 3366; changing to 3462. This may result in incorrect timestamps in the output file.
+[webm @ 0000021c1d1475c0] Writing block of size 306 with pts 3360, dts 3360, duration 20 at relative offset 52005 in cluster at offset 494608. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 5809 with pts 3365, dts 3365, duration 0 at relative offset 52318 in cluster at offset 494608. TrackNumber 1, keyframe 0
+[vost#0:0/copy @ 0000021c1d20e9c0] Non-monotonic DTS; previous: 3462, current: 3397; changing to 3462. This may result in incorrect timestamps in the output file.
+[webm @ 0000021c1d1475c0] Writing block of size 309 with pts 3380, dts 3380, duration 20 at relative offset 58134 in cluster at offset 494608. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 5970 with pts 3399, dts 3399, duration 0 at relative offset 58450 in cluster at offset 494608. TrackNumber 1, keyframe 0
+[webm @ 0000021c1d1475c0] Writing block of size 304 with pts 3400, dts 3400, duration 20 at relative offset 64427 in cluster at offset 494608. TrackNumber 2, keyframe 1 {"timestamp":"2026-01-29T10:50:53.043Z"}
+info: [FFmpeg T2blyE7g6sP3NCLJAAAD] frame=  396 fps= 15 q=-1.0 size=    2560KiB time=00:00:29.50 bitrate= 710.9kbits/s speed=1.08x elapsed=0:00:27.22 {"timestamp":"2026-01-29T10:50:53.111Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF] [webm @ 0000021c1d1475c0] Writing block of size 305 with pts 3420, dts 3420, duration 20 at relative offset 64738 in cluster at offset 494608. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 5519 with pts 3429, dts 3429, duration 0 at relative offset 65050 in cluster at offset 494608. TrackNumber 1, keyframe 0
+[vost#0:0/copy @ 0000021c1d20e9c0] Non-monotonic DTS; previous: 3462, current: 3431; changing to 3462. This may result in incorrect timestamps in the output file.
+[webm @ 0000021c1d1475c0] Writing block of size 305 with pts 3440, dts 3440, duration 20 at relative offset 70576 in cluster at offset 494608. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 308 with pts 3460, dts 3460, duration 20 at relative offset 70888 in cluster at offset 494608. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 6604 with pts 3462, dts 3462, duration 0 at relative offset 71203 in cluster at offset 494608. TrackNumber 1, keyframe 0
+[webm @ 0000021c1d1475c0] Writing block of size 6632 with pts 3462, dts 3462, duration 0 at relative offset 77814 in cluster at offset 494608. TrackNumber 1, keyframe 0
+[webm @ 0000021c1d1475c0] Writing block of size 6728 with pts 3462, dts 3462, duration 0 at relative offset 84453 in cluster at offset 494608. TrackNumber 1, keyframe 0
+[webm @ 0000021c1d1475c0] Writing block of size 6827 with pts 3462, dts 3462, duration 0 at relative offset 91188 in cluster at offset 494608. TrackNumber 1, keyframe 0 {"timestamp":"2026-01-29T10:50:53.121Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF] [webm @ 0000021c1d1475c0] Writing block of size 7195 with pts 3462, dts 3462, duration 0 at relative offset 98022 in cluster at offset 494608. TrackNumber 1, keyframe 0 {"timestamp":"2026-01-29T10:50:53.141Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF] frame=   72 fps= 27 q=-1.0 size=     256KiB time=00:00:03.46 bitrate= 605.8kbits/s speed=1.31x elapsed=0:00:02.63 {"timestamp":"2026-01-29T10:50:53.388Z"}
+info: [FFmpeg T2blyE7g6sP3NCLJAAAD] frame=  396 fps= 14 q=-1.0 size=    2560KiB time=00:00:29.50 bitrate= 710.9kbits/s speed=1.06x elapsed=0:00:27.75 {"timestamp":"2026-01-29T10:50:53.583Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF] frame=   72 fps= 23 q=-1.0 size=     256KiB time=00:00:03.46 bitrate= 605.8kbits/s speed= 1.1x elapsed=0:00:03.15 {"timestamp":"2026-01-29T10:50:53.899Z"}
+info: [FFmpeg T2blyE7g6sP3NCLJAAAD] frame=  396 fps= 14 q=-1.0 size=    2560KiB time=00:00:29.50 bitrate= 710.9kbits/s speed=1.04x elapsed=0:00:28.25 {"timestamp":"2026-01-29T10:50:54.089Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF] frame=   72 fps= 20 q=-1.0 size=     256KiB time=00:00:03.46 bitrate= 605.8kbits/s speed=0.941x elapsed=0:00:03.67 {"timestamp":"2026-01-29T10:50:54.429Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF]  {"timestamp":"2026-01-29T10:50:54.431Z"}
+info: [FFmpeg T2blyE7g6sP3NCLJAAAD] frame=  396 fps= 14 q=-1.0 size=    2560KiB time=00:00:29.50 bitrate= 710.9kbits/s speed=1.03x elapsed=0:00:28.77 {"timestamp":"2026-01-29T10:50:54.603Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF] frame=   72 fps= 17 q=-1.0 size=     256KiB time=00:00:03.46 bitrate= 605.8kbits/s speed=0.824x elapsed=0:00:04.20 {"timestamp":"2026-01-29T10:50:54.950Z"}
+info: [FFmpeg T2blyE7g6sP3NCLJAAAD] frame=  396 fps= 14 q=-1.0 size=    2560KiB time=00:00:29.50 bitrate= 710.9kbits/s speed=1.01x elapsed=0:00:29.29 {"timestamp":"2026-01-29T10:50:55.121Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF] frame=   72 fps= 15 q=-1.0 size=     256KiB time=00:00:03.46 bitrate= 605.8kbits/s speed=0.735x elapsed=0:00:04.71 {"timestamp":"2026-01-29T10:50:55.461Z"}
+info: [FFmpeg T2blyE7g6sP3NCLJAAAD] frame=  396 fps= 13 q=-1.0 size=    2560KiB time=00:00:29.50 bitrate= 710.9kbits/s speed=0.989x elapsed=0:00:29.81 {"timestamp":"2026-01-29T10:50:55.650Z"}
+info: [FFmpeg T2blyE7g6sP3NCLJAAAD]  {"timestamp":"2026-01-29T10:50:55.664Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF] frame=   72 fps= 14 q=-1.0 size=     256KiB time=00:00:03.46 bitrate= 605.8kbits/s speed=0.66x elapsed=0:00:05.24 {"timestamp":"2026-01-29T10:50:55.999Z"}
+info: [FFmpeg T2blyE7g6sP3NCLJAAAD] frame=  396 fps= 13 q=-1.0 size=    2560KiB time=00:00:29.50 bitrate= 710.9kbits/s speed=0.971x elapsed=0:00:30.37 {"timestamp":"2026-01-29T10:50:56.202Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF] frame=   72 fps= 12 q=-1.0 size=     256KiB time=00:00:03.46 bitrate= 605.8kbits/s speed=0.599x elapsed=0:00:05.78 {"timestamp":"2026-01-29T10:50:56.533Z"}
+info: [FFmpeg T2blyE7g6sP3NCLJAAAD] frame=  396 fps= 13 q=-1.0 size=    2560KiB time=00:00:29.50 bitrate= 710.9kbits/s speed=0.955x elapsed=0:00:30.88 {"timestamp":"2026-01-29T10:50:56.719Z"}
+info: [FFmpeg T2blyE7g6sP3NCLJAAAD]  {"timestamp":"2026-01-29T10:50:56.737Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF] frame=   72 fps= 11 q=-1.0 size=     256KiB time=00:00:03.46 bitrate= 605.8kbits/s speed=0.549x elapsed=0:00:06.30 {"timestamp":"2026-01-29T10:50:57.052Z"}
+info: [FFmpeg T2blyE7g6sP3NCLJAAAD] frame=  396 fps= 13 q=-1.0 size=    2560KiB time=00:00:29.50 bitrate= 710.9kbits/s speed=0.939x elapsed=0:00:31.40 {"timestamp":"2026-01-29T10:50:57.235Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF] frame=   72 fps= 11 q=-1.0 size=     256KiB time=00:00:03.46 bitrate= 605.8kbits/s speed=0.508x elapsed=0:00:06.81 {"timestamp":"2026-01-29T10:50:57.565Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF]  {"timestamp":"2026-01-29T10:50:57.566Z"}
+info: [FFmpeg T2blyE7g6sP3NCLJAAAD] frame=  396 fps= 12 q=-1.0 size=    2560KiB time=00:00:29.50 bitrate= 710.9kbits/s speed=0.924x elapsed=0:00:31.92 {"timestamp":"2026-01-29T10:50:57.755Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF] frame=   72 fps=9.8 q=-1.0 size=     256KiB time=00:00:03.46 bitrate= 605.8kbits/s speed=0.472x elapsed=0:00:07.33 {"timestamp":"2026-01-29T10:50:58.084Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF]  {"timestamp":"2026-01-29T10:50:58.086Z"}
+info: [FFmpeg T2blyE7g6sP3NCLJAAAD] frame=  396 fps= 12 q=-1.0 size=    2560KiB time=00:00:29.50 bitrate= 710.9kbits/s speed=0.908x elapsed=0:00:32.48 {"timestamp":"2026-01-29T10:50:58.312Z"}
+info: [FFmpeg T2blyE7g6sP3NCLJAAAD]  {"timestamp":"2026-01-29T10:50:58.333Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF] frame=   72 fps=9.2 q=-1.0 size=     256KiB time=00:00:03.46 bitrate= 605.8kbits/s speed=0.441x elapsed=0:00:07.85 {"timestamp":"2026-01-29T10:50:58.602Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF]  {"timestamp":"2026-01-29T10:50:58.608Z"}
+info: [Recording][T2blyE7g6sP3NCLJAAAD] FFmpeg exited code=null signal=SIGTERM {"timestamp":"2026-01-29T10:50:58.790Z"}
+info: [FFmpeg T2blyE7g6sP3NCLJAAAD] frame=  396 fps= 12 q=-1.0 size=    2560KiB time=00:00:29.50 bitrate= 710.9kbits/s speed=0.894x elapsed=0:00:32.99 {"timestamp":"2026-01-29T10:50:58.829Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF] frame=   72 fps=8.6 q=-1.0 size=     256KiB time=00:00:03.46 bitrate= 605.8kbits/s speed=0.414x elapsed=0:00:08.37 {"timestamp":"2026-01-29T10:50:59.119Z"}
+info: [FFmpeg T2blyE7g6sP3NCLJAAAD] frame=  396 fps= 12 q=-1.0 size=    2560KiB time=00:00:29.50 bitrate= 710.9kbits/s speed=0.88x elapsed=0:00:33.51 {"timestamp":"2026-01-29T10:50:59.350Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF] frame=   72 fps=8.1 q=-1.0 size=     256KiB time=00:00:03.46 bitrate= 605.8kbits/s speed=0.39x elapsed=0:00:08.88 {"timestamp":"2026-01-29T10:50:59.632Z"}
+info: [FFmpeg T2blyE7g6sP3NCLJAAAD] frame=  396 fps= 12 q=-1.0 size=    2560KiB time=00:00:29.50 bitrate= 710.9kbits/s speed=0.867x elapsed=0:00:34.03 {"timestamp":"2026-01-29T10:50:59.870Z"}
+info: [FFmpeg T2blyE7g6sP3NCLJAAAD]  {"timestamp":"2026-01-29T10:50:59.871Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF] frame=   72 fps=7.7 q=-1.0 size=     256KiB time=00:00:03.46 bitrate= 605.8kbits/s speed=0.368x elapsed=0:00:09.40 {"timestamp":"2026-01-29T10:51:00.155Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF]  {"timestamp":"2026-01-29T10:51:00.158Z"}
+info: [Recording][82WOG5o8LzxxNIpgAAAF] File exists — size: 262144 bytes {"timestamp":"2026-01-29T10:51:00.355Z"}
+info: [FFmpeg T2blyE7g6sP3NCLJAAAD] frame=  396 fps= 11 q=-1.0 size=    2560KiB time=00:00:29.50 bitrate= 710.9kbits/s speed=0.854x elapsed=0:00:34.56 {"timestamp":"2026-01-29T10:51:00.391Z"}
+info: [FFmpeg T2blyE7g6sP3NCLJAAAD]  {"timestamp":"2026-01-29T10:51:00.392Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF] frame=   72 fps=7.3 q=-1.0 size=     256KiB time=00:00:03.46 bitrate= 605.8kbits/s speed=0.349x elapsed=0:00:09.91 {"timestamp":"2026-01-29T10:51:00.667Z"}
+info: [FFmpeg T2blyE7g6sP3NCLJAAAD] frame=  396 fps= 11 q=-1.0 size=    2560KiB time=00:00:29.50 bitrate= 710.9kbits/s speed=0.841x elapsed=0:00:35.06 {"timestamp":"2026-01-29T10:51:00.899Z"}
+info: [FFmpeg T2blyE7g6sP3NCLJAAAD]  {"timestamp":"2026-01-29T10:51:00.901Z"}
+info: [FFmpeg T2blyE7g6sP3NCLJAAAD] [sdp @ 000002b06cf55840] RTP: dropping old packet received too late {"timestamp":"2026-01-29T10:51:01.044Z"}
+info: [Recording][T2blyE7g6sP3NCLJAAAD] RTP PACKETS ARRIVING! {"timestamp":"2026-01-29T10:51:01.044Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF] frame=   72 fps=6.9 q=-1.0 size=     256KiB time=00:00:03.46 bitrate= 605.8kbits/s speed=0.332x elapsed=0:00:10.43 {"timestamp":"2026-01-29T10:51:01.185Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF]  {"timestamp":"2026-01-29T10:51:01.188Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF] [sdp @ 0000021c1d145840] max delay reached. need to consume packet
+[sdp @ 0000021c1d145840] RTP: missed 20279 packets {"timestamp":"2026-01-29T10:51:01.321Z"}
+info: [Recording][82WOG5o8LzxxNIpgAAAF] RTP PACKETS ARRIVING! {"timestamp":"2026-01-29T10:51:01.328Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF] [sdp @ 0000021c1d145840] max delay reached. need to consume packet
+[sdp @ 0000021c1d145840] RTP: missed 20280 packets
+[sdp @ 0000021c1d145840] max delay reached. need to consume packet
+[sdp @ 0000021c1d145840] RTP: missed 20281 packets
+[sdp @ 0000021c1d145840] max delay reached. need to consume packet
+[sdp @ 0000021c1d145840] RTP: missed 20282 packets
+[sdp @ 0000021c1d145840] max delay reached. need to consume packet
+[sdp @ 0000021c1d145840] RTP: missed 20283 packets
+[sdp @ 0000021c1d145840] max delay reached. need to consume packet
+[sdp @ 0000021c1d145840] RTP: missed 20284 packets
+[sdp @ 0000021c1d145840] max delay reached. need to consume packet
+[sdp @ 0000021c1d145840] RTP: missed 20285 packets
+[sdp @ 0000021c1d145840] max delay reached. need to consume packet
+[sdp @ 0000021c1d145840] RTP: missed 20286 packets {"timestamp":"2026-01-29T10:51:01.341Z"}
+info: [Recording][82WOG5o8LzxxNIpgAAAF] RTP PACKETS ARRIVING! {"timestamp":"2026-01-29T10:51:01.359Z"}
+info: [FFmpeg T2blyE7g6sP3NCLJAAAD] Last mess {"timestamp":"2026-01-29T10:51:01.423Z"}
+info: [FFmpeg T2blyE7g6sP3NCLJAAAD] age repeated 7 times
+frame=  396 fps= 11 q=-1.0 size=    2560KiB time=00:00:29.50 bitrate= 710.9kbits/s speed=0.829x elapsed=0:00:35.59 {"timestamp":"2026-01-29T10:51:01.425Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF] frame=   72 fps=6.6 q=-1.0 size=     256KiB time=00:00:03.46 bitrate= 605.8kbits/s speed=0.316x elapsed=0:00:10.95 {"timestamp":"2026-01-29T10:51:01.699Z"}
+info: [FFmpeg T2blyE7g6sP3NCLJAAAD] frame=  396 fps= 11 q=-1.0 size=    2560KiB time=00:00:29.50 bitrate= 710.9kbits/s speed=0.817x elapsed=0:00:36.10 {"timestamp":"2026-01-29T10:51:01.933Z"}
+info: [FFmpeg T2blyE7g6sP3NCLJAAAD]  {"timestamp":"2026-01-29T10:51:01.935Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF] frame=   72 fps=6.3 q=-1.0 size=     256KiB time=00:00:03.46 bitrate= 605.8kbits/s speed=0.301x elapsed=0:00:11.49 {"timestamp":"2026-01-29T10:51:02.241Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF]  {"timestamp":"2026-01-29T10:51:02.244Z"}
+info: [FFmpeg T2blyE7g6sP3NCLJAAAD] frame=  396 fps= 11 q=-1.0 size=    2560KiB time=00:00:29.50 bitrate= 710.9kbits/s speed=0.804x elapsed=0:00:36.67 {"timestamp":"2026-01-29T10:51:02.510Z"}
+info: [FFmpeg T2blyE7g6sP3NCLJAAAD]  {"timestamp":"2026-01-29T10:51:02.524Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF] frame=   72 fps=6.0 q=-1.0 size=     256KiB time=00:00:03.46 bitrate= 605.8kbits/s speed=0.288x elapsed=0:00:12.01 {"timestamp":"2026-01-29T10:51:02.760Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF]  {"timestamp":"2026-01-29T10:51:02.764Z"}
+info: [FFmpeg T2blyE7g6sP3NCLJAAAD] frame=  396 fps= 11 q=-1.0 size=    2560KiB time=00:00:29.50 bitrate= 710.9kbits/s speed=0.791x elapsed=0:00:37.27 {"timestamp":"2026-01-29T10:51:03.102Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF] frame=   72 fps=5.7 q=-1.0 size=     256KiB time=00:00:03.46 bitrate= 605.8kbits/s speed=0.276x elapsed=0:00:12.52 {"timestamp":"2026-01-29T10:51:03.277Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF]  {"timestamp":"2026-01-29T10:51:03.286Z"}
+info: [Recording][82WOG5o8LzxxNIpgAAAF] FFmpeg exited code=null signal=SIGTERM {"timestamp":"2026-01-29T10:51:03.301Z"}
+info: [FFmpeg T2blyE7g6sP3NCLJAAAD] frame=  396 fps= 10 q=-1.0 size=    2560KiB time=00:00:29.50 bitrate= 710.9kbits/s speed=0.781x elapsed=0:00:37.79 {"timestamp":"2026-01-29T10:51:03.621Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF] frame=   72 fps=5.5 q=-1.0 size=     256KiB time=00:00:03.46 bitrate= 605.8kbits/s speed=0.265x elapsed=0:00:13.04 {"timestamp":"2026-01-29T10:51:03.793Z"}
+info: [FFmpeg T2blyE7g6sP3NCLJAAAD] frame=  396 fps= 10 q=-1.0 size=    2560KiB time=00:00:29.50 bitrate= 710.9kbits/s speed=0.77x elapsed=0:00:38.31 {"timestamp":"2026-01-29T10:51:04.143Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF] frame=   72 fps=5.3 q=-1.0 size=     256KiB time=00:00:03.46 bitrate= 605.8kbits/s speed=0.255x elapsed=0:00:13.56 {"timestamp":"2026-01-29T10:51:04.309Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF]  {"timestamp":"2026-01-29T10:51:04.310Z"}
+info: [FFmpeg T2blyE7g6sP3NCLJAAAD] frame=  396 fps= 10 q=-1.0 size=    2560KiB time=00:00:29.50 bitrate= 710.9kbits/s speed=0.76x elapsed=0:00:38.83 {"timestamp":"2026-01-29T10:51:04.670Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF] frame=   72 fps=5.1 q=-1.0 size=     256KiB time=00:00:03.46 bitrate= 605.8kbits/s speed=0.246x elapsed=0:00:14.07 {"timestamp":"2026-01-29T10:51:04.822Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF]  {"timestamp":"2026-01-29T10:51:04.823Z"}
+info: [FFmpeg T2blyE7g6sP3NCLJAAAD] frame=  396 fps= 10 q=-1.0 size=    2560KiB time=00:00:29.50 bitrate= 710.9kbits/s speed=0.749x elapsed=0:00:39.36 {"timestamp":"2026-01-29T10:51:05.200Z"}
+info: [FFmpeg T2blyE7g6sP3NCLJAAAD]  {"timestamp":"2026-01-29T10:51:05.211Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF] frame=   72 fps=4.9 q=-1.0 size=     256KiB time=00:00:03.46 bitrate= 605.8kbits/s speed=0.237x elapsed=0:00:14.59 {"timestamp":"2026-01-29T10:51:05.341Z"}
+warn: [Recording][82WOG5o8LzxxNIpgAAAF] File NOT growing — check FFmpeg logs for RTP/keyframe issues {"timestamp":"2026-01-29T10:51:05.357Z"}
+info: [Recording][82WOG5o8LzxxNIpgAAAF] ✓ Recording setup complete {"timestamp":"2026-01-29T10:51:05.359Z"}
+info: [Recording] Started for room room1234, recording ID: room1234-1769683812963 {"timestamp":"2026-01-29T10:51:05.359Z"}
+info: Recording started successfully for room room1234 {"timestamp":"2026-01-29T10:51:05.360Z"}
+info: [FFmpeg T2blyE7g6sP3NCLJAAAD] frame=  396 fps=9.9 q=-1.0 size=    2560KiB time=00:00:29.50 bitrate= 710.9kbits/s speed=0.74x elapsed=0:00:39.88 {"timestamp":"2026-01-29T10:51:05.713Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF] frame=   72 fps=4.8 q=-1.0 size=     256KiB time=00:00:03.46 bitrate= 605.8kbits/s speed=0.229x elapsed=0:00:15.11 {"timestamp":"2026-01-29T10:51:05.860Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF]  {"timestamp":"2026-01-29T10:51:05.880Z"}
+info: [FFmpeg T2blyE7g6sP3NCLJAAAD] [sdp @ 000002b06cf55840] RTP: dropping old packet received too late {"timestamp":"2026-01-29T10:51:06.046Z"}
+info: [Recording][T2blyE7g6sP3NCLJAAAD] RTP PACKETS ARRIVING! {"timestamp":"2026-01-29T10:51:06.078Z"}
+info: [FFmpeg T2blyE7g6sP3NCLJAAAD]  {"timestamp":"2026-01-29T10:51:06.258Z"}
+info: [FFmpeg T2blyE7g6sP3NCLJAAAD] Last message repeated 7 times
+frame=  396 fps=9.8 q=-1.0 size=    2560KiB time=00:00:29.50 bitrate= 710.9kbits/s speed=0.73x elapsed=0:00:40.42 {"timestamp":"2026-01-29T10:51:06.270Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF] [sdp @ 0000021c1d145840] max delay reached. need to consume packet
+[sdp @ 0000021c1d145840] RTP: missed 20287 packets
+[sdp @ 0000021c1d145840] max delay reached. need to consume packet
+[sdp @ 0000021c1d145840] RTP: missed 20288 packets
+[sdp @ 0000021c1d145840] max delay reached. need to consume packet
+[sdp @ 0000021c1d145840] RTP: missed 20289 packets
+[sdp @ 0000021c1d145840] max delay reached. need to consume packet
+[sdp @ 0000021c1d145840] RTP: missed 20290 packets
+[sdp @ 0000021c1d145840] max delay reached. need to consume packet
+[sdp @ 0000021c1d145840] RTP: missed 20291 packets
+[sdp @ 0000021c1d145840] max delay reached. need to consume packet
+[sdp @ 0000021c1d145840] RTP: missed 20292 packets
+[sdp @ 0000021c1d145840] max delay reached. need to consume packet
+[sdp @ 0000021c1d145840] RTP: missed 20293 packets
+[sdp @ 0000021c1d145840] max delay reached. need to consume packet
+[sdp @ 0000021c1d145840] RTP: missed 20294 packets {"timestamp":"2026-01-29T10:51:06.310Z"}
+info: [Recording][82WOG5o8LzxxNIpgAAAF] RTP PACKETS ARRIVING! {"timestamp":"2026-01-29T10:51:06.380Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF] frame=   72 fps=4.6 q=-1.0 size=     256KiB time=00:00:03.46 bitrate= 605.8kbits/s speed=0.221x elapsed=0:00:15.68 {"timestamp":"2026-01-29T10:51:06.452Z"}
+info: [FFmpeg T2blyE7g6sP3NCLJAAAD] frame=  396 fps=9.7 q=-1.0 size=    2560KiB time=00:00:29.50 bitrate= 710.9kbits/s speed=0.72x elapsed=0:00:40.96 {"timestamp":"2026-01-29T10:51:06.799Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF] frame=   72 fps=4.4 q=-1.0 size=     256KiB time=00:00:03.46 bitrate= 605.8kbits/s speed=0.214x elapsed=0:00:16.19 {"timestamp":"2026-01-29T10:51:06.949Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF]  {"timestamp":"2026-01-29T10:51:06.961Z"}
+info: [FFmpeg T2blyE7g6sP3NCLJAAAD] frame=  396 fps=9.5 q=-1.0 size=    2560KiB time=00:00:29.50 bitrate= 710.9kbits/s speed=0.711x elapsed=0:00:41.50 {"timestamp":"2026-01-29T10:51:07.332Z"}
+info: [FFmpeg T2blyE7g6sP3NCLJAAAD]  {"timestamp":"2026-01-29T10:51:07.347Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF] frame=   72 fps=4.3 q=-1.0 size=     256KiB time=00:00:03.46 bitrate= 605.8kbits/s speed=0.207x elapsed=0:00:16.75 {"timestamp":"2026-01-29T10:51:07.508Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF]  {"timestamp":"2026-01-29T10:51:07.554Z"}
+info: [FFmpeg T2blyE7g6sP3NCLJAAAD] frame=  396 fps=9.4 q=-1.0 size=    2560KiB time=00:00:29.50 bitrate= 710.9kbits/s speed=0.702x elapsed=0:00:42.00 {"timestamp":"2026-01-29T10:51:07.841Z"}
+info: [FFmpeg T2blyE7g6sP3NCLJAAAD]  {"timestamp":"2026-01-29T10:51:07.849Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF] frame=   72 fps=4.2 q=-1.0 size=     256KiB time=00:00:03.46 bitrate= 605.8kbits/s speed= 0.2x elapsed=0:00:17.28 {"timestamp":"2026-01-29T10:51:08.037Z"}
+info: [FFmpeg T2blyE7g6sP3NCLJAAAD] frame=  396 fps=9.3 q=-1.0 size=    2560KiB time=00:00:29.50 bitrate= 710.9kbits/s speed=0.693x elapsed=0:00:42.56 {"timestamp":"2026-01-29T10:51:08.392Z"}
+info: [FFmpeg T2blyE7g6sP3NCLJAAAD]  {"timestamp":"2026-01-29T10:51:08.427Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF] frame=   72 fps=4.0 q=-1.0 size=     256KiB time=00:00:03.46 bitrate= 605.8kbits/s speed=0.194x elapsed=0:00:17.81 {"timestamp":"2026-01-29T10:51:08.563Z"}
+info: [FFmpeg T2blyE7g6sP3NCLJAAAD] frame=  396 fps=9.2 q=-1.0 size=    2560KiB time=00:00:29.50 bitrate= 710.9kbits/s speed=0.683x elapsed=0:00:43.20 {"timestamp":"2026-01-29T10:51:09.031Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF] frame=   72 fps=3.9 q=-1.0 size=     256KiB time=00:00:03.46 bitrate= 605.8kbits/s speed=0.188x elapsed=0:00:18.38 {"timestamp":"2026-01-29T10:51:09.131Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF]  {"timestamp":"2026-01-29T10:51:09.288Z"}
+info: [FFmpeg T2blyE7g6sP3NCLJAAAD] frame=  396 fps=9.0 q=-1.0 size=    2560KiB time=00:00:29.50 bitrate= 710.9kbits/s speed=0.673x elapsed=0:00:43.83 {"timestamp":"2026-01-29T10:51:09.670Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF] frame=   72 fps=3.8 q=-1.0 size=     256KiB time=00:00:03.46 bitrate= 605.8kbits/s speed=0.183x elapsed=0:00:18.95 {"timestamp":"2026-01-29T10:51:09.711Z"}
+info: [FFmpeg T2blyE7g6sP3NCLJAAAD]  {"timestamp":"2026-01-29T10:51:09.792Z"}
+info: [FFmpeg T2blyE7g6sP3NCLJAAAD] frame=  396 fps=8.9 q=-1.0 size=    2560KiB time=00:00:29.50 bitrate= 710.9kbits/s speed=0.664x elapsed=0:00:44.41 {"timestamp":"2026-01-29T10:51:10.250Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF] frame=   72 fps=3.7 q=-1.0 size=     256KiB time=00:00:03.46 bitrate= 605.8kbits/s speed=0.177x elapsed=0:00:19.51 {"timestamp":"2026-01-29T10:51:10.269Z"}
+info: File for T2blyE7g6sP3NCLJAAAD: room1234-1769683812963-CoolDolphin24-T2blyE7g.webm - 2621440 bytes {"timestamp":"2026-01-29T10:51:10.388Z"}
+info: [FFmpeg T2blyE7g6sP3NCLJAAAD] frame=  396 fps=8.8 q=-1.0 size=    2560KiB time=00:00:29.50 bitrate= 710.9kbits/s speed=0.656x elapsed=0:00:44.95 {"timestamp":"2026-01-29T10:51:10.790Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF] frame=   72 fps=3.6 q=-1.0 size=     256KiB time=00:00:03.46 bitrate= 605.8kbits/s speed=0.173x elapsed=0:00:20.04 {"timestamp":"2026-01-29T10:51:10.816Z"}
+info: [FFmpeg T2blyE7g6sP3NCLJAAAD]  {"timestamp":"2026-01-29T10:51:10.820Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF] frame=   72 fps=3.5 q=-1.0 size=     256KiB time=00:00:03.46 bitrate= 605.8kbits/s speed=0.168x elapsed=0:00:20.58 {"timestamp":"2026-01-29T10:51:11.332Z"}
+info: [FFmpeg T2blyE7g6sP3NCLJAAAD] frame=  396 fps=8.7 q=-1.0 size=    2560KiB time=00:00:29.50 bitrate= 710.9kbits/s speed=0.648x elapsed=0:00:45.50 {"timestamp":"2026-01-29T10:51:11.397Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF]  {"timestamp":"2026-01-29T10:51:11.399Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF] frame=   72 fps=3.4 q=-1.0 size=     256KiB time=00:00:03.46 bitrate= 605.8kbits/s speed=0.164x elapsed=0:00:21.10 {"timestamp":"2026-01-29T10:51:11.852Z"}
+info: [FFmpeg T2blyE7g6sP3NCLJAAAD] frame=  396 fps=8.6 q=-1.0 size=    2560KiB time=00:00:29.50 bitrate= 710.9kbits/s speed=0.641x elapsed=0:00:46.02 {"timestamp":"2026-01-29T10:51:11.871Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF]  {"timestamp":"2026-01-29T10:51:11.920Z"}
+info: [FFmpeg T2blyE7g6sP3NCLJAAAD] frame=  396 fps=8.5 q=-1.0 size=    2560KiB time=00:00:29.50 bitrate= 710.9kbits/s speed=0.634x elapsed=0:00:46.53 {"timestamp":"2026-01-29T10:51:12.365Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF] frame=   72 fps=3.3 q=-1.0 size=     256KiB time=00:00:03.46 bitrate= 605.8kbits/s speed=0.16x elapsed=0:00:21.61 {"timestamp":"2026-01-29T10:51:12.371Z"}
+[AWS] Error during professional S3 upload: NoSuchBucket: The specified bucket does not exist
+    at AwsRestXmlProtocol.handleError (C:\Users\STAFF1\Downloads\videocallservercode\node_modules\@aws-sdk\core\dist-cjs\submodules\protocols\index.js:1794:27)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async AwsRestXmlProtocol.deserializeResponse (C:\Users\STAFF1\Downloads\videocallservercode\node_modules\@smithy\core\dist-cjs\submodules\protocols\index.js:309:13)
+    at async C:\Users\STAFF1\Downloads\videocallservercode\node_modules\@smithy\core\dist-cjs\submodules\schema\index.js:26:24
+    at async C:\Users\STAFF1\Downloads\videocallservercode\node_modules\@aws-sdk\middleware-sdk-s3\dist-cjs\index.js:386:20
+    at async C:\Users\STAFF1\Downloads\videocallservercode\node_modules\@smithy\middleware-retry\dist-cjs\index.js:254:46
+    at async C:\Users\STAFF1\Downloads\videocallservercode\node_modules\@aws-sdk\middleware-flexible-checksums\dist-cjs\index.js:241:24
+    at async C:\Users\STAFF1\Downloads\videocallservercode\node_modules\@aws-sdk\middleware-sdk-s3\dist-cjs\index.js:63:28
+    at async C:\Users\STAFF1\Downloads\videocallservercode\node_modules\@aws-sdk\middleware-sdk-s3\dist-cjs\index.js:90:20
+    at async C:\Users\STAFF1\Downloads\videocallservercode\node_modules\@aws-sdk\middleware-logger\dist-cjs\index.js:5:26 {
+  '$fault': 'client',
+  '$retryable': undefined,
+  '$metadata': {
+    httpStatusCode: 404,
+    requestId: 'J93RP5ND31SHZ1KJ',
+    extendedRequestId: 'ljUITc/PLI8qgd+kFL6q9PdzstmKKHz7dBAJoXtfv3osjD02Cwm8psekzaAqCu3NgfZ1VZjaRp+7jIJv3WSaa8EwIh/clxAm',
+    cfId: undefined,
+    attempts: 1,
+    totalRetryDelay: 0
+  },
+  Code: 'NoSuchBucket',
+  BucketName: 'videocall-meeting',
+  RequestId: 'J93RP5ND31SHZ1KJ',
+  HostId: 'ljUITc/PLI8qgd+kFL6q9PdzstmKKHz7dBAJoXtfv3osjD02Cwm8psekzaAqCu3NgfZ1VZjaRp+7jIJv3WSaa8EwIh/clxAm'
+}
+error: The specified bucket does not exist {"$fault":"client","$metadata":{"attempts":1,"extendedRequestId":"ljUITc/PLI8qgd+kFL6q9PdzstmKKHz7dBAJoXtfv3osjD02Cwm8psekzaAqCu3NgfZ1VZjaRp+7jIJv3WSaa8EwIh/clxAm","httpStatusCode":404,"requestId":"J93RP5ND31SHZ1KJ","totalRetryDelay":0},"BucketName":"videocall-meeting","Code":"NoSuchBucket","HostId":"ljUITc/PLI8qgd+kFL6q9PdzstmKKHz7dBAJoXtfv3osjD02Cwm8psekzaAqCu3NgfZ1VZjaRp+7jIJv3WSaa8EwIh/clxAm","RequestId":"J93RP5ND31SHZ1KJ","name":"NoSuchBucket","timestamp":"2026-01-29T10:51:12.873Z"}
+info: File for 82WOG5o8LzxxNIpgAAAF: room1234-1769683812963-SwiftWolf21-82WOG5o8.webm - 262144 bytes {"timestamp":"2026-01-29T10:51:12.940Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF] frame=   72 fps=3.3 q=-1.0 size=     256KiB time=00:00:03.46 bitrate= 605.8kbits/s speed=0.156x elapsed=0:00:22.13 {"timestamp":"2026-01-29T10:51:13.096Z"}
+info: [FFmpeg T2blyE7g6sP3NCLJAAAD] frame=  396 fps=8.4 q=-1.0 size=    2560KiB time=00:00:29.50 bitrate= 710.9kbits/s speed=0.627x elapsed=0:00:47.05 {"timestamp":"2026-01-29T10:51:13.200Z"}
+info: [FFmpeg T2blyE7g6sP3NCLJAAAD] frame=  396 fps=8.3 q=-1.0 size=    2560KiB time=00:00:29.50 bitrate= 710.9kbits/s speed=0.618x elapsed=0:00:47.74 {"timestamp":"2026-01-29T10:51:13.578Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF] frame=   72 fps=3.2 q=-1.0 size=     256KiB time=00:00:03.46 bitrate= 605.8kbits/s speed=0.152x elapsed=0:00:22.82 {"timestamp":"2026-01-29T10:51:13.865Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF] frame=   72 fps=3.1 q=-1.0 size=     256KiB time=00:00:03.46 bitrate= 605.8kbits/s speed=0.148x elapsed=0:00:23.38 {"timestamp":"2026-01-29T10:51:14.152Z"}
+info: [FFmpeg T2blyE7g6sP3NCLJAAAD] frame=  396 fps=8.2 q=-1.0 size=    2560KiB time=00:00:29.50 bitrate= 710.9kbits/s speed=0.611x elapsed=0:00:48.30 {"timestamp":"2026-01-29T10:51:14.216Z"}
+info: [FFmpeg T2blyE7g6sP3NCLJAAAD] frame=  396 fps=8.1 q=-1.0 size=    2560KiB time=00:00:29.50 bitrate= 710.9kbits/s speed=0.604x elapsed=0:00:48.83 {"timestamp":"2026-01-29T10:51:14.662Z"}
+info: [FFmpeg T2blyE7g6sP3NCLJAAAD]  {"timestamp":"2026-01-29T10:51:14.666Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF] frame=   72 fps=3.0 q=-1.0 size=     256KiB time=00:00:03.46 bitrate= 605.8kbits/s speed=0.145x elapsed=0:00:23.91 {"timestamp":"2026-01-29T10:51:14.667Z"}
+info: [FFmpeg T2blyE7g6sP3NCLJAAAD] frame=  396 fps=8.0 q=-1.0 size=    2560KiB time=00:00:29.50 bitrate= 710.9kbits/s speed=0.598x elapsed=0:00:49.34 {"timestamp":"2026-01-29T10:51:15.180Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF] frame=   72 fps=2.9 q=-1.0 size=     256KiB time=00:00:03.46 bitrate= 605.8kbits/s speed=0.142x elapsed=0:00:24.43 {"timestamp":"2026-01-29T10:51:15.181Z"}
+info: [FFmpeg T2blyE7g6sP3NCLJAAAD]  {"timestamp":"2026-01-29T10:51:15.182Z"}
+info: [FFmpeg T2blyE7g6sP3NCLJAAAD] frame=  396 fps=7.9 q=-1.0 size=    2560KiB time=00:00:29.50 bitrate= 710.9kbits/s speed=0.591x elapsed=0:00:49.89 {"timestamp":"2026-01-29T10:51:15.727Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF] frame=   72 fps=2.9 q=-1.0 size=     256KiB time=00:00:03.46 bitrate= 605.8kbits/s speed=0.139x elapsed=0:00:24.97 {"timestamp":"2026-01-29T10:51:15.728Z"}
+info: [FFmpeg T2blyE7g6sP3NCLJAAAD]  {"timestamp":"2026-01-29T10:51:15.729Z"}
+info: [FFmpeg T2blyE7g6sP3NCLJAAAD] frame=  396 fps=7.9 q=-1.0 size=    2560KiB time=00:00:29.50 bitrate= 710.9kbits/s speed=0.585x elapsed=0:00:50.42 {"timestamp":"2026-01-29T10:51:16.251Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF] frame=   72 fps=2.8 q=-1.0 size=     256KiB time=00:00:03.46 bitrate= 605.8kbits/s speed=0.136x elapsed=0:00:25.50 {"timestamp":"2026-01-29T10:51:16.252Z"}
+[AWS] Error during professional S3 upload: NoSuchBucket: The specified bucket does not exist
+    at AwsRestXmlProtocol.handleError (C:\Users\STAFF1\Downloads\videocallservercode\node_modules\@aws-sdk\core\dist-cjs\submodules\protocols\index.js:1794:27)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async AwsRestXmlProtocol.deserializeResponse (C:\Users\STAFF1\Downloads\videocallservercode\node_modules\@smithy\core\dist-cjs\submodules\protocols\index.js:309:13)
+    at async C:\Users\STAFF1\Downloads\videocallservercode\node_modules\@smithy\core\dist-cjs\submodules\schema\index.js:26:24
+    at async C:\Users\STAFF1\Downloads\videocallservercode\node_modules\@aws-sdk\middleware-sdk-s3\dist-cjs\index.js:386:20
+    at async C:\Users\STAFF1\Downloads\videocallservercode\node_modules\@smithy\middleware-retry\dist-cjs\index.js:254:46
+    at async C:\Users\STAFF1\Downloads\videocallservercode\node_modules\@aws-sdk\middleware-flexible-checksums\dist-cjs\index.js:241:24
+    at async C:\Users\STAFF1\Downloads\videocallservercode\node_modules\@aws-sdk\middleware-sdk-s3\dist-cjs\index.js:63:28
+    at async C:\Users\STAFF1\Downloads\videocallservercode\node_modules\@aws-sdk\middleware-sdk-s3\dist-cjs\index.js:90:20
+    at async C:\Users\STAFF1\Downloads\videocallservercode\node_modules\@aws-sdk\middleware-logger\dist-cjs\index.js:5:26 {
+  '$fault': 'client',
+  '$retryable': undefined,
+  '$metadata': {
+    httpStatusCode: 404,
+    requestId: 'XPV4RN8X3A9H6W3E',
+    extendedRequestId: 'YdhjQRJzdGjXzOQFAFpopU1tGLN/Lozn14d3+BGwI9f0/xwMfL8wyxAWVRNTL2HcHsKgDu0SL3o=',
+    cfId: undefined,
+    attempts: 1,
+    totalRetryDelay: 0
+  },
+  Code: 'NoSuchBucket',
+  BucketName: 'videocall-meeting',
+  RequestId: 'XPV4RN8X3A9H6W3E',
+  HostId: 'YdhjQRJzdGjXzOQFAFpopU1tGLN/Lozn14d3+BGwI9f0/xwMfL8wyxAWVRNTL2HcHsKgDu0SL3o='
+}
+error: The specified bucket does not exist {"$fault":"client","$metadata":{"attempts":1,"extendedRequestId":"YdhjQRJzdGjXzOQFAFpopU1tGLN/Lozn14d3+BGwI9f0/xwMfL8wyxAWVRNTL2HcHsKgDu0SL3o=","httpStatusCode":404,"requestId":"XPV4RN8X3A9H6W3E","totalRetryDelay":0},"BucketName":"videocall-meeting","Code":"NoSuchBucket","HostId":"YdhjQRJzdGjXzOQFAFpopU1tGLN/Lozn14d3+BGwI9f0/xwMfL8wyxAWVRNTL2HcHsKgDu0SL3o=","RequestId":"XPV4RN8X3A9H6W3E","name":"NoSuchBucket","timestamp":"2026-01-29T10:51:16.700Z"}
+error: Stop recording error: Converting circular structure to JSON
+    --> starting at object with constructor 'DerivedLogger'
+    |     property '_readableState' -> object with constructor 'ReadableState'
+    |     property 'pipes' -> object with constructor 'Console'
+    --- property 'parent' closes the circle {"timestamp":"2026-01-29T10:51:16.702Z"}
+info: [FFmpeg T2blyE7g6sP3NCLJAAAD] frame=  396 fps=7.8 q=-1.0 size=    2560KiB time=00:00:29.50 bitrate= 710.9kbits/s speed=0.579x elapsed=0:00:50.93 {"timestamp":"2026-01-29T10:51:16.771Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF] frame=   72 fps=2.8 q=-1.0 size=     256KiB time=00:00:03.46 bitrate= 605.8kbits/s speed=0.133x elapsed=0:00:26.02 {"timestamp":"2026-01-29T10:51:16.772Z"}
+info: [FFmpeg T2blyE7g6sP3NCLJAAAD] frame=  396 fps=7.7 q=-1.0 size=    2560KiB time=00:00:29.50 bitrate= 710.9kbits/s speed=0.573x elapsed=0:00:51.45 {"timestamp":"2026-01-29T10:51:17.289Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF] frame=   72 fps=2.7 q=-1.0 size=     256KiB time=00:00:03.46 bitrate= 605.8kbits/s speed=0.13x elapsed=0:00:26.53 {"timestamp":"2026-01-29T10:51:17.290Z"}
+info: [FFmpeg T2blyE7g6sP3NCLJAAAD]  {"timestamp":"2026-01-29T10:51:17.290Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF] frame=   72 fps=2.7 q=-1.0 size=     256KiB time=00:00:03.46 bitrate= 605.8kbits/s speed=0.128x elapsed=0:00:27.06 {"timestamp":"2026-01-29T10:51:17.811Z"}
+info: [FFmpeg T2blyE7g6sP3NCLJAAAD] frame=  396 fps=7.6 q=-1.0 size=    2560KiB time=00:00:29.50 bitrate= 710.9kbits/s speed=0.568x elapsed=0:00:51.98 {"timestamp":"2026-01-29T10:51:17.811Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF]  {"timestamp":"2026-01-29T10:51:17.812Z"}
+info: [FFmpeg T2blyE7g6sP3NCLJAAAD] frame=  396 fps=7.5 q=-1.0 size=    2560KiB time=00:00:29.50 bitrate= 710.9kbits/s speed=0.562x elapsed=0:00:52.49 {"timestamp":"2026-01-29T10:51:18.328Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF] frame=   72 fps=2.6 q=-1.0 size=     256KiB time=00:00:03.46 bitrate= 605.8kbits/s speed=0.126x elapsed=0:00:27.57 {"timestamp":"2026-01-29T10:51:18.329Z"}
+info: [FFmpeg T2blyE7g6sP3NCLJAAAD] frame=  396 fps=7.5 q=-1.0 size=    2560KiB time=00:00:29.50 bitrate= 710.9kbits/s speed=0.557x elapsed=0:00:53.00 {"timestamp":"2026-01-29T10:51:18.840Z"}
+info: [FFmpeg T2blyE7g6sP3NCLJAAAD]  {"timestamp":"2026-01-29T10:51:18.846Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF] frame=   72 fps=2.6 q=-1.0 size=     256KiB time=00:00:03.46 bitrate= 605.8kbits/s speed=0.123x elapsed=0:00:28.09 {"timestamp":"2026-01-29T10:51:18.848Z"}
+info: [FFmpeg T2blyE7g6sP3NCLJAAAD] frame=  396 fps=7.4 q=-1.0 size=    2560KiB time=00:00:29.50 bitrate= 710.9kbits/s speed=0.551x elapsed=0:00:53.52 {"timestamp":"2026-01-29T10:51:19.352Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF] frame=   72 fps=2.5 q=-1.0 size=     256KiB time=00:00:03.46 bitrate= 605.8kbits/s speed=0.121x elapsed=0:00:28.60 {"timestamp":"2026-01-29T10:51:19.359Z"}
+info: [FFmpeg T2blyE7g6sP3NCLJAAAD] frame=  396 fps=7.3 q=-1.0 size=    2560KiB time=00:00:29.50 bitrate= 710.9kbits/s speed=0.546x elapsed=0:00:54.03 {"timestamp":"2026-01-29T10:51:19.869Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF] frame=   72 fps=2.5 q=-1.0 size=     256KiB time=00:00:03.46 bitrate= 605.8kbits/s speed=0.119x elapsed=0:00:29.12 {"timestamp":"2026-01-29T10:51:19.870Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF] frame=   72 fps=2.4 q=-1.0 size=     256KiB time=00:00:03.46 bitrate= 605.8kbits/s speed=0.117x elapsed=0:00:29.63 {"timestamp":"2026-01-29T10:51:20.388Z"}
+info: [FFmpeg T2blyE7g6sP3NCLJAAAD] frame=  396 fps=7.3 q=-1.0 size=    2560KiB time=00:00:29.50 bitrate= 710.9kbits/s speed=0.541x elapsed=0:00:54.55 {"timestamp":"2026-01-29T10:51:20.389Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF] [in#0/sdp @ 0000021c1d1455c0] Error during demuxing: Error number -138 occurred
+[in#0/sdp @ 0000021c1d1455c0] Terminating thread with return code 0 (success) {"timestamp":"2026-01-29T10:51:20.475Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF] [out#0/webm @ 0000021c1d145b40] {"timestamp":"2026-01-29T10:51:20.477Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF] All streams finished
+[out#0/webm @ 0000021c1d145b40] Terminating thread with return code 0 (success) {"timestamp":"2026-01-29T10:51:20.479Z"}
+info: [FFmpeg T2blyE7g6sP3NCLJAAAD] [in#0/sdp @ 000002b06cf555c0] Error during demuxing: Error number -138 occurred
+[in#0/sdp @ 000002b06cf555c0] Terminating thread with return code 0 (success) {"timestamp":"2026-01-29T10:51:20.578Z"}
+info: [FFmpeg T2blyE7g6sP3NCLJAAAD] [out#0/webm @ 000002b06cfda400] All streams finished
+[out#0/webm @ 000002b06cfda400] Terminating thread with return code 0 (success) {"timestamp":"2026-01-29T10:51:20.579Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF] [webm @ 0000021c1d1475c0] Writing block of size 304 with pts 3480, dts 3480, duration 20 at relative offset 105224 in cluster at offset 494608. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 307 with pts 3500, dts 3500, duration 20 at relative offset 105535 in cluster at offset 494608. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] {"timestamp":"2026-01-29T10:51:20.708Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF] Writing block of size 311 with pts 3520, dts 3520, duration 20 at relative offset 105849 in cluster at offset 494608. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 314 with pts 3540, dts 3540, duration 20 at relative offset 106167 in cluster at offset 494608. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 311 with pts 3560, dts 3560, duration 20 at relative offset 106488 in cluster at offset 494608. TrackNumber 2, keyframe 1
+[webm @ 0000021c1d1475c0] Writing block of size 311 with pts 3580, dts 3580, duration 20 at relative offset 106806 in cluster at offset 494608. TrackNumber 2, keyframe 1 {"timestamp":"2026-01-29T10:51:20.709Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF] [webm @ 0000021c1d1475c0] end duration = 3600 {"timestamp":"2026-01-29T10:51:20.710Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF] [webm @ 0000021c1d1475c0] stream 0 end duration = 3462
+[webm @ 0000021c1d1475c0] stream 1 end duration = 3600 {"timestamp":"2026-01-29T10:51:20.711Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF] [AVIOContext @ 0000021c1ef76640] Statistics: 602350 bytes written, 2 seeks, 4 writeouts {"timestamp":"2026-01-29T10:51:20.712Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF] [out#0/webm @ 0000021c1d145b40] Output file #0 (C:\Users\STAFF1\Downloads\videocallservercode\recordings\room1234\room1234-1769683812963-SwiftWolf21-82WOG5o8.webm):
+[out#0/webm @ 0000021c1d145b40]   Output stream #0:0 (video): {"timestamp":"2026-01-29T10:51:20.712Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF] 72 packets muxed (541409 bytes);
+[out#0/webm @ 0000021c1d145b40]   Output stream #0:1 (audio): 180 packets muxed (57935 bytes);
+[out#0/webm @ 0000021c1d145b40]   Total: 252 packets (599344 bytes) muxed
+[out#0/webm @ 0000021c1d145b40] video:529KiB audio:57KiB subtitle:0KiB other streams:0KiB global headers:0KiB muxing overhead: 0.406611%
+frame=   72 fps=2.4 q=-1.0 Lsize=     588KiB time=00:00:03.46 bitrate=1390.6kbits/s speed=0.116x elapsed=0:00:29.96
+[in#0/sdp @ 0000021c1d1455c0] Input file #0 (pipe:0):
+[in#0/sdp @ 0000021c1d1455c0]   Input stream #0:0 (audio): 180 packets read (57935 bytes);
+[in#0/sdp @ 0000021c1d1455c0] {"timestamp":"2026-01-29T10:51:20.713Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF] Input stream #0:1 (video): 72 packets read (541409 bytes); {"timestamp":"2026-01-29T10:51:20.714Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF]  {"timestamp":"2026-01-29T10:51:20.722Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF] [in#0/sdp @ 0000021c1d1455c0] {"timestamp":"2026-01-29T10:51:20.723Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF] Total: 252 packets (599344 bytes) demuxed {"timestamp":"2026-01-29T10:51:20.724Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF] [AVIOContext @ 0000021c1d146740] {"timestamp":"2026-01-29T10:51:20.727Z"}
+info: [FFmpeg 82WOG5o8LzxxNIpgAAAF] Statistics: 251 bytes read, 0 seeks
+
+Exiting with exit code 0 {"timestamp":"2026-01-29T10:51:20.728Z"}
+info: [FFmpeg T2blyE7g6sP3NCLJAAAD] [webm @ 000002b06cf575c0] {"timestamp":"2026-01-29T10:51:20.802Z"}
+info: [FFmpeg T2blyE7g6sP3NCLJAAAD] Writing block of size 1 with pts 29480, dts 29480, duration 20 at relative offset 598632 in cluster at offset 2824220. TrackNumber 2, keyframe 1
+[webm @ 000002b06cf575c0] Writing block of size 6489 with pts 29493, dts 29493, duration 0 at relative offset 598639 in cluster at offset 2824220. TrackNumber 1, keyframe 0 {"timestamp":"2026-01-29T10:51:20.802Z"}
+info: [FFmpeg T2blyE7g6sP3NCLJAAAD] [webm @ 000002b06cf575c0] {"timestamp":"2026-01-29T10:51:20.805Z"}
+info: [FFmpeg T2blyE7g6sP3NCLJAAAD] Writing block of size 8417 with pts 29546, dts 29546, duration 0 at relative offset 605135 in cluster at offset 2824220. TrackNumber 1, keyframe 0 {"timestamp":"2026-01-29T10:51:20.810Z"}
+info: [FFmpeg T2blyE7g6sP3NCLJAAAD]  {"timestamp":"2026-01-29T10:51:20.812Z"}
+info: [FFmpeg T2blyE7g6sP3NCLJAAAD] [webm @ 000002b06cf575c0] Writing block of size 6061 with pts 29579, dts 29579, duration 0 at relative offset 613559 in cluster at offset 2824220. TrackNumber 1, keyframe 0 {"timestamp":"2026-01-29T10:51:20.820Z"}
+info: [FFmpeg T2blyE7g6sP3NCLJAAAD] [webm @ 000002b06cf575c0] Writing block of size 8445 with pts 29608, dts 29608, duration 0 at relative offset 619627 in cluster at offset 2824220. TrackNumber 1, keyframe 0
+[webm @ 000002b06cf575c0] Writing block of size 6472 with pts 29642, dts 29642, duration 0 at relative offset 628079 in cluster at offset 2824220. TrackNumber 1, keyframe 0
+[webm @ 000002b06cf575c0] Writing block of size 8593 with pts 29672, dts 29672, duration 0 at relative offset 634558 in cluster at offset 2824220. TrackNumber 1, keyframe 0
+[webm @ 000002b06cf575c0] Writing block of size 6367 with pts 29705, dts 29705, duration 0 at relative offset 643158 in cluster at offset 2824220. TrackNumber 1, keyframe 0
+[webm @ 000002b06cf575c0] Writing block of size 6665 with pts 29737, dts 29737, duration 0 at relative offset 649532 in cluster at offset 2824220. TrackNumber 1, keyframe 0
+[webm @ 000002b06cf575c0] Writing block of size 9268 with pts 29768, dts 29768, duration 0 at relative offset 656204 in cluster at offset 2824220. TrackNumber 1, keyframe 0
+[webm @ 000002b06cf575c0] Writing block of size 6080 with pts 29802, dts 29802, duration 0 at relative offset 665479 in cluster at offset 2824220. TrackNumber 1, keyframe 0 {"timestamp":"2026-01-29T10:51:20.821Z"}
+info: [FFmpeg T2blyE7g6sP3NCLJAAAD] [webm @ 000002b06cf575c0] end duration = 29802
+[webm @ 000002b06cf575c0] stream 0 end duration = 29802 {"timestamp":"2026-01-29T10:51:20.825Z"}
+info: [FFmpeg T2blyE7g6sP3NCLJAAAD] [webm @ 000002b06cf575c0] stream 1 end duration = 29500
+[AVIOContext @ 000002b06d012640] Statistics: 3496423 bytes written, 2 seeks, 15 writeouts
+[out#0/webm @ 000002b06cfda400] Output file #0 (C:\Users\STAFF1\Downloads\videocallservercode\recordings\room1234\room1234-1769683812963-CoolDolphin24-T2blyE7g.webm):
+[out#0/webm @ 000002b06cfda400]   Output stream #0:0 (video): 396 packets muxed (3155643 bytes);
+[out#0/webm @ 000002b06cfda400]   Output stream #0:1 (audio): 1084 packets muxed (329153 bytes);
+[out#0/webm @ 000002b06cfda400]   Total: 1480 packets (3484796 bytes) muxed
+[out#0/webm @ 000002b06cfda400] video:3082KiB audio:321KiB subtitle:0KiB other streams:0KiB global headers:0KiB muxing overhead: 0.317321%
+frame=  396 fps=7.2 q=-1.0 Lsize=    3414KiB time=00:00:29.50 bitrate= 948.0kbits/s speed=0.536x elapsed=0:00:54.99
+[in#0/sdp @ 000002b06cf555c0] Input file #0 (pipe:0):
+[in#0/sdp @ 000002b06cf555c0]   Input stream #0:0 (audio): 1084 packets read (329153 bytes);
+[in#0/sdp @ 000002b06cf555c0]   Input stream #0:1 (video): 396 packets read (3155643 bytes);
+[in#0/sdp @ 000002b06cf555c0]   Total: 1480 packets (3484796 bytes) demuxed {"timestamp":"2026-01-29T10:51:20.826Z"}
+info: [FFmpeg T2blyE7g6sP3NCLJAAAD] [AVIOContext @ 000002b06cf56740] {"timestamp":"2026-01-29T10:51:20.827Z"}
+info: [FFmpeg T2blyE7g6sP3NCLJAAAD] Statistics: 251 bytes read, 0 seeks
+
+Exiting with exit code 0 {"timestamp":"2026-01-29T10:51:20.828Z"}
+info: Recording stop request for room room1234 {"timestamp":"2026-01-29T10:51:24.649Z"}
+info: [Recording] ==================== Stopping recording for room room1234 ==================== {"timestamp":"2026-01-29T10:51:24.649Z"}
+info: File for T2blyE7g6sP3NCLJAAAD: room1234-1769683812963-CoolDolphin24-T2blyE7g.webm - 3495854 bytes {"timestamp":"2026-01-29T10:51:32.680Z"}
+error: The specified bucket does not exist {"$fault":"client","$metadata":{"attempts":1,"extendedRequestId":"rI4HHPZlLeL4gSJnR+RSZxA0GBe8v+5C/VkwCR6for5JPLe/gFEybyTZynTZxo1iPmiHqAXaNbU=","httpStatusCode":404,"requestId":"ZHPWF9MHME94T7KC","totalRetryDelay":0},"BucketName":"videocall-meeting","Code":"NoSuchBucket","HostId":"rI4HHPZlLeL4gSJnR+RSZxA0GBe8v+5C/VkwCR6for5JPLe/gFEybyTZynTZxo1iPmiHqAXaNbU=","RequestId":"ZHPWF9MHME94T7KC","name":"NoSuchBucket","timestamp":"2026-01-29T10:51:36.844Z"}
+error: Stop recording error: Converting circular structure to JSON
+    --> starting at object with constructor 'DerivedLogger'
+    |     property '_readableState' -> object with constructor 'ReadableState'
+    |     property 'pipes' -> object with constructor 'Console'
+    --- property 'parent' closes the circle {"timestamp":"2026-01-29T10:51:36.849Z"}
