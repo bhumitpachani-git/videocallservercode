@@ -2,6 +2,28 @@ const roomManager = require('../services/room.service');
 const { logUserJoin, saveChatTranscript, getRoomHistory } = require('../services/aws.service');
 const logger = require('../utils/logger');
 
+exports.getSystemMetrics = async (req, res) => {
+  try {
+    const totalRooms = roomManager.rooms.size;
+    let totalParticipants = 0;
+    roomManager.rooms.forEach(room => totalParticipants += room.peers.size);
+
+    res.json({
+      success: true,
+      metrics: {
+        totalActiveRooms: totalRooms,
+        totalActiveParticipants: totalParticipants,
+        memoryUsage: process.memoryUsage(),
+        uptime: process.uptime(),
+        timestamp: new Date().toISOString()
+      }
+    });
+  } catch (error) {
+    logger.error('Error fetching system metrics:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
 exports.getAllRooms = async (req, res) => {
   try {
     const activeRooms = Array.from(roomManager.rooms.entries()).map(([id, room]) => ({
