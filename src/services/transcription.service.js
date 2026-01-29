@@ -114,14 +114,18 @@ async function handleTranscription(socket, io, rooms, recordingSessions, { roomI
             }
           }
 
+          // Force self-transcription to always show original spoken text
+          const finalDisplayedText = (peerId === socket.id) ? transcript : (shouldTranslate ? translatedText : transcript);
+
           const transcriptionPayload = {
             id: `${socket.id}-${Date.now()}-${Math.random()}`,
             socketId: socket.id,
             username,
             originalText: transcript,
-            translatedText: shouldTranslate && translatedText !== transcript ? translatedText : undefined,
+            translatedText: (peerId === socket.id) ? undefined : (shouldTranslate && translatedText !== transcript ? translatedText : undefined),
+            displayedText: finalDisplayedText, // UI should use this for main display
             originalLanguage: actualLanguage,
-            targetLanguage: peerTargetLang,
+            targetLanguage: (peerId === socket.id) ? actualLanguage : peerTargetLang,
             isFinal,
             timestamp: new Date().toISOString(),
           };
