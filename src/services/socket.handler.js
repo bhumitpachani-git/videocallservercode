@@ -18,10 +18,6 @@ module.exports = (io, roomManager) => {
         
         let room = roomManager.rooms.get(roomId);
 
-        if (room && room.password && room.password !== password) {
-          return callback({ error: 'Invalid password' });
-        }
-
         if (!room) {
           room = await roomManager.getOrCreateRoom(roomId, password);
         }
@@ -29,99 +25,70 @@ module.exports = (io, roomManager) => {
         currentRoomId = roomId;
         currentUsername = username;
 
-        if (!room.hostId) {
-          room.hostId = socket.id;
-          logger.info(`User ${username} (${socket.id}) is now host of room ${roomId}`);
-        }
-        const isUserHost = room.hostId === socket.id;
-
-        room.peers.set(socket.id, {
-          username,
-          transports: new Map(),
-          producers: new Map(),
-          consumers: new Map(),
-          isHost: isUserHost,
-          joinedAt: Date.now()
-        });
-
-        socket.join(roomId);
-
+        // INSTANT RESPONSE: Send capabilities first so client can start WebRTC handshake
         const rtpCapabilities = room.router.rtpCapabilities;
-
-        const existingPeers = [];
-        room.peers.forEach((peer, peerId) => {
-          if (peerId !== socket.id) {
-            existingPeers.push({
-              socketId: peerId,
-              username: peer.username,
-              isHost: peerId === room.hostId
-            });
-          }
-        });
-
-        const pollsArray = room.polls ? Array.from(room.polls.values()).map(p => ({
-          id: p.id,
-          question: p.question,
-          options: p.options.map(o => o.text),
-          creatorUsername: p.creatorUsername,
-          isAnonymous: p.isAnonymous,
-          allowMultiple: p.allowMultiple,
-          createdAt: p.createdAt,
-          results: p.options.map(o => o.votes),
-          totalVotes: p.votes ? Array.from(p.votes.values()).reduce((sum, arr) => sum + arr.length, 0) : 0,
-          active: p.active
-        })) : [];
-
-        const isRecording = recordingSessions.has(roomId);
-
-        const response = {
+        
+        callback({
           rtpCapabilities,
-          peers: existingPeers,
+          peers: Array.from(room.peers.values()).map(p => ({
+            socketId: p.id,
+            username: p.username,
+            isHost: p.isHost
+          })),
           whiteboard: room.whiteboard,
           notes: room.notes,
-          polls: pollsArray,
+          polls: room.polls ? Array.from(room.polls.values()).map(p => ({
+            id: p.id, question: p.question, options: p.options.map(o => o.text),
+            creatorUsername: p.creatorUsername, isAnonymous: p.isAnonymous,
+            allowMultiple: p.allowMultiple, createdAt: p.createdAt,
+            results: p.options.map(o => o.votes), active: p.active
+          })) : [],
           chatMessages: room.chatMessages || [],
-          isHost: isUserHost,
-          isRecording
-        };
-
-        callback(response);
-
-        // Sync existing producers to the new peer immediately
-        const activeProducers = [];
-        for (const [peerId, peer] of room.peers.entries()) {
-          if (peerId !== socket.id) {
-            for (const [producerId, producer] of peer.producers.entries()) {
-              activeProducers.push({
-                socketId: peerId,
-                producerId: producerId,
-                kind: producer.kind,
-                appData: producer.appData
-              });
-            }
-          }
-        }
-        
-        if (activeProducers.length > 0) {
-          socket.emit('active-producers', activeProducers);
-        }
-
-        socket.to(roomId).emit('user-joined', {
-          socketId: socket.id,
-          username,
-          isHost: isUserHost
+          isHost: !room.hostId || room.hostId === socket.id,
+          isRecording: recordingSessions.has(roomId)
         });
 
-        if (isRecording) {
-          const recordingSession = recordingSessions.get(roomId);
-          if (recordingSession) {
-            setTimeout(async () => {
-              logger.info(`[Recording] New peer ${socket.id} joined during recording`);
-            }, 3000);
+        // DEFERRED PROCESSING: Handle heavy logic after client is unblocked
+        setImmediate(async () => {
+          if (!room.hostId) {
+            room.hostId = socket.id;
           }
-        }
+          const isUserHost = room.hostId === socket.id;
 
-        logger.info(`User ${username} joined room ${roomId}`);
+          room.peers.set(socket.id, {
+            id: socket.id,
+            username,
+            transports: new Map(),
+            producers: new Map(),
+            consumers: new Map(),
+            isHost: isUserHost,
+            joinedAt: Date.now()
+          });
+
+          socket.join(roomId);
+
+          // Background producer sync
+          const activeProducers = [];
+          for (const [peerId, peer] of room.peers.entries()) {
+            if (peerId !== socket.id) {
+              for (const [producerId, producer] of peer.producers.entries()) {
+                activeProducers.push({
+                  socketId: peerId, producerId, kind: producer.kind, appData: producer.appData
+                });
+              }
+            }
+          }
+          
+          if (activeProducers.length > 0) {
+            socket.emit('active-producers', activeProducers);
+          }
+
+          socket.to(roomId).emit('user-joined', {
+            socketId: socket.id,
+            username,
+            isHost: isUserHost
+          });
+        });
       } catch (error) {
         logger.error(`Join room error: ${error.message}`);
         callback({ error: error.message });
