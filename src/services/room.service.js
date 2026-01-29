@@ -75,8 +75,21 @@ class RoomManager {
   }
 
   async joinRoom(socket, { roomId, username, password, recorder = false }) {
-    // PRE-FETCH ROOM (Non-blocking as much as possible)
-    const room = await this.getOrCreateRoom(roomId, password);
+    // START GETTING ROOM (Router creation is the bottleneck)
+    const roomPromise = this.getOrCreateRoom(roomId, password);
+    
+    // WHILE WAITING, SETUP PEER DATA
+    const peerData = {
+      id: socket.id,
+      username: recorder ? 'System Recorder' : username,
+      transports: new Map(),
+      producers: new Map(),
+      consumers: new Map(),
+      joinedAt: new Date(),
+      isRecorder: !!recorder
+    };
+
+    const room = await roomPromise;
     
     if (room.cleanupTimeout) {
       clearTimeout(room.cleanupTimeout);
@@ -87,28 +100,17 @@ class RoomManager {
       throw new Error('Invalid password');
     }
 
-    const peerData = {
-      id: socket.id,
-      username: recorder ? 'System Recorder' : username,
-      transports: new Map(),
-      producers: new Map(),
-      consumers: new Map(),
-      joinedAt: new Date(),
-      isRecorder: !!recorder,
-      isHost: room.hostId === null && !recorder
-    };
-
+    peerData.isHost = room.hostId === null && !recorder;
     if (peerData.isHost) {
       room.hostId = socket.id;
     }
 
     room.peers.set(socket.id, peerData);
-
-    // INSTANT SOCKET JOIN
     socket.join(roomId);
 
-    // DEFER HEAVY SYNC (Non-blocking for the join callback)
+    // BACKGROUND DATA SYNC
     setImmediate(() => {
+      // 1. Sync State
       socket.emit('sync-state', {
         whiteboard: room.whiteboard,
         notes: room.notes,
@@ -121,6 +123,7 @@ class RoomManager {
         chatMessages: room.chatMessages || []
       });
 
+      // 2. Sync Producers
       const activeProducers = [];
       for (const [peerId, peer] of room.peers.entries()) {
         if (peerId !== socket.id) {
@@ -134,18 +137,17 @@ class RoomManager {
           }
         }
       }
-      
       if (activeProducers.length > 0) {
-        logger.info(`Sending ${activeProducers.length} active producers to new peer ${socket.id}`);
         socket.emit('active-producers', activeProducers);
       }
 
+      // 3. Log Join
       logUserJoin(roomId, {
         socketId: socket.id,
         username: peerData.username,
         isRecorder: peerData.isRecorder,
         action: 'USER_JOINED'
-      }).catch(err => logger.error(`User join logging failed:`, err));
+      }).catch(() => {});
     });
 
     return {
