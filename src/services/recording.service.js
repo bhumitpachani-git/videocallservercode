@@ -31,7 +31,7 @@ async function startRecording(roomId, startedBy, io, rooms) {
     try {
         const browser = await puppeteer.launch({
             headless: 'new',
-            executablePath: '/nix/store/qa9cnw4v5xkxyip6mb9kxqfq1z4x2dx1-chromium-138.0.7204.100/bin/chromium',
+            executablePath: process.env.CHROME_PATH || 'chromium-browser',
             args: [
                 '--no-sandbox',
                 '--disable-setuid-sandbox',
@@ -44,6 +44,55 @@ async function startRecording(roomId, startedBy, io, rooms) {
                 '--force-device-scale-factor=1',
                 '--high-dpi-support=1'
             ]
+        }).catch(async (err) => {
+            console.warn(`[Recording] Failed to launch with primary path: ${err.message}. Trying discovery...`);
+            
+            const { execSync } = require('child_process');
+            let foundPath;
+            const possiblePaths = [
+                'chromium',
+                'google-chrome-stable',
+                '/usr/bin/chromium-browser',
+                '/usr/bin/chromium',
+                '/nix/store/qa9cnw4v5xkxyip6mb9kxqfq1z4x2dx1-chromium-138.0.7204.100/bin/chromium'
+            ];
+
+            for (const p of possiblePaths) {
+                try {
+                    const resolvedPath = p.startsWith('/') ? p : execSync(`which ${p}`).toString().trim();
+                    if (fs.existsSync(resolvedPath)) {
+                        foundPath = resolvedPath;
+                        break;
+                    }
+                } catch (e) {}
+            }
+
+            if (!foundPath) {
+                // Last ditch: try to find any chromium in nix store dynamically
+                try {
+                    foundPath = execSync('find /nix/store -maxdepth 3 -name chromium -type f -executable 2>/dev/null | head -n 1').toString().trim();
+                } catch (e) {}
+            }
+
+            if (!foundPath) throw new Error('No compatible browser found for recording. Please ensure chromium is installed.');
+
+            console.log(`[Recording] Found browser at: ${foundPath}`);
+            return await puppeteer.launch({
+                headless: 'new',
+                executablePath: foundPath,
+                args: [
+                    '--no-sandbox',
+                    '--disable-setuid-sandbox',
+                    '--use-fake-ui-for-media-stream',
+                    '--use-fake-device-for-media-stream',
+                    '--allow-file-access-from-files',
+                    '--disable-web-security',
+                    '--autoplay-policy=no-user-gesture-required',
+                    '--window-size=1920,1080',
+                    '--force-device-scale-factor=1',
+                    '--high-dpi-support=1'
+                ]
+            });
         });
 
         const page = await browser.newPage();
