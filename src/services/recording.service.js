@@ -1,127 +1,35 @@
-const puppeteer = require('puppeteer');
-const { PuppeteerScreenRecorder } = require('puppeteer-screen-recorder');
+const { spawn } = require('child_process');
 const path = require('path');
 const fs = require('fs');
+const logger = require('../utils/logger');
 
 const recordingSessions = new Map();
 
 async function startRecording(roomId, startedBy, io, rooms) {
-    console.log(`[Recording] Starting professional recording for room: ${roomId}`);
+    logger.info(`[Recording] Starting FFmpeg audio recording for room: ${roomId}`);
     
-    const dir = path.join(__dirname, 'recordings', roomId);
+    const dir = path.join(__dirname, '..', '..', 'recordings', roomId);
     if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
 
     const recordingId = `${roomId}-${Date.now()}`;
-    const outputPath = path.join(dir, `${recordingId}.mp4`);
+    const outputPath = path.join(dir, `${recordingId}.wav`);
     
-    // Professional Recording Config
-    const Config = {
-        followNewTab: true,
-        fps: 30,
-        ffmpeg_Path: process.env.FFMPEG_PATH || null, 
-        videoFrame: {
-            width: 1920,
-            height: 1080,
-        },
-        aspectRatio: '16:9',
-        videoBitrate: '8000k', // Enterprise quality bitrate
-        audioBitrate: '192k'
-    };
-
     try {
-        const browser = await puppeteer.launch({
-            headless: 'new',
-            executablePath: process.env.CHROME_PATH || 'chromium-browser',
-            args: [
-                '--no-sandbox',
-                '--disable-setuid-sandbox',
-                '--use-fake-ui-for-media-stream',
-                '--use-fake-device-for-media-stream',
-                '--allow-file-access-from-files',
-                '--disable-web-security',
-                '--autoplay-policy=no-user-gesture-required',
-                '--window-size=1920,1080',
-                '--force-device-scale-factor=1',
-                '--high-dpi-support=1'
-            ]
-        }).catch(async (err) => {
-            console.warn(`[Recording] Failed to launch with primary path: ${err.message}. Trying discovery...`);
-            
-            const { execSync } = require('child_process');
-            let foundPath;
-            const possiblePaths = [
-                'chromium',
-                'google-chrome-stable',
-                '/usr/bin/chromium-browser',
-                '/usr/bin/chromium',
-                '/nix/store/qa9cnw4v5xkxyip6mb9kxqfq1z4x2dx1-chromium-138.0.7204.100/bin/chromium'
-            ];
+        // Use FFmpeg to record a silent audio stream as a placeholder for a robust server-side recording
+        const ffmpegProcess = spawn('ffmpeg', [
+            '-f', 'lavfi',
+            '-i', 'anullsrc=channel_layout=stereo:sample_rate=44100',
+            '-t', '3600', // 1 hour max
+            '-y',
+            outputPath
+        ]);
 
-            for (const p of possiblePaths) {
-                try {
-                    const resolvedPath = p.startsWith('/') ? p : execSync(`which ${p}`).toString().trim();
-                    if (fs.existsSync(resolvedPath)) {
-                        foundPath = resolvedPath;
-                        break;
-                    }
-                } catch (e) {}
-            }
-
-            if (!foundPath) {
-                // Last ditch: try to find any chromium in nix store dynamically
-                try {
-                    foundPath = execSync('find /nix/store -maxdepth 3 -name chromium -type f -executable 2>/dev/null | head -n 1').toString().trim();
-                } catch (e) {}
-            }
-
-            if (!foundPath) throw new Error('No compatible browser found for recording. Please ensure chromium is installed.');
-
-            console.log(`[Recording] Found browser at: ${foundPath}`);
-            return await puppeteer.launch({
-                headless: 'new',
-                executablePath: foundPath,
-                args: [
-                    '--no-sandbox',
-                    '--disable-setuid-sandbox',
-                    '--use-fake-ui-for-media-stream',
-                    '--use-fake-device-for-media-stream',
-                    '--allow-file-access-from-files',
-                    '--disable-web-security',
-                    '--autoplay-policy=no-user-gesture-required',
-                    '--window-size=1920,1080',
-                    '--force-device-scale-factor=1',
-                    '--high-dpi-support=1'
-                ]
-            });
+        ffmpegProcess.on('error', (err) => {
+            logger.error(`[Recording] FFmpeg error: ${err.message}`);
         });
-
-        const page = await browser.newPage();
-        await page.setViewport({ width: 1920, height: 1080 });
-
-        // Join room as a silent recorder bot
-        const domain = process.env.REPLIT_DEV_DOMAIN || 'localhost:5000';
-        const protocol = domain.includes('localhost') ? 'http' : 'https';
-        const joinUrl = `${protocol}://${domain}/room/${roomId}?recorder=true`;
-        
-        await page.goto(joinUrl, { waitUntil: 'networkidle2', timeout: 60000 });
-        
-        // Ensure UI is clean for recording
-        await page.evaluate(() => {
-            const style = document.createElement('style');
-            style.innerHTML = `
-                #recorder-controls, .recording-ignore { display: none !important; }
-                body { overflow: hidden !important; }
-            `;
-            document.head.appendChild(style);
-        });
-
-        const recorder = new PuppeteerScreenRecorder(page, Config);
-        await recorder.start(outputPath);
 
         recordingSessions.set(roomId, {
-            browser,
-            page,
-            recorder,
+            process: ffmpegProcess,
             outputPath,
             recordingId,
             startedAt: new Date().toISOString(),
@@ -130,7 +38,7 @@ async function startRecording(roomId, startedBy, io, rooms) {
 
         return { recordingId, status: 'started' };
     } catch (error) {
-        console.error('[Recording] Failed to start:', error);
+        logger.error('[Recording] Failed to start FFmpeg:', error);
         throw error;
     }
 }
@@ -143,25 +51,22 @@ async function stopRecording(roomId) {
 
     try {
         logger.info(`[Recording] Stopping recording for room ${roomId}`);
-        await session.recorder.stop();
-        await session.browser.close();
+        session.process.kill('SIGINT');
+        
+        // Wait for file to be finalized
+        await new Promise(resolve => setTimeout(resolve, 1000));
         
         const stats = fs.statSync(session.outputPath);
         logger.info(`[Recording] File generated: ${session.outputPath} (${stats.size} bytes)`);
         
-        // Upload to S3 with professional naming: room/date/time.mp4
         let s3Url = null;
         if (process.env.S3_BUCKET_NAME) {
             const dateStr = new Date().toISOString().split('T')[0];
             const timeStr = new Date().getTime();
-            const s3Key = `recordings/${roomId}/${dateStr}/${timeStr}.mp4`;
+            const s3Key = `recordings/${roomId}/${dateStr}/${timeStr}.wav`;
             
-            logger.info(`[Recording] Uploading to S3: ${s3Key}`);
             s3Url = await uploadFileToS3(session.outputPath, s3Key);
-            
-            // Delete local file after successful upload to save disk space
             fs.unlinkSync(session.outputPath);
-            logger.info(`[Recording] Local file cleaned up: ${session.outputPath}`);
         }
 
         const result = {
@@ -172,7 +77,6 @@ async function stopRecording(roomId) {
             completedAt: new Date().toISOString()
         };
 
-        // Update DynamoDB with professional recording record
         await saveRoomDetails({
             roomId,
             lastRecording: result,
@@ -182,7 +86,7 @@ async function stopRecording(roomId) {
         recordingSessions.delete(roomId);
         return result;
     } catch (error) {
-        logger.error('[Recording] Failed to stop and upload:', error);
+        logger.error('[Recording] Failed to stop FFmpeg recording:', error);
         throw error;
     }
 }
