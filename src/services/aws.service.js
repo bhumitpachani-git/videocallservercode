@@ -44,25 +44,24 @@ async function logUserJoin(roomId, sessionId, userDetails) {
 }
 
 async function saveChatTranscript(roomId, sessionId, transcript) {
-    setImmediate(async () => {
-        try {
-            const command = new PutCommand({
-                TableName: DYNAMO_TABLE,
-                Item: {
-                    aavrtiadmin: "aavrtiadmin",
-                    pk: `ROOM#${roomId}`,
-                    sk: `SESSION#${sessionId}#TRANSCRIPT#${Date.now()}`,
-                    type: 'CHAT_TRANSCRIPT',
-                    sessionId,
-                    transcript,
-                    timestamp: new Date().toISOString()
-                }
-            });
-            await docClient.send(command);
-        } catch (error) {
-            console.error('[AWS] Error saving transcript:', error);
-        }
-    });
+    if (!transcript || transcript.length === 0) return;
+    try {
+        const command = new PutCommand({
+            TableName: DYNAMO_TABLE,
+            Item: {
+                aavrtiadmin: "aavrtiadmin",
+                pk: `ROOM#${roomId}`,
+                sk: `SESSION#${sessionId}#TRANSCRIPT#${Date.now()}`,
+                type: 'CHAT_TRANSCRIPT',
+                sessionId,
+                transcript: JSON.parse(JSON.stringify(transcript)), // Ensure clean data
+                timestamp: new Date().toISOString()
+            }
+        });
+        await docClient.send(command);
+    } catch (error) {
+        console.error('[AWS] Error saving transcript:', error);
+    }
 }
 
 async function uploadFileToS3(filePath, s3Key) {
