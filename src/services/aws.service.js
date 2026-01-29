@@ -5,9 +5,15 @@ const { Upload } = require("@aws-sdk/lib-storage");
 const fs = require('fs');
 const config = require('../config');
 
-const ddbClient = new DynamoDBClient(config.AWS);
+const ddbClient = new DynamoDBClient({
+    region: config.AWS.region,
+    credentials: config.AWS.credentials
+});
 const docClient = DynamoDBDocumentClient.from(ddbClient);
-const s3Client = new S3Client(config.AWS);
+const s3Client = new S3Client({
+    region: config.AWS.region,
+    credentials: config.AWS.credentials
+});
 
 const S3_BUCKET = process.env.S3_BUCKET_NAME;
 const DYNAMO_TABLE = process.env.DYNAMO_TABLE_NAME || 'MeetingLogs';
