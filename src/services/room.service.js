@@ -8,6 +8,8 @@ class RoomManager {
     this.rooms = new Map();
     this.worker = null;
     this.globalRtpCapabilities = null;
+    this.routerPool = [];
+    this.POOL_SIZE = 5;
   }
 
   async initialize(worker) {
@@ -15,14 +17,30 @@ class RoomManager {
     const tempRouter = await this.worker.createRouter({ mediaCodecs: config.mediaCodecs });
     this.globalRtpCapabilities = tempRouter.rtpCapabilities;
     tempRouter.close();
-    logger.info('RoomManager initialized with global capabilities');
+    
+    // Fill router pool
+    for (let i = 0; i < this.POOL_SIZE; i++) {
+      this.worker.createRouter({ mediaCodecs: config.mediaCodecs })
+        .then(router => this.routerPool.push(router))
+        .catch(err => logger.error('Router pool creation failed:', err));
+    }
+    
+    logger.info('RoomManager initialized with global capabilities and router pool');
   }
 
   async getOrCreateRoom(roomId, password = null) {
     let room = this.rooms.get(roomId);
     if (!room) {
-      // Create router immediately
-      const router = await this.worker.createRouter({ mediaCodecs: config.mediaCodecs });
+      // Use router from pool or create new one if pool is empty
+      const router = this.routerPool.pop() || await this.worker.createRouter({ mediaCodecs: config.mediaCodecs });
+      
+      // Refill pool asynchronously
+      if (this.routerPool.length < this.POOL_SIZE) {
+        this.worker.createRouter({ mediaCodecs: config.mediaCodecs })
+          .then(r => this.routerPool.push(r))
+          .catch(err => logger.error('Router pool refill failed:', err));
+      }
+
       room = {
         id: roomId,
         router,
@@ -41,10 +59,8 @@ class RoomManager {
       };
       this.rooms.set(roomId, room);
       
-      // Auto-cleanup room if empty after 5 minutes
       room.cleanupTimeout = null;
       
-      // DEFER logging to avoid blocking room creation
       setImmediate(() => {
         logUserJoin(roomId, {
             action: 'ROOM_CREATED',
@@ -53,7 +69,7 @@ class RoomManager {
         }).catch(err => logger.error(`DynamoDB logging failed for room ${roomId}:`, err));
       });
       
-      logger.info(`New room created: ${roomId}`);
+      logger.info(`New room created instantly from pool: ${roomId}`);
     }
     return room;
   }
