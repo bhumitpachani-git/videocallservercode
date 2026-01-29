@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const roomController = require('../controllers/room.controller');
 
+router.get('/', roomController.getAllRooms);
 router.get('/:roomId', roomController.getRoom);
 router.get('/:roomId/admin', roomController.getAdminRoom);
 router.post('/:roomId/settings', roomController.updateSettings);

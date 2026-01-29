@@ -37,7 +37,20 @@ This document provides technical details for the Video Server backend to help fr
 - **Description**: Verify server is running.
 - **Response**: `{ status: "ok", uptime: 1234 }`
 
-### 2. Get Room Info
+### 2. List All Active Rooms
+`GET /api/rooms`
+- **Description**: Get a list of all currently active rooms on the server.
+- **Response**: 
+  ```json
+  {
+    "totalActiveRooms": 2,
+    "rooms": [
+      { "roomId": "room1", "activeParticipants": 3, "createdAt": "..." }
+    ]
+  }
+  ```
+
+### 3. Get Room Info
 `GET /api/rooms/:roomId`
 - **Description**: Check if a room exists and its settings.
 - **Response**: `{ roomId, hasPassword, settings, activeParticipants }`

@@ -2,6 +2,26 @@ const roomManager = require('../services/room.service');
 const { logUserJoin, saveChatTranscript, getRoomHistory } = require('../services/aws.service');
 const logger = require('../utils/logger');
 
+exports.getAllRooms = async (req, res) => {
+  try {
+    const activeRooms = Array.from(roomManager.rooms.entries()).map(([id, room]) => ({
+      roomId: id,
+      activeParticipants: room.peers.size,
+      hostId: room.hostId,
+      createdAt: room.createdAt,
+      settings: room.settings
+    }));
+
+    res.json({
+      totalActiveRooms: activeRooms.length,
+      rooms: activeRooms
+    });
+  } catch (error) {
+    logger.error('Error fetching all rooms:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
 exports.getAdminRoom = async (req, res) => {
   try {
     const { roomId } = req.params;
