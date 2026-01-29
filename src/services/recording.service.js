@@ -6,6 +6,7 @@ const config = require('../config');
 const { saveRoomDetails, uploadFileToS3 } = require('./aws.service');
 
 const recordingSessions = new Map();
+const MAX_CONCURRENT_RECORDINGS = 5;
 
 function getCodecInfo(rtpParameters) {
     const codec = rtpParameters.codecs[0];
@@ -46,6 +47,10 @@ async function createRecordingConsumer(router, transport, producer) {
 
 async function startRecording(roomId, startedBy, io, rooms) {
     logger.info(`[Recording] Starting recording for room: ${roomId}`);
+
+    if (recordingSessions.size >= MAX_CONCURRENT_RECORDINGS) {
+        throw new Error('Server recording capacity reached. Please try again later.');
+    }
 
     const room = rooms.get(roomId);
     if (!room) throw new Error('Room not found');
@@ -130,8 +135,9 @@ async function startRecording(roomId, startedBy, io, rooms) {
 
     let ffmpegArgs = [
         '-y',
-        '-loglevel', 'info',
+        '-loglevel', 'warning',
         '-protocol_whitelist', 'pipe,udp,rtp,file,crypto',
+        '-thread_queue_size', '1024',
         '-f', 'sdp',
         '-i', 'pipe:0'
     ];
@@ -188,13 +194,33 @@ async function startRecording(roomId, startedBy, io, rooms) {
         if (audioCount > 0) ffmpegArgs.push('-map', '[afinal]');
     }
 
-    ffmpegArgs.push('-c:v', 'libvpx', '-b:v', '2M', '-c:a', 'libopus', '-f', 'webm', outputPath);
+    ffmpegArgs.push(
+        '-c:v', 'libvpx', 
+        '-deadline', 'realtime',
+        '-cpu-used', '8',
+        '-b:v', '1M',
+        '-c:a', 'libopus', 
+        '-b:a', '128k',
+        '-f', 'webm', 
+        outputPath
+    );
 
     logger.info(`[Recording] FFmpeg combined command: ffmpeg ${ffmpegArgs.join(' ')}`);
 
     const ffmpegProcess = spawn('ffmpeg', ffmpegArgs, { stdio: ['pipe', 'pipe', 'pipe'] });
     session.ffmpegProcess = ffmpegProcess;
     session.ffmpegIn = ffmpegProcess.stdin;
+
+    ffmpegProcess.on('error', (err) => {
+        logger.error(`[Recording] FFmpeg process error for room ${roomId}: ${err.message}`);
+        stopRecording(roomId).catch(() => {});
+    });
+
+    ffmpegProcess.on('exit', (code, signal) => {
+        if (code !== 0 && code !== null) {
+            logger.error(`[Recording] FFmpeg exited unexpectedly for room ${roomId} with code ${code}`);
+        }
+    });
 
     ffmpegProcess.stderr.on('data', (data) => {
         logger.info(`[FFmpeg Room] ${data.toString().trim()}`);
