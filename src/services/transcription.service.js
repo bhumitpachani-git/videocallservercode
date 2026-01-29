@@ -2,6 +2,7 @@ const { TranscribeStreamingClient, StartStreamTranscriptionCommand } = require('
 const { PassThrough } = require('stream');
 const config = require('../config');
 const { translateText } = require('./translation.service');
+const { saveTranscription } = require('./aws.service');
 
 const transcribeClient = new TranscribeStreamingClient(config.AWS);
 
@@ -120,6 +121,15 @@ async function handleTranscription(socket, io, rooms, recordingSessions, { roomI
 
           // Force self-transcription to always show original spoken text
           const finalDisplayedText = (peerId === socket.id) ? transcript : (shouldTranslate ? translatedText : transcript);
+
+          if (isFinal && peerId === socket.id) {
+            saveTranscription(roomId, room.sessionId, {
+              socketId: socket.id,
+              username,
+              transcript,
+              language: speakerLanguage
+            }).catch(err => console.error('[AWS] Live transcription save failed:', err));
+          }
 
           const transcriptionPayload = {
             id: `${socket.id}-${Date.now()}-${Math.random()}`,

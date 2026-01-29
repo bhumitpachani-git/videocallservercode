@@ -134,10 +134,52 @@ async function getRoomHistory(roomId) {
     }
 }
 
+async function saveTranscription(roomId, sessionId, transcriptData) {
+    try {
+        const command = new PutCommand({
+            TableName: DYNAMO_TABLE,
+            Item: {
+                aavrtiadmin: "aavrtiadmin",
+                pk: `ROOM#${roomId}`,
+                sk: `SESSION#${sessionId}#TRANSCRIPTION#LIVE#${Date.now()}`,
+                type: 'LIVE_TRANSCRIPTION',
+                sessionId,
+                ...transcriptData,
+                timestamp: new Date().toISOString()
+            }
+        });
+        await docClient.send(command);
+    } catch (error) {
+        console.error('[AWS] Error saving live transcription:', error);
+    }
+}
+
+async function logUserLeave(roomId, sessionId, userDetails) {
+    try {
+        const command = new PutCommand({
+            TableName: DYNAMO_TABLE,
+            Item: {
+                aavrtiadmin: "aavrtiadmin",
+                pk: `ROOM#${roomId}`,
+                sk: `SESSION#${sessionId}#LEAVE#${userDetails.socketId}#${Date.now()}`,
+                type: 'USER_LEAVE',
+                sessionId,
+                ...userDetails,
+                timestamp: new Date().toISOString()
+            }
+        });
+        await docClient.send(command);
+    } catch (error) {
+        console.error('[AWS] Error logging user leave:', error);
+    }
+}
+
 module.exports = {
     logUserJoin,
+    logUserLeave,
     saveChatTranscript,
     saveRoomDetails,
+    saveTranscription,
     uploadFileToS3,
     getRoomHistory
 };

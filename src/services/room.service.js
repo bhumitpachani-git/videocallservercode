@@ -160,8 +160,17 @@ class RoomManager {
   handleDisconnect(socketId) {
     for (const [roomId, room] of this.rooms) {
       if (room.peers.has(socketId)) {
+        const peer = room.peers.get(socketId);
         room.peers.delete(socketId);
         logger.info(`User ${socketId} removed from room ${roomId}`);
+
+        // Log Leave to DynamoDB
+        logUserLeave(roomId, room.sessionId, {
+          socketId: socketId,
+          username: peer.username,
+          joinedAt: peer.joinedAt,
+          duration: Date.now() - new Date(peer.joinedAt).getTime()
+        }).catch(() => {});
 
         // Handle Host Migration
         if (room.hostId === socketId) {
