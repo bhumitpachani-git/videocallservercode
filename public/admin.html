@@ -144,44 +144,85 @@
                 </div>
             </header>
 
-            <div class="row g-4 mb-5">
                 <div class="col-md-3">
                     <div class="card glass-card p-4">
-                        <div class="stat-icon bg-soft-primary"><i class="fas fa-door-open"></i></div>
-                        <h2 class="fw-bold mb-0" id="total-rooms">0</h2>
-                        <p class="text-muted small fw-medium">Active Meeting Rooms</p>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="card glass-card p-4">
-                        <div class="stat-icon bg-soft-success"><i class="fas fa-users"></i></div>
-                        <h2 class="fw-bold mb-0" id="total-users">0</h2>
-                        <p class="text-muted small fw-medium">Live Participants</p>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="card glass-card p-4">
-                        <div class="stat-icon bg-soft-warning"><i class="fas fa-clock"></i></div>
-                        <h2 class="fw-bold mb-0" id="uptime">0m</h2>
-                        <p class="text-muted small fw-medium">Uptime Duration</p>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="card glass-card p-4">
-                        <div class="stat-icon bg-soft-danger"><i class="fas fa-microchip"></i></div>
+                        <div class="stat-icon bg-soft-primary"><i class="fas fa-microchip"></i></div>
                         <h2 class="fw-bold mb-0" id="cpu-load">0.00</h2>
-                        <p class="text-muted small fw-medium">Average CPU Load</p>
+                        <p class="text-muted small fw-medium">CPU Load Average</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card glass-card p-4">
+                        <div class="stat-icon bg-soft-info"><i class="fas fa-memory"></i></div>
+                        <h2 class="fw-bold mb-0" id="ram-usage">0.0</h2>
+                        <p class="text-muted small fw-medium">App RAM (Heap Used MB)</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card glass-card p-4">
+                        <div class="stat-icon bg-soft-warning"><i class="fas fa-server"></i></div>
+                        <h2 class="fw-bold mb-0" id="sys-ram">0.0</h2>
+                        <p class="text-muted small fw-medium">System RAM Used (GB)</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card glass-card p-4">
+                        <div class="stat-icon bg-soft-success"><i class="fas fa-clock"></i></div>
+                        <h2 class="fw-bold mb-0" id="uptime">0m</h2>
+                        <p class="text-muted small fw-medium">Server Uptime</p>
+                    </div>
+                </div>
+
+            <div class="row g-4 mb-4">
+                <div class="col-md-6">
+                    <div class="card glass-card p-4">
+                        <h6 class="fw-bold text-muted text-uppercase small mb-4">Process Memory Details</h6>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Resident Set Size (RSS)</span>
+                            <span id="mem-rss" class="fw-bold">0 MB</span>
+                        </div>
+                        <div class="progress mb-3" style="height: 8px;">
+                            <div id="rss-progress" class="progress-bar bg-primary" style="width: 0%"></div>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Heap Total</span>
+                            <span id="mem-heap-total" class="fw-bold">0 MB</span>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <span>External</span>
+                            <span id="mem-external" class="fw-bold">0 MB</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card glass-card p-4">
+                        <h6 class="fw-bold text-muted text-uppercase small mb-4">System Memory Overview</h6>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>System Total RAM</span>
+                            <span id="sys-total" class="fw-bold">0 GB</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Available Free</span>
+                            <span id="sys-free" class="fw-bold text-success">0 GB</span>
+                        </div>
+                        <div class="progress mt-4" style="height: 12px;">
+                            <div id="sys-progress" class="progress-bar bg-info" style="width: 0%"></div>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <div class="row">
-                <div class="col-12">
-                    <div class="d-flex justify-content-between align-items-center mb-4">
-                        <h4 class="fw-bold mb-0">Active Meeting Details</h4>
+            <div class="row g-4 mb-5">
+                <div class="col-md-6">
+                    <div class="card glass-card p-4 text-center">
+                        <h2 class="fw-bold mb-0" id="total-rooms">0</h2>
+                        <p class="text-muted small fw-medium mb-0">Live Rooms</p>
                     </div>
-                    <div id="rooms-container">
-                        <!-- Detailed Room Cards -->
+                </div>
+                <div class="col-md-6">
+                    <div class="card glass-card p-4 text-center">
+                        <h2 class="fw-bold mb-0" id="total-users">0</h2>
+                        <p class="text-muted small fw-medium mb-0">Total Participants</p>
                     </div>
                 </div>
             </div>
@@ -218,6 +259,23 @@
                 document.getElementById('total-users').innerText = data.totalUsers;
                 document.getElementById('uptime').innerText = Math.floor(data.uptime / 60) + 'm';
                 document.getElementById('cpu-load').innerText = data.cpuLoad;
+                
+                // New Health Metrics
+                document.getElementById('ram-usage').innerText = data.memory.heapUsed + ' MB';
+                document.getElementById('sys-ram').innerText = data.memory.systemUsed + ' GB';
+                document.getElementById('mem-rss').innerText = data.memory.rss + ' MB';
+                document.getElementById('mem-heap-total').innerText = data.memory.heapTotal + ' MB';
+                document.getElementById('mem-external').innerText = data.memory.external + ' MB';
+                document.getElementById('sys-total').innerText = data.memory.systemTotal + ' GB';
+                document.getElementById('sys-free').innerText = data.memory.systemFree + ' GB';
+
+                // Progress Bars
+                const rssPercent = Math.min((data.memory.rss / 2048) * 100, 100); // 2GB assumed limit
+                document.getElementById('rss-progress').style.width = rssPercent + '%';
+                
+                const sysPercent = (data.memory.systemUsed / data.memory.systemTotal) * 100;
+                document.getElementById('sys-progress').style.width = sysPercent + '%';
+
                 document.getElementById('last-updated').innerText = 'Last updated: ' + new Date().toLocaleTimeString();
 
                 const container = document.getElementById('rooms-container');

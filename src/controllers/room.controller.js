@@ -22,11 +22,24 @@ exports.getSystemMetrics = async (req, res) => {
       settings: room.settings
     }));
 
+    const mem = process.memoryUsage();
+    const totalMem = os.totalmem();
+    const freeMem = os.freemem();
+
     res.json({
       totalRooms: rooms.length,
       totalUsers: rooms.reduce((acc, r) => acc + r.userCount, 0),
       uptime: process.uptime(),
       cpuLoad: os.loadavg()[0].toFixed(2),
+      memory: {
+        rss: (mem.rss / 1024 / 1024).toFixed(2), // Resident Set Size
+        heapTotal: (mem.heapTotal / 1024 / 1024).toFixed(2),
+        heapUsed: (mem.heapUsed / 1024 / 1024).toFixed(2),
+        external: (mem.external / 1024 / 1024).toFixed(2),
+        systemTotal: (totalMem / 1024 / 1024 / 1024).toFixed(2),
+        systemFree: (freeMem / 1024 / 1024 / 1024).toFixed(2),
+        systemUsed: ((totalMem - freeMem) / 1024 / 1024 / 1024).toFixed(2)
+      },
       rooms
     });
   } catch (error) {
