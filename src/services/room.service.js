@@ -193,6 +193,14 @@ class RoomManager {
         
         if (room.peers.size === 0) {
           logger.info(`Room ${roomId} is empty, starting cleanup timer`);
+          
+          // Auto-stop recording if in progress
+          const { stopRecording, recordingSessions } = require('./recording.service');
+          if (recordingSessions.has(roomId)) {
+            logger.info(`[Recording] Auto-stopping recording for empty room ${roomId}`);
+            stopRecording(roomId).catch(err => logger.error(`Auto-stop recording failed for room ${roomId}:`, err));
+          }
+
           room.cleanupTimeout = setTimeout(() => {
             if (room.peers.size === 0) {
               room.router.close();

@@ -380,6 +380,16 @@ async function stopRecording(roomId) {
                 const dateStr = new Date().toISOString().split('T')[0];
                 const s3Key = `recordings/${roomId}/${dateStr}/${path.basename(filePath)}`;
                 s3Url = await uploadFileToS3(filePath, s3Key).catch(e => logger.error(e));
+                
+                // Remove local file after successful upload to save space
+                if (s3Url) {
+                    try {
+                        fs.unlinkSync(filePath);
+                        logger.info(`[Recording] Deleted local file after S3 upload: ${filePath}`);
+                    } catch (err) {
+                        logger.error(`[Recording] Failed to delete local file ${filePath}:`, err);
+                    }
+                }
             }
 
             files.push({
@@ -411,7 +421,20 @@ async function stopRecording(roomId) {
     if (process.env.S3_BUCKET_NAME) {
         const dateStr = new Date().toISOString().split('T')[0];
         const s3Key = `recordings/${roomId}/${dateStr}/${session.recordingId}-metadata.json`;
-        await uploadFileToS3(metadataPath, s3Key).catch(() => {});
+        const s3Url = await uploadFileToS3(metadataPath, s3Key).catch(() => {});
+        
+        // Remove local metadata file after S3 upload
+        if (s3Url) {
+            try {
+                fs.unlinkSync(metadataPath);
+                logger.info(`[Recording] Deleted local metadata after S3 upload: ${metadataPath}`);
+                
+                // Cleanup recording directory if empty
+                if (fs.readdirSync(session.recordingDir).length === 0) {
+                    fs.rmdirSync(session.recordingDir);
+                }
+            } catch (err) {}
+        }
     }
 
     await saveRoomDetails({
