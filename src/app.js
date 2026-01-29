@@ -30,8 +30,10 @@ app.get('/health', (req, res) => res.json({ status: 'ok', uptime: process.uptime
 const server = http.createServer(app);
 const io = socketIO(server, { 
   cors: { origin: '*' }, 
-  pingTimeout: 60000, 
-  pingInterval: 25000 
+  pingTimeout: 30000, 
+  pingInterval: 10000,
+  transports: ['websocket'], // Force WebSocket for instant connection
+  allowEIO3: true
 });
 
 socketHandler(io, roomManager);

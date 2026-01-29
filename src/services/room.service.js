@@ -43,7 +43,8 @@ class RoomManager {
       // Auto-cleanup room if empty after 5 minutes
       room.cleanupTimeout = null;
       
-      await logUserJoin(roomId, {
+      // FIRE AND FORGET logging - don't wait for DynamoDB
+      logUserJoin(roomId, {
           action: 'ROOM_CREATED',
           hasPassword: !!password,
           timestamp: new Date().toISOString()
