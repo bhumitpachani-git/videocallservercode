@@ -106,10 +106,10 @@ async function saveRoomDetails(roomData) {
 async function getRoomHistory(roomId) {
     try {
         const command = new QueryCommand({
-            aavrtiadmin: "aavrtiadmin",
             TableName: DYNAMO_TABLE,
-            KeyConditionExpression: "pk = :pk",
+            KeyConditionExpression: "aavrtiadmin = :admin AND pk = :pk",
             ExpressionAttributeValues: {
+                ":admin": "aavrtiadmin",
                 ":pk": `ROOM#${roomId}`
             },
             ScanIndexForward: false 
