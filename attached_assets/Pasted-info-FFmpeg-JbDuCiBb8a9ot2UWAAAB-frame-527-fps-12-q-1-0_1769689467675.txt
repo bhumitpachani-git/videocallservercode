@@ -1,0 +1,177 @@
+info: [FFmpeg JbDuCiBb8a9ot2UWAAAB] frame=  527 fps= 12 q=-1.0 size=    3584KiB time=00:00:25.82 bitrate=1136.9kbits/s speed=0.586x elapsed=0:00:44.10 {"timestamp":"2026-01-29T12:23:42.508Z"}
+info: [FFmpeg JbDuCiBb8a9ot2UWAAAB]  {"timestamp":"2026-01-29T12:23:42.520Z"}
+info: [FFmpeg JbDuCiBb8a9ot2UWAAAB] frame=  527 fps= 12 q=-1.0 size=    3584KiB time=00:00:25.82 bitrate=1136.9kbits/s speed=0.579x elapsed=0:00:44.62 {"timestamp":"2026-01-29T12:23:43.030Z"}
+info: [FFmpeg JbDuCiBb8a9ot2UWAAAB] frame=  527 fps= 12 q=-1.0 size=    3584KiB time=00:00:25.82 bitrate=1136.9kbits/s speed=0.572x elapsed=0:00:45.14 {"timestamp":"2026-01-29T12:23:43.548Z"}
+info: [FFmpeg JbDuCiBb8a9ot2UWAAAB]  {"timestamp":"2026-01-29T12:23:43.549Z"}
+info: File for JbDuCiBb8a9ot2UWAAAB: room1234-1769689366832-CoolBear16-JbDuCiBb.webm - 3670016 bytes {"timestamp":"2026-01-29T12:23:43.843Z"}
+[AWS] Professional S3 upload complete: recordings/room1234/2026-01-29/room1234-1769689366832-CoolBear16-JbDuCiBb.webm
+warn: File missing for 2I7vzXqPrUp-MhDSAAAF {"timestamp":"2026-01-29T12:23:43.887Z"}
+info: [FFmpeg JbDuCiBb8a9ot2UWAAAB] frame=  527 fps= 12 q=-1.0 size=    3584KiB time=00:00:25.82 bitrate=1136.9kbits/s speed=0.566x elapsed=0:00:45.65 {"timestamp":"2026-01-29T12:23:44.099Z"}
+info: [FFmpeg JbDuCiBb8a9ot2UWAAAB] frame=  527 fps= 11 q=-1.0 size=    3584KiB time=00:00:25.82 bitrate=1136.9kbits/s speed=0.559x elapsed=0:00:46.16 {"timestamp":"2026-01-29T12:23:44.575Z"}
+info: [FFmpeg JbDuCiBb8a9ot2UWAAAB] frame=  527 fps= 11 q=-1.0 size=    3584KiB time=00:00:25.82 bitrate=1136.9kbits/s speed=0.553x elapsed=0:00:46.68 {"timestamp":"2026-01-29T12:23:45.092Z"}
+info: [FFmpeg JbDuCiBb8a9ot2UWAAAB] frame=  527 fps= 11 q=-1.0 size=    3584KiB time=00:00:25.82 bitrate=1136.9kbits/s speed=0.547x elapsed=0:00:47.21 {"timestamp":"2026-01-29T12:23:45.621Z"}
+info: [FFmpeg JbDuCiBb8a9ot2UWAAAB]  {"timestamp":"2026-01-29T12:23:45.644Z"}
+[AWS] Professional S3 upload complete: recordings/room1234/2026-01-29/room1234-1769689366832-metadata.json
+[AWS] Error saving room details: Error: Pass options.removeUndefinedValues=true to remove undefined values from map/array/set.
+    at convertToAttr (C:\Users\STAFF1\Downloads\videocallservercode\node_modules\@aws-sdk\util-dynamodb\dist-cjs\index.js:43:15)
+    at C:\Users\STAFF1\Downloads\videocallservercode\node_modules\@aws-sdk\util-dynamodb\dist-cjs\index.js:162:28
+    at convertToMapAttrFromEnumerableProps (C:\Users\STAFF1\Downloads\videocallservercode\node_modules\@aws-sdk\util-dynamodb\dist-cjs\index.js:166:7)  
+    at convertToAttr (C:\Users\STAFF1\Downloads\videocallservercode\node_modules\@aws-sdk\util-dynamodb\dist-cjs\index.js:59:16)
+    at C:\Users\STAFF1\Downloads\videocallservercode\node_modules\@aws-sdk\util-dynamodb\dist-cjs\index.js:94:24
+    at Array.map (<anonymous>)
+    at convertToListAttr (C:\Users\STAFF1\Downloads\videocallservercode\node_modules\@aws-sdk\util-dynamodb\dist-cjs\index.js:94:10)
+    at convertToAttr (C:\Users\STAFF1\Downloads\videocallservercode\node_modules\@aws-sdk\util-dynamodb\dist-cjs\index.js:49:16)
+    at C:\Users\STAFF1\Downloads\videocallservercode\node_modules\@aws-sdk\util-dynamodb\dist-cjs\index.js:162:28
+    at convertToMapAttrFromEnumerableProps (C:\Users\STAFF1\Downloads\videocallservercode\node_modules\@aws-sdk\util-dynamodb\dist-cjs\index.js:166:7)  
+info: [Recording] Completed. Files processed: 1 {"timestamp":"2026-01-29T12:23:46.016Z"}
+info: Recording stopped successfully for room room1234 {"timestamp":"2026-01-29T12:23:46.059Z"}
+info: [FFmpeg JbDuCiBb8a9ot2UWAAAB] frame=  527 fps= 11 q=-1.0 size=    3584KiB time=00:00:25.82 bitrate=1136.9kbits/s speed=0.541x elapsed=0:00:47.73 {"timestamp":"2026-01-29T12:23:46.161Z"}
+info: [FFmpeg JbDuCiBb8a9ot2UWAAAB] frame=  527 fps= 11 q=-1.0 size=    3584KiB time=00:00:25.82 bitrate=1136.9kbits/s speed=0.535x elapsed=0:00:48.25 {"timestamp":"2026-01-29T12:23:46.659Z"}
+[AWS] Professional S3 upload complete: recordings/room1234/2026-01-29/room1234-1769689366832-CoolBear16-JbDuCiBb.webm
+warn: File missing for 2I7vzXqPrUp-MhDSAAAF {"timestamp":"2026-01-29T12:23:47.084Z"}
+info: [FFmpeg JbDuCiBb8a9ot2UWAAAB] frame=  527 fps= 11 q=-1.0 size=    3584KiB time=00:00:25.82 bitrate=1136.9kbits/s speed=0.53x elapsed=0:00:48.76 {"timestamp":"2026-01-29T12:23:47.170Z"}
+[AWS] Professional S3 upload complete: recordings/room1234/2026-01-29/room1234-1769689366832-metadata.json
+[AWS] Error saving room details: Error: Pass options.removeUndefinedValues=true to remove undefined values from map/array/set.
+    at convertToAttr (C:\Users\STAFF1\Downloads\videocallservercode\node_modules\@aws-sdk\util-dynamodb\dist-cjs\index.js:43:15)
+    at C:\Users\STAFF1\Downloads\videocallservercode\node_modules\@aws-sdk\util-dynamodb\dist-cjs\index.js:162:28
+    at convertToMapAttrFromEnumerableProps (C:\Users\STAFF1\Downloads\videocallservercode\node_modules\@aws-sdk\util-dynamodb\dist-cjs\index.js:166:7)  
+    at convertToAttr (C:\Users\STAFF1\Downloads\videocallservercode\node_modules\@aws-sdk\util-dynamodb\dist-cjs\index.js:59:16)
+    at C:\Users\STAFF1\Downloads\videocallservercode\node_modules\@aws-sdk\util-dynamodb\dist-cjs\index.js:94:24
+    at Array.map (<anonymous>)
+    at convertToListAttr (C:\Users\STAFF1\Downloads\videocallservercode\node_modules\@aws-sdk\util-dynamodb\dist-cjs\index.js:94:10)
+    at convertToAttr (C:\Users\STAFF1\Downloads\videocallservercode\node_modules\@aws-sdk\util-dynamodb\dist-cjs\index.js:49:16)
+    at C:\Users\STAFF1\Downloads\videocallservercode\node_modules\@aws-sdk\util-dynamodb\dist-cjs\index.js:162:28
+    at convertToMapAttrFromEnumerableProps (C:\Users\STAFF1\Downloads\videocallservercode\node_modules\@aws-sdk\util-dynamodb\dist-cjs\index.js:166:7)  
+info: [Recording] Completed. Files processed: 1 {"timestamp":"2026-01-29T12:23:47.434Z"}
+info: Recording stopped successfully for room room1234 {"timestamp":"2026-01-29T12:23:47.460Z"}
+info: [FFmpeg JbDuCiBb8a9ot2UWAAAB] frame=  527 fps= 11 q=-1.0 size=    3584KiB time=00:00:25.82 bitrate=1136.9kbits/s speed=0.524x elapsed=0:00:49.28 {"timestamp":"2026-01-29T12:23:47.703Z"}
+info: [FFmpeg JbDuCiBb8a9ot2UWAAAB] frame=  527 fps= 11 q=-1.0 size=    3584KiB time=00:00:25.82 bitrate=1136.9kbits/s speed=0.519x elapsed=0:00:49.80 {"timestamp":"2026-01-29T12:23:48.206Z"}
+info: [FFmpeg JbDuCiBb8a9ot2UWAAAB] frame=  527 fps= 10 q=-1.0 size=    3584KiB time=00:00:25.82 bitrate=1136.9kbits/s speed=0.513x elapsed=0:00:50.31 {"timestamp":"2026-01-29T12:23:48.718Z"}
+info: [FFmpeg JbDuCiBb8a9ot2UWAAAB] frame=  527 fps= 10 q=-1.0 size=    3584KiB time=00:00:25.82 bitrate=1136.9kbits/s speed=0.507x elapsed=0:00:50.93 {"timestamp":"2026-01-29T12:23:49.341Z"}
+info: [FFmpeg JbDuCiBb8a9ot2UWAAAB]  {"timestamp":"2026-01-29T12:23:49.401Z"}
+info: [FFmpeg JbDuCiBb8a9ot2UWAAAB] frame=  527 fps= 10 q=-1.0 size=    3584KiB time=00:00:25.82 bitrate=1136.9kbits/s speed=0.502x elapsed=0:00:51.46 {"timestamp":"2026-01-29T12:23:49.871Z"}
+info: [FFmpeg JbDuCiBb8a9ot2UWAAAB]  {"timestamp":"2026-01-29T12:23:49.907Z"}
+info: [FFmpeg JbDuCiBb8a9ot2UWAAAB] frame=  527 fps= 10 q=-1.0 size=    3584KiB time=00:00:25.82 bitrate=1136.9kbits/s speed=0.497x elapsed=0:00:51.99 {"timestamp":"2026-01-29T12:23:50.397Z"}
+info: [FFmpeg JbDuCiBb8a9ot2UWAAAB] [in#0/sdp @ 000001b3d8de5580] Error during demuxing: Error number -138 occurred
+[in#0/sdp @ 000001b3d8de5580] Terminating thread with return code 0 (success)
+[out#0/webm @ 000001b3d8de4e40] All streams finished
+[out#0/webm @ 000001b3d8de4e40] Terminating thread with return code 0 (success)
+[webm @ 000001b3dacb5140] Writing block of size 3 with pts 25826, dts 25826, duration 20 at relative offset 521412 in cluster at offset 3914841. TrackNumber 2, keyframe 1
+[webm @ 000001b3dacb5140] Writing block of size 1 with pts 25846, dts 25846, duration 20 at relative offset 521421 in cluster at offset 3914841. TrackNumber 2, keyframe 1 {"timestamp":"2026-01-29T12:23:50.886Z"}
+info: [FFmpeg JbDuCiBb8a9ot2UWAAAB] [webm @ 000001b3dacb5140] end duration = 25866
+[webm @ 000001b3dacb5140] stream 0 end duration = 25824
+[webm @ 000001b3dacb5140] stream 1 end duration = 25866
+[AVIOContext @ 000001b3dac9f2c0] Statistics: 4436886 bytes written, 2 seeks, 18 writeouts {"timestamp":"2026-01-29T12:23:50.888Z"}
+info: [FFmpeg JbDuCiBb8a9ot2UWAAAB] [out#0/webm @ 000001b3d8de4e40] Output file #0 (C:\Users\STAFF1\Downloads\videocallservercode\recordings\room1234\room1234-1769689366832-CoolBear16-JbDuCiBb.webm):
+[out#0/webm @ 000001b3d8de4e40]   Output stream #0:0 (video): 527 packets muxed (4430921 bytes);
+[out#0/webm @ 000001b3d8de4e40]   Output stream #0:1 (audio): 124 packets muxed (248 bytes);
+[out#0/webm @ 000001b3d8de4e40]   Total: 651 packets (4431169 bytes) muxed
+[out#0/webm @ 000001b3d8de4e40] video:4327KiB audio:0KiB subtitle:0KiB other streams:0KiB global headers:0KiB muxing overhead: 0.116177%
+frame=  527 fps= 10 q=-1.0 Lsize=    4332KiB time=00:00:25.82 bitrate=1374.3kbits/s speed=0.492x elapsed=0:00:52.48
+[in#0/sdp @ 000001b3d8de5580] Input file #0 (pipe:0):
+[in#0/sdp @ 000001b3d8de5580]   Input stream #0:0 (audio): 124 packets read (248 bytes);
+[in#0/sdp @ 000001b3d8de5580]   Input stream #0:1 (video): 527 packets read (4430921 bytes);
+[in#0/sdp @ 000001b3d8de5580]   Total: 651 packets (4431169 bytes) demuxed
+[AVIOContext @ 000001b3d8de6700] Statistics: 251 bytes read, 0 seeks
+
+Exiting with exit code 0 {"timestamp":"2026-01-29T12:23:50.890Z"}
+info: [FFmpeg 2I7vzXqPrUp-MhDSAAAF] Last message repeated {"timestamp":"2026-01-29T12:23:51.287Z"}
+info: [FFmpeg 2I7vzXqPrUp-MhDSAAAF] 15 times
+[sdp @ 0000023a95545800] rfps: 31.000000 0.013813
+[sdp @ 0000023a95545800] rfps: 32.000000 0.015757
+[sdp @ 0000023a95545800] After avformat_find_stream_info() pos: 251 bytes read:251 seeks:0 frames:18
+Input #0, sdp, from 'pipe:0':
+  Metadata:
+    title           : Mediasoup Peer Recording
+  Duration: N/A, start: 0.000000, bitrate: N/A
+  Stream #0:0, 3, 1/48000: Audio: opus, 48000 Hz, stereo, fltp
+  Stream #0:1, 15, 1/90000: Video: vp8, 1 reference frame, yuv420p(tv, bt470bg/unknown/unknown), 640x360, 0/1, 90k tbr, 90k tbn
+Successfully opened the file.
+Parsing a group of options: output url C:\Users\STAFF1\Downloads\videocallservercode\recordings\room1234\room1234-1769689366832-SwiftTiger25-2I7vzXqP.webm.
+Applying option map (set input stream mapping) with argument 0:v?.
+Applying option map (set input stream mapping) with argument 0:a?. {"timestamp":"2026-01-29T12:23:51.288Z"}
+info: [FFmpeg 2I7vzXqPrUp-MhDSAAAF] Applying option c:v (select encoder/decoder ('copy' to copy stream without reencoding)) with argument copy.
+Applying option c:a (select encoder/decoder ('copy' to copy stream without reencoding)) with argument copy.
+Applying option f (force container format (auto-detected otherwise)) with argument webm.
+Successfully parsed a group of options.
+Opening an output file: C:\Users\STAFF1\Downloads\videocallservercode\recordings\room1234\room1234-1769689366832-SwiftTiger25-2I7vzXqP.webm.
+[out#0/webm @ 0000023a955efec0] Adding streams from explicit maps...
+[vost#0:0/copy @ 0000023a9560e900] Created video stream from input stream 0:1
+[aost#0:1/copy @ 0000023a9560ed80] Created audio stream from input stream 0:0
+[file @ 0000023a955d8780] Setting default whitelist 'file,crypto,data' {"timestamp":"2026-01-29T12:23:51.290Z"}
+info: [FFmpeg 2I7vzXqPrUp-MhDSAAAF] Successfully opened the file.
+Stream mapping:
+  Stream #0:1 -> #0:0 (copy)
+  Stream #0:0 -> #0:1 (copy)
+[webm @ 0000023a9715ca40] get_metadata_duration returned: 0
+Output #0, webm, to 'C:\Users\STAFF1\Downloads\videocallservercode\recordings\room1234\room1234-1769689366832-SwiftTiger25-2I7vzXqP.webm':
+  Metadata:
+    title           : Mediasoup Peer Recording
+    encoder         : Lavf62.3.100
+  Stream #0:0, 0, 1/1000: Video: vp8, 1 reference frame, yuv420p(tv, bt470bg/unknown/unknown), 640x360, 0/1, q=2-31, 90k tbr, 1k tbn
+  Stream #0:1, 0, 1/1000: Audio: opus, 48000 Hz, stereo, fltp
+[out#0/webm @ 0000023a955efec0] Starting thread...
+[in#0/sdp @ 0000023a95545580] Starting thread... {"timestamp":"2026-01-29T12:23:51.295Z"}
+info: [FFmpeg 2I7vzXqPrUp-MhDSAAAF] [webm @ 0000023a9715ca40] Starting new cluster with timestamp 0 at offset 609 bytes
+[webm @ 0000023a9715ca40] Writing block of size 12110 with pts 0, dts 0, duration 0 at relative offset 3 in cluster at offset 609. TrackNumber 1, keyframe 1 {"timestamp":"2026-01-29T12:23:51.298Z"}
+info: [FFmpeg 2I7vzXqPrUp-MhDSAAAF] [webm @ 0000023a9715ca40] Writing block of size 1 with pts 0, dts 0, duration 20 at relative offset 12120 in cluster at offset 609. TrackNumber 2, keyframe 1
+[webm @ 0000023a9715ca40] Writing block of size 9535 with pts 33, dts 33, duration 0 at relative offset 12127 in cluster at offset 609. TrackNumber 1, keyframe 0
+[webm @ 0000023a9715ca40] Writing block of size 7199 with pts 81, dts 81, duration 0 at relative offset 21669 in cluster at offset 609. TrackNumber 1, keyframe 0
+[webm @ 0000023a9715ca40] Writing block of size 5918 with pts 113, dts 113, duration 0 at relative offset 28875 in cluster at offset 609. TrackNumber 1, keyframe 0
+[webm @ 0000023a9715ca40] Writing block of size 6238 with pts 146, dts 146, duration 0 at relative offset 34800 in cluster at offset 609. TrackNumber 1, keyframe 0
+[webm @ 0000023a9715ca40] Writing block of size 6474 with pts 176, dts 176, duration 0 at relative offset 41045 in cluster at offset 609. TrackNumber 1, keyframe 0
+[webm @ 0000023a9715ca40] Writing block of size 6557 with pts 208, dts 208, duration 0 at relative offset 47526 in cluster at offset 609. TrackNumber 1, keyframe 0
+[webm @ 0000023a9715ca40] Writing block of size 6377 with pts 240, dts 240, duration 0 at relative offset 54090 in cluster at offset 609. TrackNumber 1, keyframe 0
+[webm @ 0000023a9715ca40] Writing block of size 6442 with pts 273, dts 273, duration 0 at relative offset 60474 in cluster at offset 609. TrackNumber 1, keyframe 0
+[webm @ 0000023a9715ca40] Writing block of size 6567 with pts 306, dts 306, duration 0 at relative offset 66923 in cluster at offset 609. TrackNumber 1, keyframe 0
+[webm @ 0000023a9715ca40] Writing block of size 6167 with pts 337, dts 337, duration 0 at relative offset 73497 in cluster at offset 609. TrackNumber 1, keyframe 0
+[webm @ 0000023a9715ca40] Writing block of size 8453 with pts 368, dts 368, duration 0 at relative offset 79671 in cluster at offset 609. TrackNumber 1, keyframe 0
+[webm @ 0000023a9715ca40] Writing block of size 3 with pts 400, dts 400, duration 20 at relative offset 88131 in cluster at offset 609. TrackNumber 2, keyframe 1
+[webm @ 0000023a9715ca40] Writing block of size 6616 with pts 401, dts 401, duration 0 at relative offset 88140 in cluster at offset 609. TrackNumber 1, keyframe 0 {"timestamp":"2026-01-29T12:23:51.309Z"}
+info: [FFmpeg 2I7vzXqPrUp-MhDSAAAF] frame=   15 fps=0.0 q=-1.0 size=       1KiB time=00:00:00.44 bitrate=  11.1kbits/s speed=0.85x elapsed=0:00:00.51 {"timestamp":"2026-01-29T12:23:51.811Z"}
+info: [FFmpeg 2I7vzXqPrUp-MhDSAAAF] frame=   15 fps= 15 q=-1.0 size=       1KiB time=00:00:00.44 bitrate=  11.1kbits/s speed=0.427x elapsed=0:00:01.03 {"timestamp":"2026-01-29T12:23:52.324Z"}
+info: [FFmpeg 2I7vzXqPrUp-MhDSAAAF] frame=   15 fps=9.7 q=-1.0 size=       1KiB time=00:00:00.44 bitrate=  11.1kbits/s speed=0.284x elapsed=0:00:01.55 {"timestamp":"2026-01-29T12:23:52.845Z"}
+info: [FFmpeg 2I7vzXqPrUp-MhDSAAAF] frame=   15 fps=7.3 q=-1.0 size=       1KiB time=00:00:00.44 bitrate=  11.1kbits/s speed=0.213x elapsed=0:00:02.06 {"timestamp":"2026-01-29T12:23:53.355Z"}
+info: [FFmpeg 2I7vzXqPrUp-MhDSAAAF]  {"timestamp":"2026-01-29T12:23:53.359Z"}
+info: [FFmpeg 2I7vzXqPrUp-MhDSAAAF] frame=   15 fps=5.8 q=-1.0 size=       1KiB time=00:00:00.44 bitrate=  11.1kbits/s speed=0.17x elapsed=0:00:02.58 {"timestamp":"2026-01-29T12:23:53.880Z"}
+info: [FFmpeg 2I7vzXqPrUp-MhDSAAAF] frame=   15 fps=4.8 q=-1.0 size=       1KiB time=00:00:00.44 bitrate=  11.1kbits/s speed=0.142x elapsed=0:00:03.09 {"timestamp":"2026-01-29T12:23:54.394Z"}
+info: [FFmpeg 2I7vzXqPrUp-MhDSAAAF]  {"timestamp":"2026-01-29T12:23:54.395Z"}
+info: [FFmpeg 2I7vzXqPrUp-MhDSAAAF] frame=   15 fps=4.2 q=-1.0 size=       1KiB time=00:00:00.44 bitrate=  11.1kbits/s speed=0.122x elapsed=0:00:03.60 {"timestamp":"2026-01-29T12:23:54.902Z"}
+info: [FFmpeg 2I7vzXqPrUp-MhDSAAAF] frame=   15 fps=3.6 q=-1.0 size=       1KiB time=00:00:00.44 bitrate=  11.1kbits/s speed=0.107x elapsed=0:00:04.12 {"timestamp":"2026-01-29T12:23:55.417Z"}
+info: [FFmpeg 2I7vzXqPrUp-MhDSAAAF] frame=   15 fps=3.2 q=-1.0 size=       1KiB time=00:00:00.44 bitrate=  11.1kbits/s speed=0.0945x elapsed=0:00:04.65 {"timestamp":"2026-01-29T12:23:55.952Z"}
+info: [FFmpeg 2I7vzXqPrUp-MhDSAAAF] frame=   15 fps=2.9 q=-1.0 size=       1KiB time=00:00:00.44 bitrate=  11.1kbits/s speed=0.0848x elapsed=0:00:05.18 {"timestamp":"2026-01-29T12:23:56.481Z"}
+info: [FFmpeg 2I7vzXqPrUp-MhDSAAAF] frame=   15 fps=2.6 q=-1.0 size=       1KiB time=00:00:00.44 bitrate=  11.1kbits/s speed=0.0771x elapsed=0:00:05.70 {"timestamp":"2026-01-29T12:23:56.997Z"}
+info: [FFmpeg 2I7vzXqPrUp-MhDSAAAF] frame=   15 fps=2.4 q=-1.0 size=       1KiB time=00:00:00.44 bitrate=  11.1kbits/s speed=0.0707x elapsed=0:00:06.22 {"timestamp":"2026-01-29T12:23:57.516Z"}
+info: [FFmpeg 2I7vzXqPrUp-MhDSAAAF] frame=   15 fps=2.2 q=-1.0 size=       1KiB time=00:00:00.44 bitrate=  11.1kbits/s speed=0.0653x elapsed=0:00:06.73 {"timestamp":"2026-01-29T12:23:58.029Z"}
+info: [FFmpeg 2I7vzXqPrUp-MhDSAAAF] frame=   15 fps=2.1 q=-1.0 size=       1KiB time=00:00:00.44 bitrate=  11.1kbits/s speed=0.0606x elapsed=0:00:07.25 {"timestamp":"2026-01-29T12:23:58.553Z"}
+info: [FFmpeg 2I7vzXqPrUp-MhDSAAAF] frame=   15 fps=1.9 q=-1.0 size=       1KiB time=00:00:00.44 bitrate=  11.1kbits/s speed=0.0565x elapsed=0:00:07.78 {"timestamp":"2026-01-29T12:23:59.077Z"}
+info: [FFmpeg 2I7vzXqPrUp-MhDSAAAF] frame=   15 fps=1.8 q=-1.0 size=       1KiB time=00:00:00.44 bitrate=  11.1kbits/s speed=0.053x elapsed=0:00:08.30 {"timestamp":"2026-01-29T12:23:59.596Z"}
+info: [FFmpeg 2I7vzXqPrUp-MhDSAAAF] frame=   15 fps=1.7 q=-1.0 size=       1KiB time=00:00:00.44 bitrate=  11.1kbits/s speed=0.0499x elapsed=0:00:08.81 {"timestamp":"2026-01-29T12:24:00.112Z"}
+info: [FFmpeg 2I7vzXqPrUp-MhDSAAAF] frame=   15 fps=1.6 q=-1.0 size=       1KiB time=00:00:00.44 bitrate=  11.1kbits/s speed=0.0472x elapsed=0:00:09.32 {"timestamp":"2026-01-29T12:24:00.623Z"}
+info: [FFmpeg 2I7vzXqPrUp-MhDSAAAF] frame=   15 fps=1.5 q=-1.0 size=       1KiB time=00:00:00.44 bitrate=  11.1kbits/s speed=0.0447x elapsed=0:00:09.85 {"timestamp":"2026-01-29T12:24:01.144Z"}
+info: [FFmpeg 2I7vzXqPrUp-MhDSAAAF] frame=   15 fps=1.4 q=-1.0 size=       1KiB time=00:00:00.44 bitrate=  11.1kbits/s speed=0.0425x elapsed=0:00:10.36 {"timestamp":"2026-01-29T12:24:01.654Z"}
+info: [FFmpeg 2I7vzXqPrUp-MhDSAAAF] [in#0/sdp @ 0000023a95545580] Error during demuxing: Error number -138 occurred
+[in#0/sdp @ 0000023a95545580] {"timestamp":"2026-01-29T12:24:02.101Z"}
+info: [FFmpeg 2I7vzXqPrUp-MhDSAAAF] Terminating thread with return code 0 (success)
+[out#0/webm @ 0000023a955efec0] All streams finished
+[out#0/webm @ 0000023a955efec0] Terminating thread with return code 0 (success)
+[webm @ 0000023a9715ca40] Writing block of size 1 with pts 420, dts 420, duration 20 at relative offset 94763 in cluster at offset 609. TrackNumber 2, keyframe 1
+[webm @ 0000023a9715ca40] Writing block of size 8596 with pts 465, dts 465, duration 0 at relative offset 94770 in cluster at offset 609. TrackNumber 1, keyframe 0
+[webm @ 0000023a9715ca40] Writing block of size 6095 with pts 497, dts 497, duration 0 at relative offset 103373 in cluster at offset 609. TrackNumber 1, keyframe 0
+[webm @ 0000023a9715ca40] end duration = 497
+[webm @ 0000023a9715ca40] stream 0 end duration = 497
+[webm @ 0000023a9715ca40] stream 1 end duration = 440
+[AVIOContext @ 0000023a955d88c0] Statistics: 110113 bytes written, 0 seeks, 1 writeouts
+[out#0/webm @ 0000023a955efec0] Output file #0 (C:\Users\STAFF1\Downloads\videocallservercode\recordings\room1234\room1234-1769689366832-SwiftTiger25-2I7vzXqP.webm):
+[out#0/webm @ 0000023a955efec0]   Output stream #0:0 (video): 15 packets muxed (109344 bytes);
+[out#0/webm @ 0000023a955efec0]   Output stream #0:1 (audio): 3 packets muxed (5 bytes);
+[out#0/webm @ 0000023a955efec0]   Total: 18 packets (109349 bytes) muxed
+[out#0/webm @ 0000023a955efec0] video:107KiB audio:0KiB subtitle:0KiB other streams:0KiB global headers:0KiB muxing overhead: 0.698680%
+frame=   15 fps=1.4 q=-1.0 Lsize=     108KiB time=00:00:00.44 bitrate=2002.1kbits/s speed=0.0407x elapsed=0:00:10.81
+[in#0/sdp @ 0000023a95545580] Input file #0 (pipe:0):
+[in#0/sdp @ 0000023a95545580]   Input stream #0:0 (audio): 3 packets read (5 bytes);
+[in#0/sdp @ 0000023a95545580]   Input stream #0:1 (video): 15 packets read (109344 bytes);
+[in#0/sdp @ 0000023a95545580]   Total: 18 packets (109349 bytes) demuxed
+[AVIOContext @ 0000023a95546700] Statistics: 251 bytes read, 0 seeks
+
+Exiting with exit code 0 {"timestamp":"2026-01-29T12:24:02.167Z"}

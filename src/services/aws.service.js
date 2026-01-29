@@ -9,7 +9,12 @@ const ddbClient = new DynamoDBClient({
     region: config.AWS.region,
     credentials: config.AWS.credentials
 });
-const docClient = DynamoDBDocumentClient.from(ddbClient);
+const docClient = DynamoDBDocumentClient.from(ddbClient, {
+    marshallOptions: {
+        removeUndefinedValues: true,
+        convertClassInstanceToMap: true
+    }
+});
 const s3Client = new S3Client({
     region: config.AWS.region,
     credentials: config.AWS.credentials
