@@ -44,7 +44,10 @@ async function logUserJoin(roomId, sessionId, userDetails) {
 }
 
 async function saveChatTranscript(roomId, sessionId, transcript) {
-    if (!transcript || transcript.length === 0) return;
+    if (!transcript || transcript.length === 0) {
+        console.log(`[AWS] Skipping empty chat save for ${roomId}`);
+        return;
+    }
     try {
         const command = new PutCommand({
             TableName: DYNAMO_TABLE,
@@ -54,11 +57,12 @@ async function saveChatTranscript(roomId, sessionId, transcript) {
                 sk: `SESSION#${sessionId}#TRANSCRIPT#${Date.now()}`,
                 type: 'CHAT_TRANSCRIPT',
                 sessionId,
-                transcript: JSON.parse(JSON.stringify(transcript)), // Ensure clean data
+                transcript: JSON.parse(JSON.stringify(transcript)), 
                 timestamp: new Date().toISOString()
             }
         });
         await docClient.send(command);
+        console.log(`[AWS] Chat stored for ${roomId} session ${sessionId}`);
     } catch (error) {
         console.error('[AWS] Error saving transcript:', error);
     }

@@ -388,8 +388,8 @@ module.exports = (io, roomManager) => {
 
         io.to(roomId).emit('chat-message', chatMessage);
         
-        // Auto-save to DynamoDB (Non-blocking)
-        saveChatTranscript(roomId, room.sessionId, room.chatMessages);
+        // Ensure non-blocking persistent storage
+        saveChatTranscript(roomId, room.sessionId, room.chatMessages).catch(err => logger.error('Chat auto-save failed:', err));
       }
     });
 
@@ -409,8 +409,8 @@ module.exports = (io, roomManager) => {
 
         io.to(roomId).emit('chat-message', chatMessage);
 
-        // Auto-save to DynamoDB (Non-blocking)
-        saveChatTranscript(roomId, room.sessionId, room.chatMessages);
+        // Ensure non-blocking persistent storage
+        saveChatTranscript(roomId, room.sessionId, room.chatMessages).catch(err => logger.error('Chat auto-save failed:', err));
       }
     });
 
