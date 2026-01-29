@@ -1,7 +1,7 @@
 const { z } = require('zod');
 
 const joinRoomSchema = z.object({
-  roomId: z.string().regex(/^[a-zA-Z0-9]+$/).min(3).max(30),
+  roomId: z.string().min(1).max(100),
   username: z.string().min(2).max(20),
   password: z.string().optional().nullable(),
   recorder: z.boolean().default(false)
