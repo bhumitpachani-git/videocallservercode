@@ -38,7 +38,6 @@ async function logUserJoin(roomId, userDetails) {
 }
 
 async function saveChatTranscript(roomId, transcript) {
-    // Fire and forget - don't await to avoid blocking chat flow
     setImmediate(async () => {
         try {
             const command = new PutCommand({
@@ -68,17 +67,16 @@ async function uploadFileToS3(filePath, s3Key) {
                 Bucket: S3_BUCKET,
                 Key: s3Key,
                 Body: fileStream,
-                ContentType: 'video/mp4' // Explicit content type for professional playback
+                ContentType: 'video/mp4'
             },
-            queueSize: 4, // Concurrent uploads
-            partSize: 1024 * 1024 * 5, // 5MB parts
+            queueSize: 4,
+            partSize: 1024 * 1024 * 5,
             leavePartsOnError: false,
         });
 
         await upload.done();
         console.log(`[AWS] Professional S3 upload complete: ${s3Key}`);
-        
-        // Return a public URL if bucket is public, or s3:// if private
+
         return `https://${S3_BUCKET}.s3.${config.AWS.region}.amazonaws.com/${s3Key}`;
     } catch (error) {
         console.error('[AWS] Error during professional S3 upload:', error);
@@ -108,12 +106,13 @@ async function saveRoomDetails(roomData) {
 async function getRoomHistory(roomId) {
     try {
         const command = new QueryCommand({
+            aavrtiadmin: "aavrtiadmin",
             TableName: DYNAMO_TABLE,
             KeyConditionExpression: "pk = :pk",
             ExpressionAttributeValues: {
                 ":pk": `ROOM#${roomId}`
             },
-            ScanIndexForward: false // Latest first
+            ScanIndexForward: false 
         });
         const response = await docClient.send(command);
         return response.Items || [];
