@@ -1,0 +1,81 @@
+PS C:\Users\STAFF1\Downloads\videocallservercode> npm start
+
+> video-server@1.0.0 start
+> node src/app.js
+
+[dotenv@17.2.3] injecting env (8) from .env -- tip: 🔑 add access controls to secrets: https://dotenvx.com/ops
+info: RoomManager initialized with global capabilities and router pool {"timestamp":"2026-01-29T12:33:45.666Z"}
+info: 🚀 Powerful Backend running on port 5000 {"timestamp":"2026-01-29T12:33:45.682Z"}
+info: New connection: Pis_dEb18gTnFIt8AAAB {"timestamp":"2026-01-29T12:33:46.632Z"}
+info: New connection: sgKVsSW-y157DxrcAAAD {"timestamp":"2026-01-29T12:33:46.663Z"}
+info: New connection: pyJ0VsvDgfpnRgGwAAAF {"timestamp":"2026-01-29T12:33:46.687Z"}
+info: New connection: xKlciZIpf8wltQSxAAAH {"timestamp":"2026-01-29T12:33:46.719Z"}
+info: New connection: bO4iNp72CLfpOJXkAAAJ {"timestamp":"2026-01-29T12:33:53.884Z"}
+info: New room created instantly from pool: room1234 {"timestamp":"2026-01-29T12:33:53.939Z"}
+info: New connection: DED6Wc3Oc1qbTqh0AAAL {"timestamp":"2026-01-29T12:33:59.992Z"}
+info: Client disconnected: sgKVsSW-y157DxrcAAAD {"timestamp":"2026-01-29T12:34:00.566Z"}
+info: Client disconnected: Pis_dEb18gTnFIt8AAAB {"timestamp":"2026-01-29T12:34:00.764Z"}
+info: Client disconnected: xKlciZIpf8wltQSxAAAH {"timestamp":"2026-01-29T12:34:01.333Z"}
+info: Client disconnected: pyJ0VsvDgfpnRgGwAAAF {"timestamp":"2026-01-29T12:34:01.361Z"}
+info: Consumer da980dea-47e6-4eaf-b010-c28cff901d8c resumed for peer DED6Wc3Oc1qbTqh0AAAL {"timestamp":"2026-01-29T12:34:02.332Z"}
+info: Consumer bd61a7d1-ea93-47e6-8362-603c2838c4db resumed for peer bO4iNp72CLfpOJXkAAAJ {"timestamp":"2026-01-29T12:34:02.441Z"}
+info: Consumer 33afa059-7da7-411f-91b9-028891c9d7b1 resumed for peer DED6Wc3Oc1qbTqh0AAAL {"timestamp":"2026-01-29T12:34:02.891Z"}
+info: Consumer 7161c77e-efd5-411d-bb0b-ed6c659f0842 resumed for peer bO4iNp72CLfpOJXkAAAJ {"timestamp":"2026-01-29T12:34:03.625Z"}
+info: New connection: XDQa77nkT_T4rXroAAAN {"timestamp":"2026-01-29T12:34:06.406Z"}
+info: New room created instantly from pool: HUH-LQ6Q {"timestamp":"2026-01-29T12:34:06.439Z"}
+info: New connection: byxDYeKOZt5_CRBHAAAP {"timestamp":"2026-01-29T12:34:12.261Z"}
+info: Consumer 39a53b0b-bcde-4db8-8f08-ff789e6cfdec resumed for peer XDQa77nkT_T4rXroAAAN {"timestamp":"2026-01-29T12:34:18.032Z"}
+info: Consumer 30494909-28e0-41a5-b6fb-2d1ae4478456 resumed for peer XDQa77nkT_T4rXroAAAN {"timestamp":"2026-01-29T12:34:18.102Z"}
+info: Consumer 45aab7c6-c4af-4666-8067-a56007da67bf resumed for peer byxDYeKOZt5_CRBHAAAP {"timestamp":"2026-01-29T12:34:18.286Z"}
+info: Consumer 80588f32-6769-4627-9e39-b9e20919e520 resumed for peer byxDYeKOZt5_CRBHAAAP {"timestamp":"2026-01-29T12:34:18.574Z"}
+[Transcription] Starting for HappyDolphin45 in room room1234, speaking: en, target: en
+[Transcription] Starting for WiseFox29 in room room1234, speaking: en, target: en
+info: Target language set to hi for socket bO4iNp72CLfpOJXkAAAJ {"timestamp":"2026-01-29T12:34:35.106Z"}
+[Translation] en → hi for HappyDolphin45: "Fortu"
+[Translation] en → hi for HappyDolphin45: "आपके लिए"
+[Translation] en → hi for HappyDolphin45: "के बारे में"
+[Translation] en → hi for HappyDolphin45: "इसके बारे में।"
+[Translation] en → hi for HappyDolphin45: "कैसे"
+[Translation] en → hi for HappyDolphin45: "मैं कैसे मदद कर सकता हूं"
+[Translation] en → hi for HappyDolphin45: "मैं आपकी मदद कैसे कर सकता हूं"
+info: CosmicWolf started whiteboard presentation {"timestamp":"2026-01-29T12:34:51.993Z"}
+info: CosmicWolf stopped whiteboard presentation {"timestamp":"2026-01-29T12:34:56.809Z"}
+[Translation] en → hi for HappyDolphin45: "हां,"
+[Translation] en → hi for HappyDolphin45: "हां, हॉवर्ड"
+info: CosmicWolf started notes presentation {"timestamp":"2026-01-29T12:35:00.711Z"}
+info: CosmicWolf stopped notes presentation {"timestamp":"2026-01-29T12:35:06.889Z"}
+[Translation] en → hi for HappyDolphin45: "हां,"
+[Translation] en → hi for HappyDolphin45: "हां, हां"
+[Translation] en → hi for HappyDolphin45: "हां हां"
+info: Poll created in HUH-LQ6Q: asdadd {"timestamp":"2026-01-29T12:35:12.416Z"}
+[AWS] Chat stored for room1234 session SESS-1769690033939-ca6tq5xg8
+[AWS] Chat stored for room1234 session SESS-1769690033939-ca6tq5xg8
+[AWS] Chat stored for room1234 session SESS-1769690033939-ca6tq5xg8
+[Translation] en → hi for HappyDolphin45: "मैं"
+[AWS] Chat stored for room1234 session SESS-1769690033939-ca6tq5xg8
+[Translation] en → hi for HappyDolphin45: "मैं"
+[AWS] Chat stored for room1234 session SESS-1769690033939-ca6tq5xg8
+[Translation] en → hi for HappyDolphin45: "मैं"
+[AWS] Chat stored for room1234 session SESS-1769690033939-ca6tq5xg8
+[AWS] Chat stored for room1234 session SESS-1769690033939-ca6tq5xg8
+[AWS] Chat stored for room1234 session SESS-1769690033939-ca6tq5xg8
+[Translation] en → hi for HappyDolphin45: "मैं।"
+info: Client disconnected: bO4iNp72CLfpOJXkAAAJ {"timestamp":"2026-01-29T12:35:33.589Z"}
+info: User bO4iNp72CLfpOJXkAAAJ removed from room room1234 {"timestamp":"2026-01-29T12:35:33.607Z"}
+C:\Users\STAFF1\Downloads\videocallservercode\src\services\room.service.js:168
+        logUserLeave(roomId, room.sessionId, {
+        ^
+
+ReferenceError: logUserLeave is not defined
+    at RoomManager.handleDisconnect (C:\Users\STAFF1\Downloads\videocallservercode\src\services\room.service.js:168:9)
+    at Socket.<anonymous> (C:\Users\STAFF1\Downloads\videocallservercode\src\services\socket.handler.js:638:19)
+    at Socket.emit (node:events:524:28)
+    at Socket.emitReserved (C:\Users\STAFF1\Downloads\videocallservercode\node_modules\socket.io\dist\typed-events.js:56:22)
+    at Socket._onclose (C:\Users\STAFF1\Downloads\videocallservercode\node_modules\socket.io\dist\socket.js:554:14)
+    at Socket.ondisconnect (C:\Users\STAFF1\Downloads\videocallservercode\node_modules\socket.io\dist\socket.js:513:14)
+    at Socket._onpacket (C:\Users\STAFF1\Downloads\videocallservercode\node_modules\socket.io\dist\socket.js:442:22)
+    at C:\Users\STAFF1\Downloads\videocallservercode\node_modules\socket.io\dist\client.js:207:24
+    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)
+
+Node.js v20.19.4
+PS C:\Users\STAFF1\Downloads\videocallservercode> 

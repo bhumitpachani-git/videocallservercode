@@ -1,6 +1,6 @@
 const mediasoup = require('mediasoup');
 const config = require('../config');
-const { logUserJoin, saveRoomDetails } = require('./aws.service');
+const { logUserJoin, saveRoomDetails, logUserLeave } = require('./aws.service');
 const logger = require('../utils/logger');
 
 class RoomManager {
@@ -208,8 +208,17 @@ class RoomManager {
           const { stopRecording, recordingSessions } = require('./recording.service');
           if (recordingSessions.has(roomId)) {
             logger.info(`[Recording] Auto-stopping recording for empty room ${roomId}`);
-            stopRecording(roomId).then(result => {
+            stopRecording(roomId).then(async (result) => {
               logger.info(`[Recording] Auto-stop and upload successful for room ${roomId}: ${result.recordingId}`);
+              
+              // Save full transcription JSON to DynamoDB at end of session
+              if (result.metadata && result.metadata.transcripts && result.metadata.transcripts.length > 0) {
+                const { saveTranscription } = require('./aws.service');
+                await saveTranscription(roomId, room.sessionId, {
+                  type: 'FULL_SESSION_TRANSCRIPT',
+                  transcripts: result.metadata.transcripts
+                }).catch(err => logger.error('[AWS] Full transcription save failed:', err));
+              }
             }).catch(err => logger.error(`Auto-stop recording failed for room ${roomId}:`, err));
           }
 
