@@ -163,20 +163,32 @@ async function startRecording(roomId, startedBy, io, rooms) {
         let xStack = '';
         for (let r = 0; r < rows; r++) {
             let rowInputs = '';
+            let rowCols = 0;
             for (let c = 0; c < cols; c++) {
                 const idx = r * cols + c;
                 if (idx < videoCount) {
                     rowInputs += `[v${idx}]`;
+                    rowCols++;
                 } else {
                     // Placeholder for empty cells
                     filterComplex += `color=s=${cellW}x${cellH}:c=black[vblack${idx}];`;
                     rowInputs += `[vblack${idx}]`;
+                    rowCols++;
                 }
             }
-            filterComplex += `${rowInputs}hstack=inputs=${cols}[row${r}];`;
-            xStack += `[row${r}]`;
+            if (rowCols > 1) {
+                filterComplex += `${rowInputs}hstack=inputs=${rowCols}[row${r}];`;
+                xStack += `[row${r}]`;
+            } else {
+                filterComplex += `${rowInputs}null[row${r}];`;
+                xStack += `[row${r}]`;
+            }
         }
-        filterComplex += `${xStack}vstack=inputs=${rows}[vfinal]`;
+        if (rows > 1) {
+            filterComplex += `${xStack}vstack=inputs=${rows}[vfinal]`;
+        } else {
+            filterComplex += `${xStack}null[vfinal]`;
+        }
     }
 
     if (audioCount > 0) {
@@ -185,7 +197,11 @@ async function startRecording(roomId, startedBy, io, rooms) {
         for (let i = 0; i < audioCount; i++) {
             audioInputs += `[0:a:${i}]`;
         }
-        filterComplex += `${audioInputs}amix=inputs=${audioCount}[afinal]`;
+        if (audioCount > 1) {
+            filterComplex += `${audioInputs}amix=inputs=${audioCount}[afinal]`;
+        } else {
+            filterComplex += `${audioInputs}anull[afinal]`;
+        }
     }
 
     if (filterComplex) {

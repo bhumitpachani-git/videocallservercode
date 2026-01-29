@@ -1,0 +1,40 @@
+PS C:\Users\STAFF1\Downloads\videocallservercode> npm start
+
+> video-server@1.0.0 start
+> node src/app.js
+
+[dotenv@17.2.3] injecting env (8) from .env -- tip: ⚙️  enable debug logging with { debug: true }
+info: RoomManager initialized with global capabilities and router pool {"timestamp":"2026-01-29T11:34:32.766Z"}
+info: 🚀 Powerful Backend running on port 5000 {"timestamp":"2026-01-29T11:34:32.798Z"}
+info: New connection: HMxgdCssTdeP_Q7JAAAB {"timestamp":"2026-01-29T11:34:36.633Z"}
+info: New connection: Qtj0baGCEFxaAWtuAAAD {"timestamp":"2026-01-29T11:34:36.640Z"}
+info: New connection: evhPRgeWX5OySQh5AAAF {"timestamp":"2026-01-29T11:34:36.672Z"}
+info: New connection: 8M3aTUl9sQEA6e6NAAAH {"timestamp":"2026-01-29T11:34:36.697Z"}
+info: New connection: fcxBy2z2FiqUmMxYAAAJ {"timestamp":"2026-01-29T11:36:14.998Z"}
+info: New room created instantly from pool: room1234 {"timestamp":"2026-01-29T11:36:15.009Z"}
+info: New connection: _5UzVqgrRQcWwnj8AAAL {"timestamp":"2026-01-29T11:36:21.369Z"}
+info: Consumer 18a2e8b1-f055-4004-8351-30a83bedc46a resumed for peer _5UzVqgrRQcWwnj8AAAL {"timestamp":"2026-01-29T11:36:24.436Z"}
+info: Consumer 4e79b7e1-b75e-4adb-98ed-6375904bf40b resumed for peer fcxBy2z2FiqUmMxYAAAJ {"timestamp":"2026-01-29T11:36:24.557Z"}
+info: Consumer 76f07ae4-49f9-4660-8b1d-6859ebdb0981 resumed for peer fcxBy2z2FiqUmMxYAAAJ {"timestamp":"2026-01-29T11:36:25.963Z"}
+info: Consumer 5d374ea2-4932-4625-a12c-207ed4c4d20d resumed for peer _5UzVqgrRQcWwnj8AAAL {"timestamp":"2026-01-29T11:36:25.982Z"}
+info: Recording start request for room room1234 by CalmTiger89 {"timestamp":"2026-01-29T11:36:30.790Z"}
+info: [Recording] Starting recording for room: room1234 {"timestamp":"2026-01-29T11:36:30.794Z"}
+info: [Recording] FFmpeg combined command: ffmpeg -y -loglevel warning -protocol_whitelist pipe,udp,rtp,file,crypto -thread_queue_size 1024 -f sdp -i pipe:0 -filter_complex [0:v:0]scale=640:720:force_original_aspect_ratio=decrease,pad=640:720:(ow-iw)/2:(oh-ih)/2[v0];[0:v:1]scale=640:720:force_original_aspect_ratio=decrease,pad=640:720:(ow-iw)/2:(oh-ih)/2[v1];[v0][v1]hstack=inputs=2[row0];[row0]vstack=inputs=1[vfinal];[0:a:0][0:a:1]amix=inputs=2[afinal] -map [vfinal] -map [afinal] -c:v libvpx -deadline realtime -cpu-used 8 -b:v 1M -c:a libopus -b:a 128k -f webm C:\Users\STAFF1\Downloads\videocallservercode\recordings\room1234\room1234-1769686590798-combined.webm {"timestamp":"2026-01-29T11:36:30.799Z"}
+info: [Recording] Created PlainTransport (explicit connect mode) on port 10067 for audio {"timestamp":"2026-01-29T11:36:30.876Z"}
+info: [Recording] Created consumer 87dd6e1b-33d0-45a5-9545-b38fcbba9457 for audio producer 513407fe-8cd3-4889-b38e-c59110b7cd1d {"timestamp":"2026-01-29T11:36:30.935Z"}
+info: [Recording] Audio peer fcxBy2z2FiqUmMxYAAAJ connected to combined recorder on port 37114 {"timestamp":"2026-01-29T11:36:30.996Z"}
+info: [Recording] Created PlainTransport (explicit connect mode) on port 10032 for audio {"timestamp":"2026-01-29T11:36:31.035Z"}
+info: [Recording] Created consumer 39812132-6830-4281-93d5-f0a8720b8926 for audio producer 3e8c2505-77b8-42a1-bcfc-46cc79760d9c {"timestamp":"2026-01-29T11:36:31.046Z"}
+info: [Recording] Audio peer _5UzVqgrRQcWwnj8AAAL connected to combined recorder on port 37116 {"timestamp":"2026-01-29T11:36:31.056Z"}
+info: [Recording] Created PlainTransport (explicit connect mode) on port 10018 for video {"timestamp":"2026-01-29T11:36:31.062Z"}
+info: [Recording] Created consumer 102b7aea-4b75-4137-ab33-9edcac2b7401 for video producer bfd99f42-f985-4c75-a3ca-c251a4441da0 {"timestamp":"2026-01-29T11:36:31.087Z"}
+info: [Recording] Video peer fcxBy2z2FiqUmMxYAAAJ connected to combined recorder on port 37118 {"timestamp":"2026-01-29T11:36:31.091Z"}
+info: [Recording] Created PlainTransport (explicit connect mode) on port 10086 for video {"timestamp":"2026-01-29T11:36:31.196Z"}
+info: [Recording] Created consumer 1af4773a-a99a-4ef6-a435-fc43d8ea91fc for video producer 6c9cb411-de72-456e-88a0-bc4013199f6d {"timestamp":"2026-01-29T11:36:31.258Z"}
+info: [Recording] Video peer _5UzVqgrRQcWwnj8AAAL connected to combined recorder on port 37120 {"timestamp":"2026-01-29T11:36:31.305Z"}
+info: [Recording] Started combined recording for room room1234, recording ID: room1234-1769686590798 {"timestamp":"2026-01-29T11:36:31.308Z"}
+info: Recording started successfully for room room1234 {"timestamp":"2026-01-29T11:36:31.337Z"}
+info: [FFmpeg Room] [Parsed_vstack_5 @ 000001db675c97c0] Value 1.000000 for parameter 'inputs' out of range [2 - 2.14748e+09] {"timestamp":"2026-01-29T11:36:31.998Z"}
+info: [FFmpeg Room] [fc#0 @ 000001db675a58c0] Error applying option 'inputs' to filter 'vstack': Result too large
+Error : Result too large {"timestamp":"2026-01-29T11:36:32.006Z"}
+error: [Recording] FFmpeg exited unexpectedly for room room1234 with code 4294967262 {"timestamp":"2026-01-29T11:36:32.295Z"}
