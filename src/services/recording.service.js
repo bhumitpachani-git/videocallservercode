@@ -31,7 +31,7 @@ async function startRecording(roomId, startedBy, io, rooms) {
     try {
         const browser = await puppeteer.launch({
             headless: 'new',
-            executablePath: '/nix/store/qa9cnw4v5xkxyip6mb9kxqfq1z4x2dx1-chromium-138.0.7204.100/bin/chromium',
+            executablePath: '/usr/bin/chromium-browser', // Common path for system chromium
             args: [
                 '--no-sandbox',
                 '--disable-setuid-sandbox',
@@ -44,6 +44,24 @@ async function startRecording(roomId, startedBy, io, rooms) {
                 '--force-device-scale-factor=1',
                 '--high-dpi-support=1'
             ]
+        }).catch(async () => {
+            // Fallback to the nix store path if the common path fails
+            return await puppeteer.launch({
+                headless: 'new',
+                executablePath: '/nix/store/qa9cnw4v5xkxyip6mb9kxqfq1z4x2dx1-chromium-138.0.7204.100/bin/chromium',
+                args: [
+                    '--no-sandbox',
+                    '--disable-setuid-sandbox',
+                    '--use-fake-ui-for-media-stream',
+                    '--use-fake-device-for-media-stream',
+                    '--allow-file-access-from-files',
+                    '--disable-web-security',
+                    '--autoplay-policy=no-user-gesture-required',
+                    '--window-size=1920,1080',
+                    '--force-device-scale-factor=1',
+                    '--high-dpi-support=1'
+                ]
+            });
         });
 
         const page = await browser.newPage();
