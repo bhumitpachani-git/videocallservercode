@@ -11,8 +11,11 @@ module.exports = (io, roomManager) => {
     let currentRoomId = null;
     let currentUsername = null;
 
-    socket.on('join-room', async ({ roomId, username, password }, callback) => {
+    socket.on('join-room', async (data, callback) => {
       try {
+        const validated = joinRoomSchema.parse(data);
+        const { roomId, username, password } = validated;
+        
         let room = roomManager.rooms.get(roomId);
 
         if (room && room.password && room.password !== password) {

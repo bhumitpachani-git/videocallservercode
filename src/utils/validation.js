@@ -1,31 +1,31 @@
-const Joi = require('joi');
+const { z } = require('zod');
 
-const joinRoomSchema = Joi.object({
-  roomId: Joi.string().alphanum().min(3).max(30).required(),
-  username: Joi.string().min(2).max(20).required(),
-  password: Joi.string().allow('', null),
-  recorder: Joi.boolean().default(false)
+const joinRoomSchema = z.object({
+  roomId: z.string().regex(/^[a-zA-Z0-9]+$/).min(3).max(30),
+  username: z.string().min(2).max(20),
+  password: z.string().optional().nullable(),
+  recorder: z.boolean().default(false)
 });
 
-const transportSchema = Joi.object({
-  roomId: Joi.string().required()
+const transportSchema = z.object({
+  roomId: z.string()
 });
 
-const recordingSchema = Joi.object({
-  roomId: Joi.string().required()
+const recordingSchema = z.object({
+  roomId: z.string()
 });
 
-const whiteboardSchema = Joi.object({
-  roomId: Joi.string().required(),
-  stroke: Joi.object().required()
+const whiteboardSchema = z.object({
+  roomId: z.string(),
+  stroke: z.object({}).passthrough()
 });
 
-const pollSchema = Joi.object({
-  roomId: Joi.string().required(),
-  poll: Joi.object({
-    question: Joi.string().required(),
-    options: Joi.array().items(Joi.string()).min(2).required()
-  }).required()
+const pollSchema = z.object({
+  roomId: z.string(),
+  poll: z.object({
+    question: z.string(),
+    options: z.array(z.string()).min(2)
+  })
 });
 
 module.exports = {

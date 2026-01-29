@@ -80,7 +80,8 @@ class RoomManager {
       producers: new Map(),
       consumers: new Map(),
       joinedAt: new Date(),
-      isRecorder: !!recorder
+      isRecorder: !!recorder,
+      isHost: room.hostId === socket.id
     };
 
     room.peers.set(socket.id, peerData);
