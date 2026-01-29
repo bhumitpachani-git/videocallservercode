@@ -5,7 +5,7 @@ integrations = ["javascript_openai_ai_integrations:2.0.0"]
 
 [nix]
 channel = "stable-25_05"
-packages = ["chromium"]
+packages = ["chromium", "ffmpeg"]
 
 [workflows]
 runButton = "Project"
