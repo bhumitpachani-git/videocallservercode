@@ -42,7 +42,7 @@ const webRtcTransportOptions = {
   minimumAvailableOutgoingBitrate: 2000000, // 2Mbps min
   maxSctpMessageSize: 262144,
   enableUdp: true,
-  enableTcp: false, // Force UDP only for lowest latency
+  enableTcp: true,
   preferUdp: true,
   disableIceLite: false,
 };

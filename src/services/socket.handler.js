@@ -16,20 +16,14 @@ module.exports = (io, roomManager) => {
         const validated = joinRoomSchema.parse(data);
         const { roomId, username, password } = validated;
         
-        let room = roomManager.rooms.get(roomId);
-
-        if (!room) {
-          room = await roomManager.getOrCreateRoom(roomId, password);
-        }
-
+        const room = await roomManager.getOrCreateRoom(roomId, password);
         currentRoomId = roomId;
         currentUsername = username;
 
-        // INSTANT RESPONSE: Send capabilities first so client can start WebRTC handshake
-        const rtpCapabilities = room.router.rtpCapabilities;
+        const result = await roomManager.joinRoom(socket, validated);
         
         callback({
-          rtpCapabilities,
+          ...result,
           peers: Array.from(room.peers.values()).map(p => ({
             socketId: p.id,
             username: p.username,
@@ -44,50 +38,13 @@ module.exports = (io, roomManager) => {
             results: p.options.map(o => o.votes), active: p.active
           })) : [],
           chatMessages: room.chatMessages || [],
-          isHost: !room.hostId || room.hostId === socket.id,
           isRecording: recordingSessions.has(roomId)
         });
 
-        // DEFERRED PROCESSING: Handle heavy logic after client is unblocked
-        setImmediate(async () => {
-          if (!room.hostId) {
-            room.hostId = socket.id;
-          }
-          const isUserHost = room.hostId === socket.id;
-
-          room.peers.set(socket.id, {
-            id: socket.id,
-            username,
-            transports: new Map(),
-            producers: new Map(),
-            consumers: new Map(),
-            isHost: isUserHost,
-            joinedAt: Date.now()
-          });
-
-          socket.join(roomId);
-
-          // Background producer sync
-          const activeProducers = [];
-          for (const [peerId, peer] of room.peers.entries()) {
-            if (peerId !== socket.id) {
-              for (const [producerId, producer] of peer.producers.entries()) {
-                activeProducers.push({
-                  socketId: peerId, producerId, kind: producer.kind, appData: producer.appData
-                });
-              }
-            }
-          }
-          
-          if (activeProducers.length > 0) {
-            socket.emit('active-producers', activeProducers);
-          }
-
-          socket.to(roomId).emit('user-joined', {
-            socketId: socket.id,
-            username,
-            isHost: isUserHost
-          });
+        socket.to(roomId).emit('user-joined', {
+          socketId: socket.id,
+          username,
+          isHost: result.isHost
         });
       } catch (error) {
         logger.error(`Join room error: ${error.message}`);
@@ -269,7 +226,8 @@ module.exports = (io, roomManager) => {
     socket.on('produce', async ({ transportId, kind, rtpParameters, appData }, callback) => {
       try {
         const room = Array.from(roomManager.rooms.values()).find(r => r.peers.has(socket.id));
-        const peer = room?.peers.get(socket.id);
+        if (!room) throw new Error('Room not found');
+        const peer = room.peers.get(socket.id);
         const transport = peer?.transports.get(transportId);
 
         if (transport) {
@@ -294,21 +252,18 @@ module.exports = (io, roomManager) => {
     socket.on('consume', async ({ transportId, producerId, rtpCapabilities }, callback) => {
       try {
         const room = Array.from(roomManager.rooms.values()).find(r => r.peers.has(socket.id));
-        const peer = room?.peers.get(socket.id);
+        if (!room) throw new Error('Room not found');
+        const peer = room.peers.get(socket.id);
         const transport = peer?.transports.get(transportId);
 
         if (!transport) {
           return callback({ error: 'Transport not found' });
         }
 
-        if (!room.router.canConsume({ producerId, rtpCapabilities })) {
-          return callback({ error: 'Cannot consume producer' });
-        }
-
         const consumer = await transport.consume({
           producerId,
           rtpCapabilities,
-          paused: false // Ensure consumer starts unpaused
+          paused: true
         });
 
         peer.consumers.set(consumer.id, consumer);
