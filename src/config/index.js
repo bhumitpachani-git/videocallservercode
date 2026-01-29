@@ -34,7 +34,7 @@ const mediaCodecs = [
 const webRtcTransportOptions = {
   listenIps: [
     {
-      ip: "0.0.0.0",
+      ip: "127.0.0.1",
       announcedIp: process.env.ANNOUNCED_IP || "127.0.0.1"
     }
   ],

@@ -10,7 +10,7 @@ const recordingSessions = new Map();
 function getCodecInfo(rtpParameters) {
     const codec = rtpParameters.codecs[0];
     const mimeType = codec.mimeType.toLowerCase();
-    
+
     return {
         mimeType,
         payloadType: codec.payloadType,
@@ -20,13 +20,16 @@ function getCodecInfo(rtpParameters) {
     };
 }
 
-async function createPlainTransport(router, remoteRtpPort) {
+async function createPlainTransport(router, isVideo = false) {
     const transport = await router.createPlainTransport({
-        listenIp: { ip: '127.0.0.1', announcedIp: null },
-        rtcpMux: false,
-        comedia: true
+        listenIp:       { ip: '127.0.0.1', announcedIp: null },
+        rtcpMux:        true,
+        comedia:        false,               // We use explicit connect()
+        enableSrtp:     false,
+        enableSctp:     false
     });
-    
+
+    logger.info(`[Recording] Created PlainTransport (explicit connect mode) on port ${transport.tuple.localPort} for ${isVideo ? 'video' : 'audio'}`);
     return transport;
 }
 
@@ -34,71 +37,29 @@ async function createRecordingConsumer(router, transport, producer) {
     const consumer = await transport.consume({
         producerId: producer.id,
         rtpCapabilities: router.rtpCapabilities,
-        paused: false
+        paused: true
     });
-    
-    logger.info(`[Recording] Created consumer for ${producer.kind} producer ${producer.id}, port ${transport.tuple.localPort}`);
-    return consumer;
-}
 
-function createGStreamerPipeline(audioInfo, videoInfo, outputPath) {
-    let pipeline = '';
-    
-    if (videoInfo) {
-        const videoCodec = videoInfo.codecInfo.mimeType.split('/')[1].toLowerCase();
-        pipeline += `udpsrc port=${videoInfo.port} caps="application/x-rtp,media=video,clock-rate=${videoInfo.codecInfo.clockRate},payload=${videoInfo.codecInfo.payloadType},encoding-name=${videoCodec.toUpperCase()}" ! `;
-        
-        if (videoCodec === 'vp8') {
-            pipeline += 'rtpvp8depay ! vp8dec ! videoconvert ! x264enc tune=zerolatency speed-preset=ultrafast ! video/x-h264,profile=baseline ! ';
-        } else if (videoCodec === 'vp9') {
-            pipeline += 'rtpvp9depay ! vp9dec ! videoconvert ! x264enc tune=zerolatency speed-preset=ultrafast ! video/x-h264,profile=baseline ! ';
-        } else if (videoCodec === 'h264') {
-            pipeline += 'rtph264depay ! h264parse ! ';
-        }
-        
-        pipeline += 'queue name=videoqueue ! mux. ';
-    }
-    
-    if (audioInfo) {
-        const audioCodec = audioInfo.codecInfo.mimeType.split('/')[1].toLowerCase();
-        pipeline += `udpsrc port=${audioInfo.port} caps="application/x-rtp,media=audio,clock-rate=${audioInfo.codecInfo.clockRate},payload=${audioInfo.codecInfo.payloadType},encoding-name=${audioCodec.toUpperCase()}" ! `;
-        
-        if (audioCodec === 'opus') {
-            pipeline += 'rtpopusdepay ! opusdec ! audioconvert ! audioresample ! avenc_aac ! ';
-        } else if (audioCodec === 'pcma' || audioCodec === 'pcmu') {
-            pipeline += `rtp${audioCodec}depay ! ${audioCodec}dec ! audioconvert ! audioresample ! avenc_aac ! `;
-        }
-        
-        pipeline += 'queue name=audioqueue ! mux. ';
-    }
-    
-    pipeline += `mp4mux name=mux faststart=true ! filesink location="${outputPath}"`;
-    
-    return pipeline;
+    logger.info(`[Recording] Created consumer ${consumer.id} for ${producer.kind} producer ${producer.id}`);
+    return consumer;
 }
 
 async function startRecording(roomId, startedBy, io, rooms) {
     logger.info(`[Recording] Starting recording for room: ${roomId}`);
-    
-    const room = rooms.get(roomId);
-    if (!room) {
-        throw new Error('Room not found');
-    }
 
-    if (recordingSessions.has(roomId)) {
-        throw new Error('Recording already in progress');
-    }
+    const room = rooms.get(roomId);
+    if (!room) throw new Error('Room not found');
+
+    if (recordingSessions.has(roomId)) throw new Error('Recording already in progress');
 
     const dir = path.join(__dirname, '..', '..', 'recordings', roomId);
     if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
 
     const recordingId = `${roomId}-${Date.now()}`;
-    const outputPath = path.join(dir, `${recordingId}.webm`);
 
     const session = {
         recordingId,
         roomId,
-        outputPath,
         startedAt: new Date().toISOString(),
         startedBy,
         transports: new Map(),
@@ -122,6 +83,8 @@ async function startRecording(roomId, startedBy, io, rooms) {
 
 async function startRecordingForPeer(roomId, peerId, peer, router, session, recordingDir) {
     try {
+        logger.info(`[Recording] ==================== Starting recording for peer ${peerId} ====================`);
+
         const peerRecording = {
             peerId,
             username: peer.username || 'unknown',
@@ -136,12 +99,23 @@ async function startRecordingForPeer(roomId, peerId, peer, router, session, reco
         let audioInfo = null;
         let videoInfo = null;
 
+        if (peer.producers.size === 0) {
+            logger.warn(`[Recording] Peer ${peerId} has no producers — skipping`);
+            return;
+        }
+
+        logger.info(`[Recording] Peer ${peerId} has ${peer.producers.size} producer(s)`);
+
         for (const [producerId, producer] of peer.producers.entries()) {
-            const transport = await createPlainTransport(router);
+            logger.info(`[Recording] Processing ${producer.kind} producer ${producerId}`);
+
+            const transport = await createPlainTransport(router, producer.kind === 'video');
             const consumer = await createRecordingConsumer(router, transport, producer);
-            
+
             const codecInfo = getCodecInfo(consumer.rtpParameters);
-            const port = transport.tuple.localPort;
+            const mediasoupPort = transport.tuple.localPort;
+
+            logger.info(`[Recording] ${producer.kind} codec: ${codecInfo.mimeType}, PT: ${codecInfo.payloadType}, mediasoup listen port: ${mediasoupPort}`);
 
             session.transports.set(transport.id, transport);
             session.consumers.set(consumer.id, consumer);
@@ -149,16 +123,16 @@ async function startRecordingForPeer(roomId, peerId, peer, router, session, reco
             if (producer.kind === 'audio') {
                 peerRecording.audioTransport = transport;
                 peerRecording.audioConsumer = consumer;
-                audioInfo = { port, codecInfo, consumer, transport };
+                audioInfo = { mediasoupPort, codecInfo, consumer, transport };
             } else if (producer.kind === 'video') {
                 peerRecording.videoTransport = transport;
                 peerRecording.videoConsumer = consumer;
-                videoInfo = { port, codecInfo, consumer, transport };
+                videoInfo = { mediasoupPort, codecInfo, consumer, transport };
             }
         }
 
         if (!audioInfo && !videoInfo) {
-            logger.warn(`[Recording] No producers found for peer ${peerId}`);
+            logger.warn(`[Recording] No valid audio/video for peer ${peerId}`);
             return;
         }
 
@@ -166,68 +140,189 @@ async function startRecordingForPeer(roomId, peerId, peer, router, session, reco
         const outputPath = path.join(recordingDir, `${session.recordingId}-${safeUsername}-${peerId.substring(0, 8)}.webm`);
         peerRecording.outputPath = outputPath;
 
-        let gstArgs;
-        
-        if (videoInfo && audioInfo) {
-            gstArgs = [
-                'udpsrc', `port=${videoInfo.port}`,
-                `caps=application/x-rtp,media=video,clock-rate=${videoInfo.codecInfo.clockRate},payload=${videoInfo.codecInfo.payloadType}`,
-                '!', 'rtpvp8depay', '!', 'webmmux', 'name=mux',
-                '!', 'filesink', `location=${outputPath}`,
-                'udpsrc', `port=${audioInfo.port}`,
-                `caps=application/x-rtp,media=audio,clock-rate=${audioInfo.codecInfo.clockRate},payload=${audioInfo.codecInfo.payloadType}`,
-                '!', 'rtpopusdepay', '!', 'mux.'
-            ];
-        } else if (videoInfo) {
-            gstArgs = [
-                'udpsrc', `port=${videoInfo.port}`,
-                `caps=application/x-rtp,media=video,clock-rate=${videoInfo.codecInfo.clockRate},payload=${videoInfo.codecInfo.payloadType}`,
-                '!', 'rtpvp8depay', '!', 'webmmux',
-                '!', 'filesink', `location=${outputPath}`
-            ];
-        } else if (audioInfo) {
-            const audioOutputPath = outputPath.replace('.webm', '.ogg');
-            peerRecording.outputPath = audioOutputPath;
-            gstArgs = [
-                'udpsrc', `port=${audioInfo.port}`,
-                `caps=application/x-rtp,media=audio,clock-rate=${audioInfo.codecInfo.clockRate},payload=${audioInfo.codecInfo.payloadType}`,
-                '!', 'rtpopusdepay', '!', 'oggmux',
-                '!', 'filesink', `location=${audioOutputPath}`
-            ];
+        logger.info(`[Recording] Output file: ${outputPath}`);
+
+        // ────────────────────────────────────────────────────────────────
+        // FFmpeg listens on DIFFERENT random high ports
+        // ────────────────────────────────────────────────────────────────
+        const basePort = 30000 + Math.floor(Math.random() * 20000);
+        const ffmpegAudioPort = audioInfo ? basePort : null;
+        const ffmpegVideoPort = videoInfo ? basePort + 2 : null; // avoid overlap
+
+        const sdpLines = [
+            'v=0',
+            'o=- 0 0 IN IP4 127.0.0.1',
+            's=Mediasoup Peer Recording',
+            'c=IN IP4 127.0.0.1',
+            't=0 0'
+        ];
+
+        if (audioInfo) {
+            sdpLines.push(
+                `m=audio ${ffmpegAudioPort} RTP/AVP ${audioInfo.codecInfo.payloadType}`,
+                `a=rtpmap:${audioInfo.codecInfo.payloadType} opus/48000/2`,
+                'a=fmtp:111 minptime=10;useinbandfec=1;usedtx=1',
+                'a=recvonly'
+            );
         }
 
-        logger.info(`[Recording] Starting GStreamer for ${peerId}: gst-launch-1.0 ${gstArgs.join(' ')}`);
+        if (videoInfo) {
+            sdpLines.push(
+                `m=video ${ffmpegVideoPort} RTP/AVP ${videoInfo.codecInfo.payloadType}`,
+                `a=rtpmap:${videoInfo.codecInfo.payloadType} VP8/90000`,
+                'a=recvonly'
+            );
+        }
 
-        const gstProcess = spawn('gst-launch-1.0', gstArgs);
-        peerRecording.process = gstProcess;
-        session.processes.set(peerId, gstProcess);
+        const sdp = sdpLines.join('\n') + '\n';
+        logger.info(`[Recording][${peerId}] SDP (FFmpeg will listen here):\n${sdp}`);
 
-        gstProcess.stdout.on('data', (data) => {
-            logger.debug(`[Recording] GStreamer stdout for ${peerId}: ${data.toString()}`);
+        // ────────────────────────────────────────────────────────────────
+        // FFmpeg command – high probe values + debug logging
+        // ────────────────────────────────────────────────────────────────
+        let ffmpegArgs = [
+            '-y',
+            '-loglevel', 'debug',  // ← keep debug until it works, then change to info
+            '-protocol_whitelist', 'pipe,udp,rtp,file,crypto',
+            '-analyzeduration', '60000000',
+            '-probesize', '60000000',
+            '-fflags', '+genpts+discardcorrupt+igndts',
+            '-vsync', '0',
+            '-async', '1',
+            '-f', 'sdp',
+            '-i', 'pipe:0'
+        ];
+
+        if (videoInfo && audioInfo) {
+            logger.info(`[Recording] Recording BOTH audio and video`);
+            ffmpegArgs = ffmpegArgs.concat([
+                '-map', '0:v?', '-map', '0:a?',
+                '-c:v', 'copy',
+                '-c:a', 'copy',
+                '-f', 'webm',
+                outputPath
+            ]);
+        } else if (videoInfo) {
+            logger.info(`[Recording] Recording VIDEO only`);
+            ffmpegArgs = ffmpegArgs.concat([
+                '-an',
+                '-c:v', 'copy',
+                '-f', 'webm',
+                outputPath
+            ]);
+        } else if (audioInfo) {
+            logger.info(`[Recording] Recording AUDIO only`);
+            const audioOutput = outputPath.replace('.webm', '.opus');
+            peerRecording.outputPath = audioOutput;
+            ffmpegArgs = ffmpegArgs.concat([
+                '-vn',
+                '-c:a', 'copy',
+                '-f', 'ogg',
+                audioOutput
+            ]);
+        }
+
+        logger.info(`[Recording][${peerId}] FFmpeg command: ffmpeg ${ffmpegArgs.join(' ')}`);
+
+        const ffmpegProcess = spawn('ffmpeg', ffmpegArgs, {
+            stdio: ['pipe', 'pipe', 'pipe']
         });
 
-        gstProcess.stderr.on('data', (data) => {
-            const msg = data.toString();
-            if (msg.includes('ERROR') || msg.includes('error')) {
-                logger.error(`[Recording] GStreamer error for ${peerId}: ${msg}`);
-            } else {
-                logger.debug(`[Recording] GStreamer stderr for ${peerId}: ${msg}`);
+        peerRecording.process = ffmpegProcess;
+        session.processes.set(peerId, ffmpegProcess);
+
+        ffmpegProcess.stderr.on('data', (data) => {
+            const line = data.toString().trim();
+            logger.info(`[FFmpeg ${peerId}] ${line}`);
+
+            if (line.includes('bind') && line.includes('failed')) {
+                logger.error(`BIND ERROR - port conflict: ${line}`);
+            }
+            if (line.includes('RTP:') || line.includes('received packet')) {
+                logger.info(`[Recording][${peerId}] RTP PACKETS ARRIVING!`);
+            }
+            if (line.includes('dimensions not set') || line.includes('Could not write header')) {
+                logger.warn(`[Recording][${peerId}] Waiting longer for video keyframe...`);
             }
         });
 
-        gstProcess.on('error', (err) => {
-            logger.error(`[Recording] GStreamer spawn error for ${peerId}: ${err.message}`);
+        ffmpegProcess.on('error', (err) => {
+            logger.error(`[Recording][${peerId}] FFmpeg spawn error: ${err.message}`);
         });
 
-        gstProcess.on('close', (code) => {
-            logger.info(`[Recording] GStreamer closed for ${peerId} with code ${code}`);
+        ffmpegProcess.on('exit', (code, signal) => {
+            logger.info(`[Recording][${peerId}] FFmpeg exited code=${code} signal=${signal}`);
         });
+
+        // Feed SDP → FFmpeg starts listening on the new ports
+        ffmpegProcess.stdin.write(sdp);
+        ffmpegProcess.stdin.end();
+
+        logger.info(`[Recording][${peerId}] Waiting 6–8 seconds for FFmpeg to bind...`);
+        await new Promise(r => setTimeout(r, 7000));
+
+        if (ffmpegProcess.killed || ffmpegProcess.exitCode !== null) {
+            logger.error(`[Recording][${peerId}] FFmpeg died during initialization`);
+            return;
+        }
+
+        // Tell mediasoup to send RTP to FFmpeg's listen ports
+        if (audioInfo) {
+            await audioInfo.transport.connect({
+                ip: '127.0.0.1',
+                port: ffmpegAudioPort
+            });
+            logger.info(`[Recording][${peerId}] Audio transport CONNECTED to FFmpeg port ${ffmpegAudioPort}`);
+        }
+
+        if (videoInfo) {
+            await videoInfo.transport.connect({
+                ip: '127.0.0.1',
+                port: ffmpegVideoPort
+            });
+            logger.info(`[Recording][${peerId}] Video transport CONNECTED to FFmpeg port ${ffmpegVideoPort}`);
+        }
+
+        // Small delay after connect
+        await new Promise(r => setTimeout(r, 2000));
+
+        logger.info(`[Recording][${peerId}] Resuming consumers...`);
+
+        if (videoInfo?.consumer && !videoInfo.consumer.closed) {
+            await videoInfo.consumer.resume();
+            logger.info(`[Recording][${peerId}] Video consumer resumed`);
+        }
+
+        if (audioInfo?.consumer && !audioInfo.consumer.closed) {
+            await audioInfo.consumer.resume();
+            logger.info(`[Recording][${peerId}] Audio consumer resumed`);
+        }
+
+        // Wait and check file growth
+        logger.info(`[Recording][${peerId}] Waiting 10 seconds to check file growth...`);
+        await new Promise(r => setTimeout(r, 10000));
+
+        if (fs.existsSync(peerRecording.outputPath)) {
+            const stats = fs.statSync(peerRecording.outputPath);
+            logger.info(`[Recording][${peerId}] File exists — size: ${stats.size} bytes`);
+
+            await new Promise(r => setTimeout(r, 5000));
+            const stats2 = fs.statSync(peerRecording.outputPath);
+            if (stats2.size > stats.size) {
+                logger.info(`[Recording][${peerId}] FILE IS GROWING → success (${stats2.size} bytes)`);
+            } else {
+                logger.warn(`[Recording][${peerId}] File NOT growing — check FFmpeg logs for RTP/keyframe issues`);
+            }
+        } else {
+            logger.warn(`[Recording][${peerId}] File was NEVER created`);
+        }
 
         session.peerRecordings.set(peerId, peerRecording);
-        logger.info(`[Recording] Started recording for peer ${peerId} (${peer.username})`);
+        logger.info(`[Recording][${peerId}] ✓ Recording setup complete`);
 
     } catch (error) {
-        logger.error(`[Recording] Failed to start recording for peer ${peerId}: ${error.message}`);
+        logger.error(`[Recording] Failed to start recording for peer ${peerId}:`, error);
+        logger.error(error.stack);
     }
 }
 
@@ -237,58 +332,69 @@ async function stopRecording(roomId) {
         throw new Error('No recording in progress for this room');
     }
 
-    logger.info(`[Recording] Stopping recording for room ${roomId}`);
+    logger.info(`[Recording] ==================== Stopping recording for room ${roomId} ====================`);
 
-    for (const [peerId, process] of session.processes.entries()) {
-        if (process && !process.killed) {
-            process.kill('SIGINT');
-            await new Promise(resolve => setTimeout(resolve, 500));
-            if (!process.killed) {
-                process.kill('SIGTERM');
-            }
-        }
-    }
-
-    await new Promise(resolve => setTimeout(resolve, 2000));
-
+    // Pause consumers
     for (const consumer of session.consumers.values()) {
         try {
-            consumer.close();
-        } catch (e) {}
+            if (!consumer.closed && !consumer.paused) await consumer.pause();
+        } catch {}
     }
 
-    for (const transport of session.transports.values()) {
-        try {
-            transport.close();
-        } catch (e) {}
-    }
+    await new Promise(r => setTimeout(r, 3000));
 
-    const files = [];
-    for (const [peerId, peerRecording] of session.peerRecordings.entries()) {
-        if (peerRecording.outputPath && fs.existsSync(peerRecording.outputPath)) {
+    // Stop FFmpeg gracefully
+    for (const [peerId, process] of session.processes.entries()) {
+        if (process && !process.killed) {
             try {
-                const stats = fs.statSync(peerRecording.outputPath);
-                let s3Url = null;
-                
-                if (process.env.S3_BUCKET_NAME && stats.size > 0) {
-                    const dateStr = new Date().toISOString().split('T')[0];
-                    const s3Key = `recordings/${roomId}/${dateStr}/${path.basename(peerRecording.outputPath)}`;
-                    s3Url = await uploadFileToS3(peerRecording.outputPath, s3Key);
-                }
-
-                files.push({
-                    peerId,
-                    username: peerRecording.username,
-                    file: path.basename(peerRecording.outputPath),
-                    size: stats.size,
-                    s3Url
-                });
-            } catch (err) {
-                logger.error(`[Recording] Error processing file for ${peerId}: ${err.message}`);
-            }
+                process.stdin.write('q\n');
+                process.stdin.end();
+            } catch {}
+            await new Promise(r => setTimeout(r, 2500));
+            if (!process.killed) process.kill('SIGTERM');
+            await new Promise(r => setTimeout(r, 2000));
+            if (!process.killed) process.kill('SIGKILL');
         }
     }
 
+    await new Promise(r => setTimeout(r, 5000));
+
+    // Close mediasoup objects
+    for (const consumer of session.consumers.values()) {
+        try { if (!consumer.closed) consumer.close(); } catch {}
+    }
+    for (const transport of session.transports.values()) {
+        try { if (!transport.closed) transport.close(); } catch {}
+    }
+
+    // Process files & metadata (your existing logic)
+    const files = [];
+    for (const [peerId, rec] of session.peerRecordings.entries()) {
+        const filePath = rec.outputPath;
+        if (fs.existsSync(filePath)) {
+            const stats = fs.statSync(filePath);
+            logger.info(`File for ${peerId}: ${path.basename(filePath)} - ${stats.size} bytes`);
+
+            let s3Url = null;
+            if (stats.size > 0 && process.env.S3_BUCKET_NAME) {
+                const dateStr = new Date().toISOString().split('T')[0];
+                const s3Key = `recordings/${roomId}/${dateStr}/${path.basename(filePath)}`;
+                s3Url = await uploadFileToS3(filePath, s3Key).catch(e => logger.error(e));
+            }
+
+            files.push({
+                peerId,
+                username: rec.username,
+                file: path.basename(filePath),
+                size: stats.size,
+                s3Url
+            });
+        } else {
+            logger.warn(`File missing for ${peerId}`);
+        }
+    }
+
+    // Metadata saving (your existing code)
     const metadataPath = path.join(session.recordingDir, `${session.recordingId}-metadata.json`);
     const metadata = {
         recordingId: session.recordingId,
@@ -299,13 +405,13 @@ async function stopRecording(roomId) {
         files,
         transcripts: session.transcripts || []
     };
-    
+
     fs.writeFileSync(metadataPath, JSON.stringify(metadata, null, 2));
 
     if (process.env.S3_BUCKET_NAME) {
         const dateStr = new Date().toISOString().split('T')[0];
         const s3Key = `recordings/${roomId}/${dateStr}/${session.recordingId}-metadata.json`;
-        await uploadFileToS3(metadataPath, s3Key);
+        await uploadFileToS3(metadataPath, s3Key).catch(() => {});
     }
 
     await saveRoomDetails({
@@ -316,22 +422,10 @@ async function stopRecording(roomId) {
 
     recordingSessions.delete(roomId);
 
-    logger.info(`[Recording] Completed for room ${roomId}. Files: ${files.length}`);
-
-    return {
-        recordingId: session.recordingId,
-        files,
-        metadata,
-        completedAt: new Date().toISOString()
-    };
+    logger.info(`[Recording] Completed. Files processed: ${files.length}`);
+    return { recordingId: session.recordingId, files, metadata };
 }
 
-async function addProducerToRecording(roomId, peerId, producer, router) {
-    const session = recordingSessions.get(roomId);
-    if (!session) return;
-
-    logger.info(`[Recording] Adding new ${producer.kind} producer for ${peerId} during active recording`);
-}
 
 function addTranscript(roomId, transcript) {
     const session = recordingSessions.get(roomId);
@@ -346,8 +440,6 @@ function addTranscript(roomId, transcript) {
 module.exports = {
     startRecording,
     stopRecording,
-    startRecordingForPeer,
-    addProducerToRecording,
     addTranscript,
     recordingSessions
 };
