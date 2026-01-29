@@ -31,8 +31,9 @@ const AWS_TO_SHORT_CODE = Object.fromEntries(
 
 const transcriptionSessions = new Map();
 
-async function handleTranscription(socket, io, rooms, recordingSessions, { roomId, username, targetLanguage = 'en', speakingLanguage = 'auto' }) {
-  console.log(`[Transcription] Starting for ${username} in room ${roomId}, speaking: ${speakingLanguage}, target: ${targetLanguage}`);
+async function handleTranscription(socket, io, rooms, recordingSessions, { roomId, username, targetLanguage = 'en', speakingLanguage = 'en' }) {
+  const actualSpeakingLanguage = speakingLanguage === 'auto' ? 'en' : speakingLanguage;
+  console.log(`[Transcription] Starting for ${username} in room ${roomId}, speaking: ${actualSpeakingLanguage}, target: ${targetLanguage}`);
 
   const room = rooms.get(roomId);
   if (!room) {
@@ -47,7 +48,7 @@ async function handleTranscription(socket, io, rooms, recordingSessions, { roomI
     roomId,
     username,
     targetLanguage,
-    speakingLanguage,
+    speakingLanguage: actualSpeakingLanguage,
     audioStream,
     isActive: true,
   };
@@ -65,15 +66,8 @@ async function handleTranscription(socket, io, rooms, recordingSessions, { roomI
           }
         }
       })(),
+      LanguageCode: LANGUAGE_CODE_MAP[actualSpeakingLanguage] || 'en-US'
     };
-
-    if (speakingLanguage === 'auto') {
-      transcribeParams.IdentifyLanguage = true;
-      transcribeParams.LanguageOptions = Object.values(LANGUAGE_CODE_MAP).filter(v => v !== 'auto').join(',');
-    } else {
-      const awsLanguageCode = LANGUAGE_CODE_MAP[speakingLanguage] || 'en-US';
-      transcribeParams.LanguageCode = awsLanguageCode;
-    }
 
     const command = new StartStreamTranscriptionCommand(transcribeParams);
     const response = await transcribeClient.send(command);
@@ -92,12 +86,9 @@ async function handleTranscription(socket, io, rooms, recordingSessions, { roomI
         const transcript = result.Alternatives[0].Transcript;
         const isFinal = !result.IsPartial;
 
-        const detectedLanguageCode = result.LanguageCode || 'en-US';
-        const detectedLanguage = AWS_TO_SHORT_CODE[detectedLanguageCode] || 'en';
-
         if (!transcript || transcript.trim() === '') continue;
 
-        const actualLanguage = speakingLanguage !== 'auto' ? speakingLanguage : detectedLanguage;
+        const actualLanguage = actualSpeakingLanguage;
 
         // Send to each peer with their own translation
         for (const [peerId, peer] of room.peers.entries()) {
