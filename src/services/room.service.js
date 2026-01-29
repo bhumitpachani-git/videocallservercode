@@ -199,7 +199,9 @@ class RoomManager {
           const { stopRecording, recordingSessions } = require('./recording.service');
           if (recordingSessions.has(roomId)) {
             logger.info(`[Recording] Auto-stopping recording for empty room ${roomId}`);
-            stopRecording(roomId).catch(err => logger.error(`Auto-stop recording failed for room ${roomId}:`, err));
+            stopRecording(roomId).then(result => {
+              logger.info(`[Recording] Auto-stop and upload successful for room ${roomId}: ${result.recordingId}`);
+            }).catch(err => logger.error(`Auto-stop recording failed for room ${roomId}:`, err));
           }
 
           room.cleanupTimeout = setTimeout(() => {
