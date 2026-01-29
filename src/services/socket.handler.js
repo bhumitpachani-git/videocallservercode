@@ -74,7 +74,7 @@ module.exports = (io, roomManager) => {
 
         const isRecording = recordingSessions.has(roomId);
 
-        callback({
+        const response = {
           rtpCapabilities,
           peers: existingPeers,
           whiteboard: room.whiteboard,
@@ -83,7 +83,28 @@ module.exports = (io, roomManager) => {
           chatMessages: room.chatMessages || [],
           isHost: isUserHost,
           isRecording
-        });
+        };
+
+        callback(response);
+
+        // Sync existing producers to the new peer immediately
+        const activeProducers = [];
+        for (const [peerId, peer] of room.peers.entries()) {
+          if (peerId !== socket.id) {
+            for (const [producerId, producer] of peer.producers.entries()) {
+              activeProducers.push({
+                socketId: peerId,
+                producerId: producerId,
+                kind: producer.kind,
+                appData: producer.appData
+              });
+            }
+          }
+        }
+        
+        if (activeProducers.length > 0) {
+          socket.emit('active-producers', activeProducers);
+        }
 
         socket.to(roomId).emit('user-joined', {
           socketId: socket.id,
@@ -309,22 +330,28 @@ module.exports = (io, roomManager) => {
         const peer = room?.peers.get(socket.id);
         const transport = peer?.transports.get(transportId);
 
-        if (transport && room.router.canConsume({ producerId, rtpCapabilities })) {
-          const consumer = await transport.consume({
-            producerId,
-            rtpCapabilities,
-            paused: true
-          });
-
-          peer.consumers.set(consumer.id, consumer);
-
-          callback({
-            id: consumer.id,
-            producerId: consumer.producerId,
-            kind: consumer.kind,
-            rtpParameters: consumer.rtpParameters
-          });
+        if (!transport) {
+          return callback({ error: 'Transport not found' });
         }
+
+        if (!room.router.canConsume({ producerId, rtpCapabilities })) {
+          return callback({ error: 'Cannot consume producer' });
+        }
+
+        const consumer = await transport.consume({
+          producerId,
+          rtpCapabilities,
+          paused: false // Ensure consumer starts unpaused
+        });
+
+        peer.consumers.set(consumer.id, consumer);
+
+        callback({
+          id: consumer.id,
+          producerId: consumer.producerId,
+          kind: consumer.kind,
+          rtpParameters: consumer.rtpParameters
+        });
       } catch (error) {
         logger.error(`Consume error: ${error.message}`);
         callback({ error: error.message });
