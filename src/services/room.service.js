@@ -21,6 +21,7 @@ class RoomManager {
   async getOrCreateRoom(roomId, password = null) {
     let room = this.rooms.get(roomId);
     if (!room) {
+      // Create router immediately
       const router = await this.worker.createRouter({ mediaCodecs: config.mediaCodecs });
       room = {
         id: roomId,
@@ -43,12 +44,14 @@ class RoomManager {
       // Auto-cleanup room if empty after 5 minutes
       room.cleanupTimeout = null;
       
-      // FIRE AND FORGET logging - don't wait for DynamoDB
-      logUserJoin(roomId, {
-          action: 'ROOM_CREATED',
-          hasPassword: !!password,
-          timestamp: new Date().toISOString()
-      }).catch(err => logger.error(`DynamoDB logging failed for room ${roomId}:`, err));
+      // DEFER logging to avoid blocking room creation
+      setImmediate(() => {
+        logUserJoin(roomId, {
+            action: 'ROOM_CREATED',
+            hasPassword: !!password,
+            timestamp: new Date().toISOString()
+        }).catch(err => logger.error(`DynamoDB logging failed for room ${roomId}:`, err));
+      });
       
       logger.info(`New room created: ${roomId}`);
     }
