@@ -126,7 +126,8 @@ async function startRecording(roomId, startedBy, io, rooms) {
         sdpLines.push(
             `m=video ${port} RTP/AVP 96`,
             `a=rtpmap:96 VP8/90000`,
-            'a=recvonly'
+            `a=fmtp:96 x-google-start-bitrate=1000`,
+            `a=recvonly`
         );
         streamMappings.push({ type: 'video', index: i, peerId: videoPeers[i].peer.id });
     }
@@ -135,10 +136,12 @@ async function startRecording(roomId, startedBy, io, rooms) {
 
     let ffmpegArgs = [
         '-y',
-        '-loglevel', 'warning',
+        '-loglevel', 'info',
         '-protocol_whitelist', 'pipe,udp,rtp,file,crypto',
-        '-thread_queue_size', '4096', // Increased buffer
-        '-fflags', '+genpts+discardcorrupt+igndts', // Better RTP handling
+        '-thread_queue_size', '4096',
+        '-analyzeduration', '10000000', // 10s analysis duration
+        '-probesize', '10000000',       // 10MB probe size
+        '-fflags', '+genpts+discardcorrupt+igndts',
         '-f', 'sdp',
         '-i', 'pipe:0'
     ];
