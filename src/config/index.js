@@ -26,7 +26,7 @@ const mediaCodecs = [
       'packetization-mode': 1,
       'profile-level-id': '42e01f',
       'level-asymmetry-allowed': 1,
-      'x-google-start-bitrate': 800
+      'x-google-start-bitrate': 2000 // Increased for 1080p
     }
   }
 ];
@@ -38,8 +38,8 @@ const webRtcTransportOptions = {
       announcedIp: process.env.ANNOUNCED_IP || "127.0.0.1"
     }
   ],
-  initialAvailableOutgoingBitrate: 2000000, // Doubled for faster initial ramp
-  minimumAvailableOutgoingBitrate: 1000000,
+  initialAvailableOutgoingBitrate: 4000000, // 4Mbps for 1080p
+  minimumAvailableOutgoingBitrate: 2000000, // 2Mbps min
   maxSctpMessageSize: 262144,
   enableUdp: true,
   enableTcp: false, // Force UDP only for lowest latency

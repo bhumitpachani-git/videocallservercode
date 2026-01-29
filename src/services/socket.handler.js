@@ -426,6 +426,41 @@ module.exports = (io, roomManager) => {
         
         // Auto-save to DynamoDB
         await saveChatTranscript(roomId, room.chatMessages).catch(err => logger.error('Chat auto-save failed:', err));
+
+        // AI Sentiment Analysis (Vibe Meter)
+        const { OpenAI } = require('openai');
+        const client = new OpenAI();
+        
+        setImmediate(async () => {
+          try {
+            const response = await client.chat.completions.create({
+              model: "gpt-4o-mini",
+              messages: [
+                { role: "system", content: "Analyze the sentiment of this chat message in a video conference. Return a single word: 'positive', 'neutral', or 'negative'." },
+                { role: "user", content: message }
+              ],
+              max_tokens: 10
+            });
+            const sentiment = response.choices[0].message.content.toLowerCase().trim();
+            io.to(roomId).emit('vibe-update', { sentiment, socketId: socket.id });
+            
+            // AI Meeting Insight / Memory Update
+            if (room.chatMessages.length % 5 === 0) { // Every 5 messages, update summary
+                const insightResponse = await client.chat.completions.create({
+                  model: "gpt-4o-mini",
+                  messages: [
+                    { role: "system", content: "Provide a one-sentence summary of the current meeting discussion based on these messages." },
+                    { role: "user", content: room.chatMessages.slice(-5).map(m => m.message).join('\n') }
+                  ],
+                  max_tokens: 50
+                });
+                const summary = insightResponse.choices[0].message.content.trim();
+                io.to(roomId).emit('meeting-insight', { summary });
+            }
+          } catch (err) {
+            logger.error('AI Processing failed:', err);
+          }
+        });
       }
     });
 
@@ -447,6 +482,41 @@ module.exports = (io, roomManager) => {
 
         // Auto-save to DynamoDB
         await saveChatTranscript(roomId, room.chatMessages).catch(err => logger.error('Chat auto-save failed:', err));
+        
+        // AI Sentiment Analysis (Vibe Meter)
+        const { OpenAI } = require('openai');
+        const client = new OpenAI();
+        
+        setImmediate(async () => {
+          try {
+            const response = await client.chat.completions.create({
+              model: "gpt-4o-mini",
+              messages: [
+                { role: "system", content: "Analyze the sentiment of this chat message in a video conference. Return a single word: 'positive', 'neutral', or 'negative'." },
+                { role: "user", content: message }
+              ],
+              max_tokens: 10
+            });
+            const sentiment = response.choices[0].message.content.toLowerCase().trim();
+            io.to(roomId).emit('vibe-update', { sentiment, socketId: socket.id });
+            
+            // AI Meeting Insight / Memory Update
+            if (room.chatMessages.length % 5 === 0) { // Every 5 messages, update summary
+                const insightResponse = await client.chat.completions.create({
+                  model: "gpt-4o-mini",
+                  messages: [
+                    { role: "system", content: "Provide a one-sentence summary of the current meeting discussion based on these messages." },
+                    { role: "user", content: room.chatMessages.slice(-5).map(m => m.message).join('\n') }
+                  ],
+                  max_tokens: 50
+                });
+                const summary = insightResponse.choices[0].message.content.trim();
+                io.to(roomId).emit('meeting-insight', { summary });
+            }
+          } catch (err) {
+            logger.error('AI Processing failed:', err);
+          }
+        });
       }
     });
 
