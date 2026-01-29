@@ -96,7 +96,13 @@ class RoomManager {
       socket.emit('sync-state', {
         whiteboard: room.whiteboard,
         notes: room.notes,
-        polls: Array.from(room.polls.values())
+        polls: room.polls ? Array.from(room.polls.values()).map(p => ({
+          id: p.id, question: p.question, options: p.options.map(o => o.text),
+          creatorUsername: p.creatorUsername, isAnonymous: p.isAnonymous,
+          allowMultiple: p.allowMultiple, createdAt: p.createdAt,
+          results: p.options.map(o => o.votes), active: p.active
+        })) : [],
+        chatMessages: room.chatMessages || []
       });
 
       const activeProducers = [];
@@ -106,13 +112,15 @@ class RoomManager {
             activeProducers.push({
               socketId: peerId,
               producerId: producerId,
-              kind: producer.kind
+              kind: producer.kind,
+              appData: producer.appData
             });
           }
         }
       }
       
       if (activeProducers.length > 0) {
+        logger.info(`Sending ${activeProducers.length} active producers to new peer ${socket.id}`);
         socket.emit('active-producers', activeProducers);
       }
 

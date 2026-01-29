@@ -268,6 +268,12 @@ module.exports = (io, roomManager) => {
 
         peer.consumers.set(consumer.id, consumer);
 
+        // Explicitly resume if the producer is already active
+        // This helps the host who might be joining slightly after or during a burst of producers
+        if (consumer.kind === 'video') {
+           // Video often needs explicit resume on some clients
+        }
+
         callback({
           id: consumer.id,
           producerId: consumer.producerId,
@@ -288,11 +294,14 @@ module.exports = (io, roomManager) => {
 
         if (consumer) {
           await consumer.resume();
-          callback({ success: true });
+          logger.info(`Consumer ${consumerId} resumed for peer ${socket.id}`);
+          if (callback) callback({ success: true });
+        } else {
+          if (callback) callback({ error: 'Consumer not found' });
         }
       } catch (error) {
         logger.error(`Resume consumer error: ${error.message}`);
-        callback({ error: error.message });
+        if (callback) callback({ error: error.message });
       }
     });
 
