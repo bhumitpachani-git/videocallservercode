@@ -107,7 +107,8 @@ async function getRoomHistory(roomId) {
     try {
         const command = new QueryCommand({
             TableName: DYNAMO_TABLE,
-            KeyConditionExpression: "aavrtiadmin = :admin AND pk = :pk",
+            KeyConditionExpression: "aavrtiadmin = :admin",
+            FilterExpression: "pk = :pk",
             ExpressionAttributeValues: {
                 ":admin": "aavrtiadmin",
                 ":pk": `ROOM#${roomId}`
