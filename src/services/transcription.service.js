@@ -18,6 +18,10 @@ const LANGUAGE_CODE_MAP = {
   'ko': 'ko-KR',
   'ar': 'ar-SA',
   'hi': 'hi-IN',
+  'gu': 'gu-IN',
+  'mr': 'mr-IN',
+  'ta': 'ta-IN',
+  'te': 'te-IN',
   'ru': 'ru-RU',
 };
 
