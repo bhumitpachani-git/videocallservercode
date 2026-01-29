@@ -636,6 +636,16 @@ module.exports = (io, roomManager) => {
       }
     });
 
+    // Global broadcast for admin announcements
+    socket.on('admin-broadcast', ({ message }) => {
+      // Security: This would typically check for an admin token
+      io.emit('system-announcement', {
+        message,
+        timestamp: new Date().toISOString()
+      });
+      logger.info(`Admin broadcast sent: ${message}`);
+    });
+
     socket.on('disconnect', () => {
       logger.info(`Client disconnected: ${socket.id}`);
 
