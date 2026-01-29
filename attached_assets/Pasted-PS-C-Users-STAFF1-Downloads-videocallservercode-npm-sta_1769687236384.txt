@@ -1,0 +1,87 @@
+PS C:\Users\STAFF1\Downloads\videocallservercode> npm start
+
+> video-server@1.0.0 start
+> node src/app.js
+
+[dotenv@17.2.3] injecting env (8) from .env -- tip: ⚙️  load multiple .env files with { path: ['.env.local', '.env'] }
+info: RoomManager initialized with global capabilities and router pool {"timestamp":"2026-01-29T11:44:48.838Z"}
+info: 🚀 Powerful Backend running on port 5000 {"timestamp":"2026-01-29T11:44:48.874Z"}
+info: New connection: SI70eftFWikvagtHAAAC {"timestamp":"2026-01-29T11:44:52.658Z"}
+info: New connection: S1BCaIjanzWhNsUVAAAE {"timestamp":"2026-01-29T11:44:52.676Z"}
+info: New connection: icqTKz88iOTf7-6lAAAG {"timestamp":"2026-01-29T11:44:52.717Z"}
+info: New connection: fzRMO-sASeobABpFAAAI {"timestamp":"2026-01-29T11:44:53.676Z"}
+info: New connection: YP6tV1D9tGyIEf6ZAAAK {"timestamp":"2026-01-29T11:45:05.782Z"}
+info: New room created instantly from pool: room1234 {"timestamp":"2026-01-29T11:45:05.833Z"}
+info: New connection: Zq1oaXKb2UfOpUgpAAAM {"timestamp":"2026-01-29T11:45:13.745Z"}
+info: Consumer 2c6be146-47db-4dbf-8594-5b25442434f6 resumed for peer YP6tV1D9tGyIEf6ZAAAK {"timestamp":"2026-01-29T11:45:15.422Z"}
+info: Consumer 4e5d126d-f02f-490f-936a-9af3bbf9be63 resumed for peer Zq1oaXKb2UfOpUgpAAAM {"timestamp":"2026-01-29T11:45:15.540Z"}
+info: Consumer 7a6491bb-7e57-4115-a815-f5531d3f64e8 resumed for peer Zq1oaXKb2UfOpUgpAAAM {"timestamp":"2026-01-29T11:45:15.975Z"}
+info: Consumer a140e6ef-7e91-466a-8344-d3e6d30c3d1e resumed for peer YP6tV1D9tGyIEf6ZAAAK {"timestamp":"2026-01-29T11:45:17.381Z"}
+info: Recording start request for room room1234 by WiseWolf63 {"timestamp":"2026-01-29T11:45:21.712Z"}
+info: [Recording] Starting recording for room: room1234 {"timestamp":"2026-01-29T11:45:21.720Z"}
+info: [Recording] FFmpeg combined command: ffmpeg -y -loglevel info -protocol_whitelist pipe,udp,rtp,file,crypto -thread_queue_size 4096 -analyzeduration 10000000 -probesize 10000000 -fflags +genpts+discardcorrupt+igndts -f sdp -i pipe:0 -filter_complex [0:v:0]scale=640:720:force_original_aspect_ratio=decrease,pad=640:720:(ow-iw)/2:(oh-ih)/2[v0];[0:v:1]scale=640:720:force_original_aspect_ratio=decrease,pad=640:720:(ow-iw)/2:(oh-ih)/2[v1];[v0][v1]hstack=inputs=2[row0];[row0]null[vfinal];[0:a:0][0:a:1]amix=inputs=2[afinal] -map [vfinal] -map [afinal] -c:v libvpx -deadline realtime -cpu-used 8 -b:v 1M -c:a libopus -b:a 128k -f webm C:\Users\STAFF1\Downloads\videocallservercode\recordings\room1234\room1234-1769687121726-combined.webm {"timestamp":"2026-01-29T11:45:21.727Z"}
+info: [FFmpeg Room] ffmpeg version 8.0.1-essentials_build-www.gyan.dev {"timestamp":"2026-01-29T11:45:23.817Z"}
+info: [FFmpeg Room] Copyright (c) 2000-2025 the FFmpeg developers {"timestamp":"2026-01-29T11:45:23.841Z"}
+info: [FFmpeg Room]  {"timestamp":"2026-01-29T11:45:23.841Z"}
+info: [FFmpeg Room] built with gcc 15.2.0 (Rev8, Built by MSYS2 project) {"timestamp":"2026-01-29T11:45:23.842Z"}
+info: [FFmpeg Room]  {"timestamp":"2026-01-29T11:45:23.842Z"}
+info: [FFmpeg Room] configuration: --enable-gpl --enable-version3 --enable-static --disable-w32threads --disable-autodetect --enable-fontconfig --enable-iconv --enable-gnutls --enable-libxml2 --enable-gmp --enable-bzlib --enable-lzma --enable-zlib --enable-libsrt --enable-libssh --enable-libzmq --enable-avisynth --enable-sdl2 --enable-libwebp --enable-libx264 --enable-libx265 --enable-libxvid --enable-libaom --enable-libopenjpeg --enable-libvpx --enable-mediafoundation --enable-libass --enable-libfreetype --enable-libfribidi --enable-libharfbuzz --enable-libvidstab --enable-libvmaf --enable-libzimg --enable-amf --enable-cuda-llvm --enable-cuvid --enable-dxva2 --enable-d3d11va --enable-d3d12va --enable-ffnvcodec --enable-libvpl --enable-nvdec --enable-nvenc --enable-vaapi --enable-openal --enable-libgme --enable-libopenmpt --enable-libopencore-amrwb --enable-libmp3lame --enable-libtheora --enable-libvo-amrwbenc --enable-libgsm --enable-libopencore-amrnb --enable-libopus --enable-libspeex --enable-libvorbis --enable-librubberband {"timestamp":"2026-01-29T11:45:23.904Z"}
+info: [FFmpeg Room] libavutil      60.  8.100 / 60.  8.100
+  libavcodec     62. 11.100 / 62. 11.100
+  libavformat    62.  3.100 / 62.  3.100
+  libavdevice    62.  1.100 / 62.  1.100
+  libavfilter    11.  4.100 / 11.  4.100
+  libswscale      9.  1.100 /  9.  1.100
+  libswresample   6.  1.100 /  6.  1.100 {"timestamp":"2026-01-29T11:45:23.934Z"}
+info: [FFmpeg Room]  {"timestamp":"2026-01-29T11:45:23.966Z"}
+info: [Recording] Created PlainTransport (explicit connect mode) on port 10078 for audio {"timestamp":"2026-01-29T11:45:24.042Z"}
+info: [Recording] Created consumer 8c7b7cd0-d96e-419d-991f-383a06b84eba for audio producer b5096578-e01b-4cdb-af1e-81bde1d5cc5a {"timestamp":"2026-01-29T11:45:24.086Z"}
+info: [Recording] Audio peer YP6tV1D9tGyIEf6ZAAAK connected to combined recorder on port 37743 {"timestamp":"2026-01-29T11:45:24.850Z"}
+info: [Recording] Created PlainTransport (explicit connect mode) on port 10081 for audio {"timestamp":"2026-01-29T11:45:25.015Z"}
+info: [Recording] Created consumer 59b5bc94-b7d6-4f8a-a42b-81a460079761 for audio producer 8394096e-5a06-4e7c-b89c-eac298cfa04f {"timestamp":"2026-01-29T11:45:25.180Z"}
+info: [Recording] Audio peer Zq1oaXKb2UfOpUgpAAAM connected to combined recorder on port 37745 {"timestamp":"2026-01-29T11:45:25.750Z"}
+info: [Recording] Created PlainTransport (explicit connect mode) on port 10082 for video {"timestamp":"2026-01-29T11:45:25.778Z"}
+info: [Recording] Created consumer b73b5dd1-1c61-4390-b984-95de4760095a for video producer 15276bba-dedd-4170-94d1-2a12f52a51b4 {"timestamp":"2026-01-29T11:45:25.785Z"}
+info: [Recording] Video peer YP6tV1D9tGyIEf6ZAAAK connected to combined recorder on port 37747 {"timestamp":"2026-01-29T11:45:26.329Z"}
+info: [Recording] Created PlainTransport (explicit connect mode) on port 10000 for video {"timestamp":"2026-01-29T11:45:26.351Z"}
+info: [Recording] Created consumer 4b7bc655-6db8-4d93-a67f-4b2e68a5438a for video producer 2047d4fa-9d33-4830-94ba-f94b3110e194 {"timestamp":"2026-01-29T11:45:26.369Z"}
+info: [Recording] Video peer Zq1oaXKb2UfOpUgpAAAM connected to combined recorder on port 37749 {"timestamp":"2026-01-29T11:45:26.891Z"}
+info: [Recording] Started combined recording for room room1234, recording ID: room1234-1769687121726 {"timestamp":"2026-01-29T11:45:26.917Z"}
+info: Recording started successfully for room room1234 {"timestamp":"2026-01-29T11:45:26.920Z"}
+info: Recording stop request for room room1234 {"timestamp":"2026-01-29T11:45:54.186Z"}
+info: [Recording] ==================== Stopping recording for room room1234 ==================== {"timestamp":"2026-01-29T11:45:54.212Z"}
+info: [Recording] Completed. Combined file processed. {"timestamp":"2026-01-29T11:46:01.245Z"}
+info: Recording stopped successfully for room room1234 {"timestamp":"2026-01-29T11:46:01.250Z"}
+info: [FFmpeg Room] [sdp @ 00000242bb8c7300] Could not find codec parameters for stream 2 (Video: vp8, yuv420p): unspecified size
+Consider increasing the value for the 'analyzeduration' (10000000) and 'probesize' (10000000) options
+[sdp @ 00000242bb8c7300] Could not find codec parameters for stream 3 (Video: vp8, yuv420p): unspecified size
+Consider increasing the value for the 'analyzeduration' (10000000) and 'probesize' (10000000) options {"timestamp":"2026-01-29T11:46:12.005Z"}
+info: [FFmpeg Room] Input #0, sdp, from 'pipe:0':
+  Metadata:
+    title           : Mediasoup Room Recording
+  Duration: N/A, bitrate: N/A
+  Stream #0:0: Audio: opus, 48000 Hz, stereo, fltp
+  Stream #0:1: Audio: opus, 48000 Hz, stereo, fltp
+  Stream #0:2: Video: vp8, yuv420p, 90k tbr, 90k tbn
+  Stream #0:3: Video: vp8, yuv420p, 90k tbr, 90k tbn {"timestamp":"2026-01-29T11:46:12.007Z"}
+info: [FFmpeg Room] Stream mapping:
+  Stream #0:0 (opus) -> amix
+  Stream #0:1 (opus) -> amix
+  Stream #0:2 (vp8) -> scale:default
+  Stream #0:3 (vp8) -> scale:default
+  null:default -> Stream #0:0 (libvpx) {"timestamp":"2026-01-29T11:46:12.022Z"}
+info: [FFmpeg Room] amix:default -> Stream #0:1 (libopus) {"timestamp":"2026-01-29T11:46:12.023Z"}
+info: [FFmpeg Room] [in#0/sdp @ 00000242bb8c7980] Error during demuxing: Error number -138 occurred {"timestamp":"2026-01-29T11:46:22.881Z"}
+info: [FFmpeg Room] [graph 0 input from stream 0:2 @ 00000242bbdcefc0] Invalid size 0x0 {"timestamp":"2026-01-29T11:46:22.886Z"}
+info: [FFmpeg Room] [fc#0 @ 00000242bb8c5c40] Error initializing filters!
+[fc#0 @ 00000242bb8c5c40] Task finished with error code: -22 (Invalid argument) {"timestamp":"2026-01-29T11:46:22.887Z"}
+info: [FFmpeg Room] [fc#0 @ 00000242bb8c5c40] Terminating thread with return code -22 (Invalid argument)
+[vost#0:0/libvpx @ 00000242bbd35700] [enc:libvpx @ 00000242bb8ad480] Could not open encoder before EOF
+[vost#0:0/libvpx @ 00000242bbd35700] Task finished with error code: -22 (Invalid argument)
+[vost#0:0/libvpx @ 00000242bbd35700] Terminating thread with return code -22 (Invalid argument)
+[aost#0:1/libopus @ 00000242bbd1ea40] [enc:libopus @ 00000242bb8acdc0] Could not open encoder before EOF
+[aost#0:1/libopus @ 00000242bbd1ea40] Task finished with error code: -22 (Invalid argument)
+[aost#0:1/libopus @ 00000242bbd1ea40] Terminating thread with return code -22 (Invalid argument) {"timestamp":"2026-01-29T11:46:22.888Z"}
+info: [FFmpeg Room] [out#0/webm @ 00000242bbd33700] Nothing was written into output file, because at least one of its streams received no packets.      
+frame=    0 fps=0.0 q=0.0 Lsize=       0KiB time=N/A bitrate=N/A speed=N/A elapsed=0:00:10.86 {"timestamp":"2026-01-29T11:46:22.890Z"}
+info: [FFmpeg Room] Conversion failed! {"timestamp":"2026-01-29T11:46:22.895Z"}

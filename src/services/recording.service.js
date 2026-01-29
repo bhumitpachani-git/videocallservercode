@@ -69,252 +69,186 @@ async function startRecording(roomId, startedBy, io, rooms) {
         startedBy,
         transports: new Map(),
         consumers: new Map(),
+        processes: new Map(),
         peerRecordings: new Map(),
         transcripts: [],
-        recordingDir: dir,
-        ffmpegProcess: null,
-        ffmpegIn: null
+        recordingDir: dir
     };
 
     recordingSessions.set(roomId, session);
 
-    // Setup combined FFmpeg process
-    const outputPath = path.join(dir, `${recordingId}-combined.webm`);
-    session.outputPath = outputPath;
-
-    const peers = Array.from(room.peers.values()).filter(p => !p.isRecorder);
-    const audioPeers = [];
-    const videoPeers = [];
-
-    for (const peer of peers) {
-        const audioProducer = Array.from(peer.producers.values()).find(p => p.kind === 'audio');
-        const videoProducer = Array.from(peer.producers.values()).find(p => p.kind === 'video');
-
-        if (audioProducer) audioPeers.push({ peer, producer: audioProducer });
-        if (videoProducer) videoPeers.push({ peer, producer: videoProducer });
+    for (const [peerId, peer] of room.peers.entries()) {
+        if (peer.isRecorder) continue;
+        await startRecordingForPeer(roomId, peerId, peer, room.router, session, dir);
     }
 
-    const sdpLines = [
-        'v=0',
-        'o=- 0 0 IN IP4 127.0.0.1',
-        's=Mediasoup Room Recording',
-        'c=IN IP4 127.0.0.1',
-        't=0 0'
-    ];
-
-    const basePort = 30000 + Math.floor(Math.random() * 10000);
-    let portOffset = 0;
-
-    const streamMappings = [];
-
-    for (let i = 0; i < audioPeers.length; i++) {
-        const port = basePort + portOffset;
-        portOffset += 2;
-        audioPeers[i].ffmpegPort = port;
-        sdpLines.push(
-            `m=audio ${port} RTP/AVP 111`,
-            `a=rtpmap:111 opus/48000/2`,
-            'a=recvonly'
-        );
-        streamMappings.push({ type: 'audio', index: i, peerId: audioPeers[i].peer.id });
-    }
-
-    for (let i = 0; i < videoPeers.length; i++) {
-        const port = basePort + portOffset;
-        portOffset += 2;
-        videoPeers[i].ffmpegPort = port;
-        sdpLines.push(
-            `m=video ${port} RTP/AVP 96`,
-            `a=rtpmap:96 VP8/90000`,
-            `a=fmtp:96 x-google-start-bitrate=1000`,
-            `a=recvonly`
-        );
-        streamMappings.push({ type: 'video', index: i, peerId: videoPeers[i].peer.id });
-    }
-
-    const sdp = sdpLines.join('\n') + '\n';
-
-    let ffmpegArgs = [
-        '-y',
-        '-loglevel', 'info',
-        '-protocol_whitelist', 'pipe,udp,rtp,file,crypto',
-        '-thread_queue_size', '4096',
-        '-analyzeduration', '10000000', // 10s analysis duration
-        '-probesize', '10000000',       // 10MB probe size
-        '-fflags', '+genpts+discardcorrupt+igndts',
-        '-f', 'sdp',
-        '-i', 'pipe:0'
-    ];
-
-    // Build filter_complex for layout
-    let filterComplex = '';
-    const videoCount = videoPeers.length;
-    const audioCount = audioPeers.length;
-
-    if (videoCount > 0) {
-        // Simple grid for video
-        const cols = Math.ceil(Math.sqrt(videoCount));
-        const rows = Math.ceil(videoCount / cols);
-        const width = 1280;
-        const height = 720;
-        const cellW = Math.floor(width / cols);
-        const cellH = Math.floor(height / rows);
-
-        for (let i = 0; i < videoCount; i++) {
-            filterComplex += `[0:v:${i}]scale=${cellW}:${cellH}:force_original_aspect_ratio=decrease,pad=${cellW}:${cellH}:(ow-iw)/2:(oh-ih)/2[v${i}];`;
-        }
-
-        let xStack = '';
-        for (let r = 0; r < rows; r++) {
-            let rowInputs = '';
-            let rowCols = 0;
-            for (let c = 0; c < cols; c++) {
-                const idx = r * cols + c;
-                if (idx < videoCount) {
-                    rowInputs += `[v${idx}]`;
-                    rowCols++;
-                } else {
-                    // Placeholder for empty cells
-                    filterComplex += `color=s=${cellW}x${cellH}:c=black[vblack${idx}];`;
-                    rowInputs += `[vblack${idx}]`;
-                    rowCols++;
-                }
-            }
-            if (rowCols > 1) {
-                filterComplex += `${rowInputs}hstack=inputs=${rowCols}[row${r}];`;
-                xStack += `[row${r}]`;
-            } else {
-                filterComplex += `${rowInputs}null[row${r}];`;
-                xStack += `[row${r}]`;
-            }
-        }
-        if (rows > 1) {
-            filterComplex += `${xStack}vstack=inputs=${rows}[vfinal]`;
-        } else {
-            filterComplex += `${xStack}null[vfinal]`;
-        }
-    }
-
-    if (audioCount > 0) {
-        if (filterComplex) filterComplex += ';';
-        let audioInputs = '';
-        for (let i = 0; i < audioCount; i++) {
-            audioInputs += `[0:a:${i}]`;
-        }
-        if (audioCount > 1) {
-            filterComplex += `${audioInputs}amix=inputs=${audioCount}[afinal]`;
-        } else {
-            filterComplex += `${audioInputs}anull[afinal]`;
-        }
-    }
-
-    if (filterComplex) {
-        ffmpegArgs.push('-filter_complex', filterComplex);
-        if (videoCount > 0) ffmpegArgs.push('-map', '[vfinal]');
-        if (audioCount > 0) ffmpegArgs.push('-map', '[afinal]');
-    }
-
-    ffmpegArgs.push(
-        '-c:v', 'libvpx', 
-        '-deadline', 'realtime',
-        '-cpu-used', '8',
-        '-b:v', '1M',
-        '-c:a', 'libopus', 
-        '-b:a', '128k',
-        '-f', 'webm', 
-        outputPath
-    );
-
-    logger.info(`[Recording] FFmpeg combined command: ffmpeg ${ffmpegArgs.join(' ')}`);
-
-    const ffmpegProcess = spawn('ffmpeg', ffmpegArgs, { stdio: ['pipe', 'pipe', 'pipe'] });
-    session.ffmpegProcess = ffmpegProcess;
-    session.ffmpegIn = ffmpegProcess.stdin;
-
-    // IMPORTANT: Wait for FFmpeg to start listening BEFORE connecting transports
-    await new Promise(r => setTimeout(r, 2000));
-
-    ffmpegProcess.on('error', (err) => {
-        logger.error(`[Recording] FFmpeg process error for room ${roomId}: ${err.message}`);
-        stopRecording(roomId).catch(() => {});
-    });
-
-    ffmpegProcess.on('exit', (code, signal) => {
-        if (code !== 0 && code !== null) {
-            logger.error(`[Recording] FFmpeg exited unexpectedly for room ${roomId} with code ${code}`);
-        }
-    });
-
-    ffmpegProcess.stderr.on('data', (data) => {
-        logger.info(`[FFmpeg Room] ${data.toString().trim()}`);
-    });
-
-    ffmpegProcess.stdin.write(sdp);
-    ffmpegProcess.stdin.end();
-
-    // Connect transports
-    for (const item of audioPeers) {
-        const transport = await createPlainTransport(room.router, false);
-        const consumer = await createRecordingConsumer(room.router, transport, item.producer);
-        
-        session.transports.set(transport.id, transport);
-        session.consumers.set(consumer.id, consumer);
-
-        await transport.connect({ ip: '127.0.0.1', port: item.ffmpegPort });
-        
-        // Small delay before resume to ensure binding is ready
-        await new Promise(r => setTimeout(r, 500));
-        await consumer.resume();
-        logger.info(`[Recording] Audio peer ${item.peer.id} connected to combined recorder on port ${item.ffmpegPort}`);
-    }
-
-    for (const item of videoPeers) {
-        const transport = await createPlainTransport(room.router, true);
-        const consumer = await createRecordingConsumer(room.router, transport, item.producer);
-        
-        session.transports.set(transport.id, transport);
-        session.consumers.set(consumer.id, consumer);
-
-        await transport.connect({ ip: '127.0.0.1', port: item.ffmpegPort });
-        
-        // Small delay before resume to ensure binding is ready
-        await new Promise(r => setTimeout(r, 500));
-        await consumer.resume();
-        logger.info(`[Recording] Video peer ${item.peer.id} connected to combined recorder on port ${item.ffmpegPort}`);
-    }
-
-    logger.info(`[Recording] Started combined recording for room ${roomId}, recording ID: ${recordingId}`);
+    logger.info(`[Recording] Started for room ${roomId}, recording ID: ${recordingId}`);
     return session;
+}
+
+async function startRecordingForPeer(roomId, peerId, peer, router, session, recordingDir) {
+    try {
+        logger.info(`[Recording] ==================== Starting recording for peer ${peerId} ====================`);
+
+        const peerRecording = {
+            peerId,
+            username: peer.username || 'unknown',
+            audioTransport: null,
+            videoTransport: null,
+            audioConsumer: null,
+            videoConsumer: null,
+            process: null,
+            outputPath: null
+        };
+
+        let audioInfo = null;
+        let videoInfo = null;
+
+        if (peer.producers.size === 0) {
+            logger.warn(`[Recording] Peer ${peerId} has no producers — skipping`);
+            return;
+        }
+
+        for (const [producerId, producer] of peer.producers.entries()) {
+            const transport = await createPlainTransport(router, producer.kind === 'video');
+            const consumer = await createRecordingConsumer(router, transport, producer);
+
+            const codecInfo = getCodecInfo(consumer.rtpParameters);
+            const mediasoupPort = transport.tuple.localPort;
+
+            session.transports.set(transport.id, transport);
+            session.consumers.set(consumer.id, consumer);
+
+            if (producer.kind === 'audio') {
+                peerRecording.audioTransport = transport;
+                peerRecording.audioConsumer = consumer;
+                audioInfo = { mediasoupPort, codecInfo, consumer, transport };
+            } else if (producer.kind === 'video') {
+                peerRecording.videoTransport = transport;
+                peerRecording.videoConsumer = consumer;
+                videoInfo = { mediasoupPort, codecInfo, consumer, transport };
+            }
+        }
+
+        const safeUsername = (peer.username || 'unknown').replace(/[^a-zA-Z0-9]/g, '_');
+        const outputPath = path.join(recordingDir, `${session.recordingId}-${safeUsername}-${peerId.substring(0, 8)}.webm`);
+        peerRecording.outputPath = outputPath;
+
+        const basePort = 30000 + Math.floor(Math.random() * 20000);
+        const ffmpegAudioPort = audioInfo ? basePort : null;
+        const ffmpegVideoPort = videoInfo ? basePort + 2 : null;
+
+        const sdpLines = [
+            'v=0',
+            'o=- 0 0 IN IP4 127.0.0.1',
+            's=Mediasoup Peer Recording',
+            'c=IN IP4 127.0.0.1',
+            't=0 0'
+        ];
+
+        if (audioInfo) {
+            sdpLines.push(
+                `m=audio ${ffmpegAudioPort} RTP/AVP ${audioInfo.codecInfo.payloadType}`,
+                `a=rtpmap:${audioInfo.codecInfo.payloadType} opus/48000/2`,
+                'a=fmtp:111 minptime=10;useinbandfec=1;usedtx=1',
+                'a=recvonly'
+            );
+        }
+
+        if (videoInfo) {
+            sdpLines.push(
+                `m=video ${ffmpegVideoPort} RTP/AVP ${videoInfo.codecInfo.payloadType}`,
+                `a=rtpmap:${videoInfo.codecInfo.payloadType} VP8/90000`,
+                'a=fmtp:96 x-google-start-bitrate=1000',
+                'a=recvonly'
+            );
+        }
+
+        const sdp = sdpLines.join('\n') + '\n';
+
+        let ffmpegArgs = [
+            '-y',
+            '-loglevel', 'info',
+            '-protocol_whitelist', 'pipe,udp,rtp,file,crypto',
+            '-analyzeduration', '20000000',
+            '-probesize', '20000000',
+            '-fflags', '+genpts+discardcorrupt+igndts',
+            '-f', 'sdp',
+            '-i', 'pipe:0'
+        ];
+
+        if (videoInfo && audioInfo) {
+            ffmpegArgs = ffmpegArgs.concat([
+                '-map', '0:v?', '-map', '0:a?',
+                '-c:v', 'libvpx', '-deadline', 'realtime', '-cpu-used', '8', '-b:v', '1M',
+                '-c:a', 'libopus', '-b:a', '128k',
+                '-f', 'webm', outputPath
+            ]);
+        } else if (videoInfo) {
+            ffmpegArgs = ffmpegArgs.concat([
+                '-an',
+                '-c:v', 'libvpx', '-deadline', 'realtime', '-cpu-used', '8', '-b:v', '1M',
+                '-f', 'webm', outputPath
+            ]);
+        } else if (audioInfo) {
+            const audioOutput = outputPath.replace('.webm', '.opus');
+            peerRecording.outputPath = audioOutput;
+            ffmpegArgs = ffmpegArgs.concat([
+                '-vn',
+                '-c:a', 'libopus', '-b:a', '128k',
+                '-f', 'ogg', audioOutput
+            ]);
+        }
+
+        const ffmpegProcess = spawn('ffmpeg', ffmpegArgs, { stdio: ['pipe', 'pipe', 'pipe'] });
+        peerRecording.process = ffmpegProcess;
+        session.processes.set(peerId, ffmpegProcess);
+
+        ffmpegProcess.stdin.write(sdp);
+        ffmpegProcess.stdin.end();
+
+        await new Promise(r => setTimeout(r, 3000));
+
+        if (audioInfo) {
+            await audioInfo.transport.connect({ ip: '127.0.0.1', port: ffmpegAudioPort });
+            await audioInfo.consumer.resume();
+        }
+
+        if (videoInfo) {
+            await videoInfo.transport.connect({ ip: '127.0.0.1', port: ffmpegVideoPort });
+            await videoInfo.consumer.resume();
+        }
+
+        session.peerRecordings.set(peerId, peerRecording);
+        logger.info(`[Recording][${peerId}] ✓ Peer recording setup complete`);
+
+    } catch (error) {
+        logger.error(`[Recording] Failed for peer ${peerId}:`, error);
+    }
 }
 
 async function stopRecording(roomId) {
     const session = recordingSessions.get(roomId);
-    if (!session) {
-        throw new Error('No recording in progress for this room');
-    }
+    if (!session) throw new Error('No recording in progress');
 
-    logger.info(`[Recording] ==================== Stopping recording for room ${roomId} ====================`);
+    logger.info(`[Recording] Stopping room ${roomId}`);
 
-    // Pause consumers
     for (const consumer of session.consumers.values()) {
         try { if (!consumer.closed && !consumer.paused) await consumer.pause(); } catch {}
     }
 
     await new Promise(r => setTimeout(r, 2000));
 
-    // Stop FFmpeg
-    if (session.ffmpegProcess && !session.ffmpegProcess.killed) {
-        try {
-            session.ffmpegProcess.stdin.write('q\n');
-            session.ffmpegProcess.stdin.end();
-        } catch {}
-        await new Promise(r => setTimeout(r, 3000));
-        if (!session.ffmpegProcess.killed) session.ffmpegProcess.kill('SIGTERM');
+    for (const process of session.processes.values()) {
+        if (process && !process.killed) {
+            try { process.stdin.write('q\n'); process.stdin.end(); } catch {}
+            await new Promise(r => setTimeout(r, 2000));
+            if (!process.killed) process.kill('SIGTERM');
+        }
     }
 
     await new Promise(r => setTimeout(r, 2000));
 
-    // Close mediasoup objects
     for (const consumer of session.consumers.values()) {
         try { if (!consumer.closed) consumer.close(); } catch {}
     }
@@ -323,44 +257,30 @@ async function stopRecording(roomId) {
     }
 
     const files = [];
-    if (fs.existsSync(session.outputPath)) {
-        const stats = fs.statSync(session.outputPath);
-        logger.info(`Combined file for ${roomId}: ${path.basename(session.outputPath)} - ${stats.size} bytes`);
-
-        let s3Url = null;
-        if (stats.size > 0 && process.env.S3_BUCKET_NAME) {
-            const dateStr = new Date().toISOString().split('T')[0];
-            const s3Key = `recordings/${roomId}/${dateStr}/${path.basename(session.outputPath)}`;
-            s3Url = await uploadFileToS3(session.outputPath, s3Key).catch(e => logger.error(e));
-            if (s3Url) fs.unlinkSync(session.outputPath);
+    for (const rec of session.peerRecordings.values()) {
+        if (fs.existsSync(rec.outputPath)) {
+            const stats = fs.statSync(rec.outputPath);
+            files.push({
+                peerId: rec.peerId,
+                username: rec.username,
+                file: path.basename(rec.outputPath),
+                size: stats.size
+            });
         }
-
-        files.push({
-            peerId: 'combined',
-            username: 'Room Recording',
-            file: path.basename(session.outputPath),
-            size: stats.size,
-            s3Url
-        });
     }
 
-    // Metadata saving
     const metadataPath = path.join(session.recordingDir, `${session.recordingId}-metadata.json`);
     const metadata = {
         recordingId: session.recordingId,
         roomId,
         startedAt: session.startedAt,
         endedAt: new Date().toISOString(),
-        startedBy: session.startedBy,
-        files,
-        transcripts: session.transcripts || []
+        files
     };
 
     fs.writeFileSync(metadataPath, JSON.stringify(metadata, null, 2));
-
     recordingSessions.delete(roomId);
 
-    logger.info(`[Recording] Completed. Combined file processed.`);
     return { recordingId: session.recordingId, files, metadata };
 }
 
