@@ -1,7 +1,7 @@
 const { joinRoomSchema, transportSchema, recordingSchema } = require('../utils/validation');
 const logger = require('../utils/logger');
 const { startRecording, stopRecording, recordingSessions } = require('./recording.service');
-const { saveRoomDetails } = require('./aws.service');
+const { saveRoomDetails, saveChatTranscript, getRoomHistory } = require('./aws.service');
 const { handleTranscription, transcriptionSessions } = require('./transcription.service');
 
 module.exports = (io, roomManager) => {
