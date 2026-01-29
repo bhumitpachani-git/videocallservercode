@@ -17,6 +17,7 @@ async function logUserJoin(roomId, userDetails) {
         const command = new PutCommand({
             TableName: DYNAMO_TABLE,
             Item: {
+                aavrtiadmin: "aavrtiadmin",
                 pk: `ROOM#${roomId}`,
                 sk: `JOIN#${userDetails.socketId}#${Date.now()}`,
                 type: 'USER_JOIN',
@@ -35,6 +36,7 @@ async function saveChatTranscript(roomId, transcript) {
         const command = new PutCommand({
             TableName: DYNAMO_TABLE,
             Item: {
+                aavrtiadmin: "aavrtiadmin",
                 pk: `ROOM#${roomId}`,
                 sk: `TRANSCRIPT#${Date.now()}`,
                 type: 'CHAT_TRANSCRIPT',
@@ -80,6 +82,7 @@ async function saveRoomDetails(roomData) {
         const command = new PutCommand({
             TableName: DYNAMO_TABLE,
             Item: {
+                aavrtiadmin: "aavrtiadmin",
                 pk: `ROOM#${roomData.roomId}`,
                 sk: 'METADATA',
                 type: 'ROOM_METADATA',
