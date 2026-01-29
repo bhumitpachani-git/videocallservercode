@@ -1,0 +1,159 @@
+[dotenv@17.2.3] injecting env (0) from .env -- tip: ✅ audit secrets and track compliance: https://dotenvx.com/ops
+info: RoomManager initialized with global capabilities {"timestamp":"2026-01-29T04:58:05.982Z"}
+info: 🚀 Powerful Backend running on port 5000 {"timestamp":"2026-01-29T04:58:06.006Z"}
+info: New connection: BCsd23RZyeGmq0m9AAAB {"timestamp":"2026-01-29T04:58:42.133Z"}
+[AWS] Error logging user join: Error: Resolved credential object is not valid
+    at SignatureV4.validateResolvedCredentials (C:\Users\STAFF1\Downloads\new server\videocallservercode-main\node_modules\@smithy\signature-v4\dist-cjs\index.js:374:19)
+    at SignatureV4.signRequest (C:\Users\STAFF1\Downloads\new server\videocallservercode-main\node_modules\@smithy\signature-v4\dist-cjs\index.js:481:14)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async AwsSdkSigV4Signer.sign (C:\Users\STAFF1\Downloads\new server\videocallservercode-main\node_modules\@aws-sdk\core\dist-cjs\index.js:114:31)
+    at async C:\Users\STAFF1\Downloads\new server\videocallservercode-main\node_modules\@smithy\core\dist-cjs\index.js:123:18
+    at async C:\Users\STAFF1\Downloads\new server\videocallservercode-main\node_modules\@smithy\middleware-retry\dist-cjs\index.js:254:46
+    at async C:\Users\STAFF1\Downloads\new server\videocallservercode-main\node_modules\@aws-sdk\middleware-logger\dist-cjs\index.js:5:26
+    at async logUserJoin (C:\Users\STAFF1\Downloads\new server\videocallservercode-main\src\services\aws.service.js:28:9)
+    at async RoomManager.getOrCreateRoom (C:\Users\STAFF1\Downloads\new server\videocallservercode-main\src\services\room.service.js:46:7)
+    at async Socket.<anonymous> (C:\Users\STAFF1\Downloads\new server\videocallservercode-main\src\services\socket.handler.js:23:18) {
+  '$metadata': { attempts: 1, totalRetryDelay: 0 }
+}
+info: New room created: room123 {"timestamp":"2026-01-29T04:58:42.309Z"}
+info: User CoolWolf77 (BCsd23RZyeGmq0m9AAAB) is now host of room room123 {"timestamp":"2026-01-29T04:58:42.310Z"}
+info: User CoolWolf77 joined room room123 {"timestamp":"2026-01-29T04:58:42.339Z"}
+info: New connection: qEfb1R2P4ENCQgVAAAAD {"timestamp":"2026-01-29T04:58:48.762Z"}
+info: User HappyDolphin19 joined room room123 {"timestamp":"2026-01-29T04:58:48.904Z"}
+[AWS] Error saving transcript: Error: Resolved credential object is not valid
+    at SignatureV4.validateResolvedCredentials (C:\Users\STAFF1\Downloads\new server\videocallservercode-main\node_modules\@smithy\signature-v4\dist-cjs\index.js:374:19)       
+    at SignatureV4.signRequest (C:\Users\STAFF1\Downloads\new server\videocallservercode-main\node_modules\@smithy\signature-v4\dist-cjs\index.js:481:14)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async AwsSdkSigV4Signer.sign (C:\Users\STAFF1\Downloads\new server\videocallservercode-main\node_modules\@aws-sdk\core\dist-cjs\index.js:114:31)
+    at async C:\Users\STAFF1\Downloads\new server\videocallservercode-main\node_modules\@smithy\core\dist-cjs\index.js:123:18
+    at async C:\Users\STAFF1\Downloads\new server\videocallservercode-main\node_modules\@smithy\middleware-retry\dist-cjs\index.js:254:46
+    at async C:\Users\STAFF1\Downloads\new server\videocallservercode-main\node_modules\@aws-sdk\middleware-logger\dist-cjs\index.js:5:26
+    at async saveChatTranscript (C:\Users\STAFF1\Downloads\new server\videocallservercode-main\src\services\aws.service.js:47:9)
+    at async Socket.<anonymous> (C:\Users\STAFF1\Downloads\new server\videocallservercode-main\src\services\socket.handler.js:437:9) {
+  '$metadata': { attempts: 1, totalRetryDelay: 0 }
+}
+[AWS] Error saving transcript: Error: Resolved credential object is not valid
+    at SignatureV4.validateResolvedCredentials (C:\Users\STAFF1\Downloads\new server\videocallservercode-main\node_modules\@smithy\signature-v4\dist-cjs\index.js:374:19)       
+    at SignatureV4.signRequest (C:\Users\STAFF1\Downloads\new server\videocallservercode-main\node_modules\@smithy\signature-v4\dist-cjs\index.js:481:14)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async AwsSdkSigV4Signer.sign (C:\Users\STAFF1\Downloads\new server\videocallservercode-main\node_modules\@aws-sdk\core\dist-cjs\index.js:114:31)
+    at async C:\Users\STAFF1\Downloads\new server\videocallservercode-main\node_modules\@smithy\core\dist-cjs\index.js:123:18
+    at async C:\Users\STAFF1\Downloads\new server\videocallservercode-main\node_modules\@smithy\middleware-retry\dist-cjs\index.js:254:46
+    at async C:\Users\STAFF1\Downloads\new server\videocallservercode-main\node_modules\@aws-sdk\middleware-logger\dist-cjs\index.js:5:26
+    at async saveChatTranscript (C:\Users\STAFF1\Downloads\new server\videocallservercode-main\src\services\aws.service.js:47:9)
+    at async Socket.<anonymous> (C:\Users\STAFF1\Downloads\new server\videocallservercode-main\src\services\socket.handler.js:437:9) {
+  '$metadata': { attempts: 1, totalRetryDelay: 0 }
+}
+info: Client disconnected: BCsd23RZyeGmq0m9AAAB {"timestamp":"2026-01-29T04:59:15.855Z"}
+info: User BCsd23RZyeGmq0m9AAAB removed from room room123 {"timestamp":"2026-01-29T04:59:15.871Z"}
+info: Host migrated to qEfb1R2P4ENCQgVAAAAD in room room123 {"timestamp":"2026-01-29T04:59:15.880Z"}
+info: Client disconnected: qEfb1R2P4ENCQgVAAAAD {"timestamp":"2026-01-29T04:59:18.331Z"}
+info: User qEfb1R2P4ENCQgVAAAAD removed from room room123 {"timestamp":"2026-01-29T04:59:18.340Z"}
+info: Room room123 is empty, starting cleanup timer {"timestamp":"2026-01-29T04:59:18.343Z"}
+info: New connection: k4Pkw7W-VFzMXuSRAAAF {"timestamp":"2026-01-29T04:59:58.506Z"}
+[AWS] Error logging user join: Error: Resolved credential object is not valid
+    at SignatureV4.validateResolvedCredentials (C:\Users\STAFF1\Downloads\new server\videocallservercode-main\node_modules\@smithy\signature-v4\dist-cjs\index.js:374:19)       
+    at SignatureV4.signRequest (C:\Users\STAFF1\Downloads\new server\videocallservercode-main\node_modules\@smithy\signature-v4\dist-cjs\index.js:481:14)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async AwsSdkSigV4Signer.sign (C:\Users\STAFF1\Downloads\new server\videocallservercode-main\node_modules\@aws-sdk\core\dist-cjs\index.js:114:31)
+    at async C:\Users\STAFF1\Downloads\new server\videocallservercode-main\node_modules\@smithy\core\dist-cjs\index.js:123:18
+    at async C:\Users\STAFF1\Downloads\new server\videocallservercode-main\node_modules\@smithy\middleware-retry\dist-cjs\index.js:254:46
+    at async C:\Users\STAFF1\Downloads\new server\videocallservercode-main\node_modules\@aws-sdk\middleware-logger\dist-cjs\index.js:5:26
+    at async logUserJoin (C:\Users\STAFF1\Downloads\new server\videocallservercode-main\src\services\aws.service.js:28:9)
+    at async RoomManager.getOrCreateRoom (C:\Users\STAFF1\Downloads\new server\videocallservercode-main\src\services\room.service.js:46:7)
+    at async Socket.<anonymous> (C:\Users\STAFF1\Downloads\new server\videocallservercode-main\src\services\socket.handler.js:23:18) {
+  '$metadata': { attempts: 1, totalRetryDelay: 0 }
+}
+info: New room created: room-sz7f35rvw {"timestamp":"2026-01-29T04:59:58.523Z"}
+info: User CoolHawk55 (k4Pkw7W-VFzMXuSRAAAF) is now host of room room-sz7f35rvw {"timestamp":"2026-01-29T04:59:58.523Z"}
+info: User CoolHawk55 joined room room-sz7f35rvw {"timestamp":"2026-01-29T04:59:58.524Z"}
+info: New connection: ydI_4OuYKjVluJfbAAAH {"timestamp":"2026-01-29T05:00:20.092Z"}
+info: User CoolFox8 joined room room-sz7f35rvw {"timestamp":"2026-01-29T05:00:20.099Z"}
+info: Poll created in room-sz7f35rvw: asd {"timestamp":"2026-01-29T05:00:28.522Z"}
+info: Client disconnected: k4Pkw7W-VFzMXuSRAAAF {"timestamp":"2026-01-29T05:00:45.531Z"}
+info: User k4Pkw7W-VFzMXuSRAAAF removed from room room-sz7f35rvw {"timestamp":"2026-01-29T05:00:45.531Z"}
+info: Host migrated to ydI_4OuYKjVluJfbAAAH in room room-sz7f35rvw {"timestamp":"2026-01-29T05:00:45.531Z"}
+info: Client disconnected: ydI_4OuYKjVluJfbAAAH {"timestamp":"2026-01-29T05:00:45.701Z"}
+info: User ydI_4OuYKjVluJfbAAAH removed from room room-sz7f35rvw {"timestamp":"2026-01-29T05:00:45.701Z"}
+info: Room room-sz7f35rvw is empty, starting cleanup timer {"timestamp":"2026-01-29T05:00:45.702Z"}
+info: New connection: Gmn2vOMj-FCSmJC1AAAJ {"timestamp":"2026-01-29T05:00:54.560Z"}
+[AWS] Error logging user join: Error: Resolved credential object is not valid
+    at SignatureV4.validateResolvedCredentials (C:\Users\STAFF1\Downloads\new server\videocallservercode-main\node_modules\@smithy\signature-v4\dist-cjs\index.js:374:19)       
+    at SignatureV4.signRequest (C:\Users\STAFF1\Downloads\new server\videocallservercode-main\node_modules\@smithy\signature-v4\dist-cjs\index.js:481:14)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async AwsSdkSigV4Signer.sign (C:\Users\STAFF1\Downloads\new server\videocallservercode-main\node_modules\@aws-sdk\core\dist-cjs\index.js:114:31)
+    at async C:\Users\STAFF1\Downloads\new server\videocallservercode-main\node_modules\@smithy\core\dist-cjs\index.js:123:18
+    at async C:\Users\STAFF1\Downloads\new server\videocallservercode-main\node_modules\@smithy\middleware-retry\dist-cjs\index.js:254:46
+    at async C:\Users\STAFF1\Downloads\new server\videocallservercode-main\node_modules\@aws-sdk\middleware-logger\dist-cjs\index.js:5:26
+    at async logUserJoin (C:\Users\STAFF1\Downloads\new server\videocallservercode-main\src\services\aws.service.js:28:9)
+    at async RoomManager.getOrCreateRoom (C:\Users\STAFF1\Downloads\new server\videocallservercode-main\src\services\room.service.js:46:7)
+    at async Socket.<anonymous> (C:\Users\STAFF1\Downloads\new server\videocallservercode-main\src\services\socket.handler.js:23:18) {
+  '$metadata': { attempts: 1, totalRetryDelay: 0 }
+}
+info: New room created: room-cr8f1soz6 {"timestamp":"2026-01-29T05:00:54.568Z"}
+info: User HappyPanda12 (Gmn2vOMj-FCSmJC1AAAJ) is now host of room room-cr8f1soz6 {"timestamp":"2026-01-29T05:00:54.568Z"}
+info: User HappyPanda12 joined room room-cr8f1soz6 {"timestamp":"2026-01-29T05:00:54.569Z"}
+info: New connection: 0FKet2kRsoYu2INHAAAL {"timestamp":"2026-01-29T05:01:09.807Z"}
+info: User HappyWolf63 joined room room-cr8f1soz6 {"timestamp":"2026-01-29T05:01:09.811Z"}
+info: HappyPanda12 started whiteboard presentation {"timestamp":"2026-01-29T05:01:22.297Z"}
+[AWS] Error saving room details: Error: Resolved credential object is not valid
+    at SignatureV4.validateResolvedCredentials (C:\Users\STAFF1\Downloads\new server\videocallservercode-main\node_modules\@smithy\signature-v4\dist-cjs\index.js:374:19)       
+    at SignatureV4.signRequest (C:\Users\STAFF1\Downloads\new server\videocallservercode-main\node_modules\@smithy\signature-v4\dist-cjs\index.js:481:14)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async AwsSdkSigV4Signer.sign (C:\Users\STAFF1\Downloads\new server\videocallservercode-main\node_modules\@aws-sdk\core\dist-cjs\index.js:114:31)
+    at async C:\Users\STAFF1\Downloads\new server\videocallservercode-main\node_modules\@smithy\core\dist-cjs\index.js:123:18
+    at async C:\Users\STAFF1\Downloads\new server\videocallservercode-main\node_modules\@smithy\middleware-retry\dist-cjs\index.js:254:46
+    at async C:\Users\STAFF1\Downloads\new server\videocallservercode-main\node_modules\@aws-sdk\middleware-logger\dist-cjs\index.js:5:26
+    at async saveRoomDetails (C:\Users\STAFF1\Downloads\new server\videocallservercode-main\src\services\aws.service.js:93:9)
+    at async Socket.<anonymous> (C:\Users\STAFF1\Downloads\new server\videocallservercode-main\src\services\socket.handler.js:580:7) {
+  '$metadata': { attempts: 1, totalRetryDelay: 0 }
+}
+info: HappyPanda12 stopped whiteboard presentation {"timestamp":"2026-01-29T05:01:38.833Z"}
+info: HappyPanda12 started notes presentation {"timestamp":"2026-01-29T05:01:42.144Z"}
+[AWS] Error saving room details: Error: Resolved credential object is not valid
+    at SignatureV4.validateResolvedCredentials (C:\Users\STAFF1\Downloads\new server\videocallservercode-main\node_modules\@smithy\signature-v4\dist-cjs\index.js:374:19)       
+    at SignatureV4.signRequest (C:\Users\STAFF1\Downloads\new server\videocallservercode-main\node_modules\@smithy\signature-v4\dist-cjs\index.js:481:14)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async AwsSdkSigV4Signer.sign (C:\Users\STAFF1\Downloads\new server\videocallservercode-main\node_modules\@aws-sdk\core\dist-cjs\index.js:114:31)
+    at async C:\Users\STAFF1\Downloads\new server\videocallservercode-main\node_modules\@smithy\core\dist-cjs\index.js:123:18
+    at async C:\Users\STAFF1\Downloads\new server\videocallservercode-main\node_modules\@smithy\middleware-retry\dist-cjs\index.js:254:46
+    at async C:\Users\STAFF1\Downloads\new server\videocallservercode-main\node_modules\@aws-sdk\middleware-logger\dist-cjs\index.js:5:26
+    at async saveRoomDetails (C:\Users\STAFF1\Downloads\new server\videocallservercode-main\src\services\aws.service.js:93:9)
+    at async Socket.<anonymous> (C:\Users\STAFF1\Downloads\new server\videocallservercode-main\src\services\socket.handler.js:613:7) {
+  '$metadata': { attempts: 1, totalRetryDelay: 0 }
+}
+info: HappyPanda12 stopped notes presentation {"timestamp":"2026-01-29T05:01:56.791Z"}
+info: Client disconnected: Gmn2vOMj-FCSmJC1AAAJ {"timestamp":"2026-01-29T05:02:47.127Z"}
+info: User Gmn2vOMj-FCSmJC1AAAJ removed from room room-cr8f1soz6 {"timestamp":"2026-01-29T05:02:47.128Z"}
+info: Host migrated to 0FKet2kRsoYu2INHAAAL in room room-cr8f1soz6 {"timestamp":"2026-01-29T05:02:47.128Z"}
+info: Client disconnected: 0FKet2kRsoYu2INHAAAL {"timestamp":"2026-01-29T05:02:47.174Z"}
+info: User 0FKet2kRsoYu2INHAAAL removed from room room-cr8f1soz6 {"timestamp":"2026-01-29T05:02:47.175Z"}
+info: Room room-cr8f1soz6 is empty, starting cleanup timer {"timestamp":"2026-01-29T05:02:47.175Z"}
+info: Room room123 cleaned up due to inactivity {"timestamp":"2026-01-29T05:04:18.358Z"}
+info: Room room-sz7f35rvw cleaned up due to inactivity {"timestamp":"2026-01-29T05:05:45.704Z"}
+info: Room room-cr8f1soz6 cleaned up due to inactivity {"timestamp":"2026-01-29T05:07:47.192Z"}
+info: New connection: bB_oUMhFLjxjUMRDAAAN {"timestamp":"2026-01-29T05:28:05.470Z"}
+[AWS] Error logging user join: Error: Resolved credential object is not valid
+    at SignatureV4.validateResolvedCredentials (C:\Users\STAFF1\Downloads\new server\videocallservercode-main\node_modules\@smithy\signature-v4\dist-cjs\index.js:374:19)       
+    at SignatureV4.signRequest (C:\Users\STAFF1\Downloads\new server\videocallservercode-main\node_modules\@smithy\signature-v4\dist-cjs\index.js:481:14)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async AwsSdkSigV4Signer.sign (C:\Users\STAFF1\Downloads\new server\videocallservercode-main\node_modules\@aws-sdk\core\dist-cjs\index.js:114:31)
+    at async C:\Users\STAFF1\Downloads\new server\videocallservercode-main\node_modules\@smithy\core\dist-cjs\index.js:123:18
+    at async C:\Users\STAFF1\Downloads\new server\videocallservercode-main\node_modules\@smithy\middleware-retry\dist-cjs\index.js:254:46
+    at async C:\Users\STAFF1\Downloads\new server\videocallservercode-main\node_modules\@aws-sdk\middleware-logger\dist-cjs\index.js:5:26
+    at async logUserJoin (C:\Users\STAFF1\Downloads\new server\videocallservercode-main\src\services\aws.service.js:28:9)
+    at async RoomManager.getOrCreateRoom (C:\Users\STAFF1\Downloads\new server\videocallservercode-main\src\services\room.service.js:46:7)
+    at async Socket.<anonymous> (C:\Users\STAFF1\Downloads\new server\videocallservercode-main\src\services\socket.handler.js:23:18) {
+  '$metadata': { attempts: 1, totalRetryDelay: 0 }
+}
+info: New room created: PXU-VRKL {"timestamp":"2026-01-29T05:28:05.485Z"}
+info: User HappyFalcon (bB_oUMhFLjxjUMRDAAAN) is now host of room PXU-VRKL {"timestamp":"2026-01-29T05:28:05.486Z"}
+info: User HappyFalcon joined room PXU-VRKL {"timestamp":"2026-01-29T05:28:05.488Z"}
+info: New connection: CfJddLCwoPRz5hT3AAAP {"timestamp":"2026-01-29T05:28:29.071Z"}
+info: User SwiftBear joined room PXU-VRKL {"timestamp":"2026-01-29T05:28:29.077Z"}
+info: Poll created in PXU-VRKL: asd {"timestamp":"2026-01-29T05:28:44.440Z"}
+info: Client disconnected: CfJddLCwoPRz5hT3AAAP {"timestamp":"2026-01-29T05:28:44.474Z"}
+info: User CfJddLCwoPRz5hT3AAAP removed from room PXU-VRKL {"timestamp":"2026-01-29T05:28:44.474Z"}
+info: Client disconnected: bB_oUMhFLjxjUMRDAAAN {"timestamp":"2026-01-29T05:28:44.497Z"}
+info: User bB_oUMhFLjxjUMRDAAAN removed from room PXU-VRKL {"timestamp":"2026-01-29T05:28:44.498Z"}
+info: Room PXU-VRKL is empty, starting cleanup timer {"timestamp":"2026-01-29T05:28:44.498Z"}
