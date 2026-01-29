@@ -1,26 +1,39 @@
+const os = require('os');
 const roomManager = require('../services/room.service');
-const { logUserJoin, saveChatTranscript, getRoomHistory } = require('../services/aws.service');
+const { getRoomHistory } = require('../services/aws.service');
 const logger = require('../utils/logger');
 
 exports.getSystemMetrics = async (req, res) => {
   try {
-    const totalRooms = roomManager.rooms.size;
-    let totalParticipants = 0;
-    roomManager.rooms.forEach(room => totalParticipants += room.peers.size);
+    const rooms = Array.from(roomManager.rooms.values()).map(room => ({
+      id: room.id,
+      hostUsername: room.peers.get(room.hostId)?.username || 'No Host',
+      userCount: room.peers.size,
+      isRecording: !!room.recordingId,
+      hasWhiteboard: room.whiteboard?.strokes.length > 0,
+      createdAt: room.createdAt
+    }));
 
     res.json({
-      success: true,
-      metrics: {
-        totalActiveRooms: totalRooms,
-        totalActiveParticipants: totalParticipants,
-        memoryUsage: process.memoryUsage(),
-        uptime: process.uptime(),
-        timestamp: new Date().toISOString()
-      }
+      totalRooms: rooms.length,
+      totalUsers: rooms.reduce((acc, r) => acc + r.userCount, 0),
+      uptime: process.uptime(),
+      cpuLoad: os.loadavg()[0].toFixed(2),
+      rooms
     });
   } catch (error) {
     logger.error('Error fetching system metrics:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    res.status(500).json({ error: error.message });
+  }
+};
+
+exports.getHistory = async (req, res) => {
+  try {
+    const history = await getRoomHistory(req.params.roomId);
+    res.json(history);
+  } catch (error) {
+    logger.error(`Error fetching history for room ${req.params.roomId}:`, error);
+    res.status(500).json({ error: error.message });
   }
 };
 
