@@ -57,14 +57,20 @@ async function uploadFileToS3(filePath, s3Key) {
                 Bucket: S3_BUCKET,
                 Key: s3Key,
                 Body: fileStream,
+                ContentType: 'video/mp4' // Explicit content type for professional playback
             },
+            queueSize: 4, // Concurrent uploads
+            partSize: 1024 * 1024 * 5, // 5MB parts
+            leavePartsOnError: false,
         });
 
         await upload.done();
-        console.log(`[AWS] File uploaded to S3: ${s3Key}`);
-        return `s3://${S3_BUCKET}/${s3Key}`;
+        console.log(`[AWS] Professional S3 upload complete: ${s3Key}`);
+        
+        // Return a public URL if bucket is public, or s3:// if private
+        return `https://${S3_BUCKET}.s3.${config.AWS.region}.amazonaws.com/${s3Key}`;
     } catch (error) {
-        console.error('[AWS] Error uploading to S3:', error);
+        console.error('[AWS] Error during professional S3 upload:', error);
         throw error;
     }
 }

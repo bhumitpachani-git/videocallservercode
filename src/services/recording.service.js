@@ -93,38 +93,47 @@ async function stopRecording(roomId) {
     if (!session) return;
 
     try {
+        logger.info(`[Recording] Stopping recording for room ${roomId}`);
         await session.recorder.stop();
         await session.browser.close();
         
         const stats = fs.statSync(session.outputPath);
+        logger.info(`[Recording] File generated: ${session.outputPath} (${stats.size} bytes)`);
         
-        // Upload to S3 if configured
+        // Upload to S3 with professional naming: room/date/time.mp4
         let s3Url = null;
         if (process.env.S3_BUCKET_NAME) {
-            const s3Key = `recordings/${roomId}/${session.recordingId}.mp4`;
+            const dateStr = new Date().toISOString().split('T')[0];
+            const timeStr = new Date().getTime();
+            const s3Key = `recordings/${roomId}/${dateStr}/${timeStr}.mp4`;
+            
+            logger.info(`[Recording] Uploading to S3: ${s3Key}`);
             s3Url = await uploadFileToS3(session.outputPath, s3Key);
+            
+            // Delete local file after successful upload to save disk space
+            fs.unlinkSync(session.outputPath);
+            logger.info(`[Recording] Local file cleaned up: ${session.outputPath}`);
         }
 
         const result = {
             recordingId: session.recordingId,
-            file: path.basename(session.outputPath),
+            roomId,
+            s3Url,
             size: stats.size,
-            path: session.outputPath,
-            s3Url
+            completedAt: new Date().toISOString()
         };
 
-        // Update DynamoDB with recording info
+        // Update DynamoDB with professional recording record
         await saveRoomDetails({
             roomId,
-            lastRecordingId: session.recordingId,
-            lastRecordingUrl: s3Url,
-            lastRecordingSize: stats.size
+            lastRecording: result,
+            type: 'RECORDING_COMPLETED'
         });
 
         recordingSessions.delete(roomId);
         return result;
     } catch (error) {
-        console.error('[Recording] Failed to stop:', error);
+        logger.error('[Recording] Failed to stop and upload:', error);
         throw error;
     }
 }
