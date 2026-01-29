@@ -31,7 +31,7 @@ async function startRecording(roomId, startedBy, io, rooms) {
     try {
         const browser = await puppeteer.launch({
             headless: 'new',
-            executablePath: '/usr/bin/chromium-browser', // Common path for system chromium
+            executablePath: '/nix/var/nix/profiles/default/bin/chromium',
             args: [
                 '--no-sandbox',
                 '--disable-setuid-sandbox',
@@ -45,10 +45,22 @@ async function startRecording(roomId, startedBy, io, rooms) {
                 '--high-dpi-support=1'
             ]
         }).catch(async () => {
-            // Fallback to the nix store path if the common path fails
+            // Fallback 1: Dynamic discovery via which
+            const { execSync } = require('child_process');
+            let dynamicPath;
+            try {
+                dynamicPath = execSync('which chromium').toString().trim();
+            } catch (e) {
+                try {
+                    dynamicPath = execSync('which google-chrome-stable').toString().trim();
+                } catch (e2) {
+                    dynamicPath = '/usr/bin/chromium';
+                }
+            }
+            
             return await puppeteer.launch({
                 headless: 'new',
-                executablePath: '/nix/store/qa9cnw4v5xkxyip6mb9kxqfq1z4x2dx1-chromium-138.0.7204.100/bin/chromium',
+                executablePath: dynamicPath,
                 args: [
                     '--no-sandbox',
                     '--disable-setuid-sandbox',
