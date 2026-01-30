@@ -35,19 +35,35 @@ Preferred communication style: Simple, everyday language.
 - Recordings are uploaded to S3 with metadata stored in DynamoDB
 - Located in `src/services/recording.service.js`
 
-### Room Management
+### Room Management & Session Lifecycle
 - Rooms are managed in-memory with a Map structure in `src/services/room.service.js`
 - Each room tracks: peers, producers, consumers, host, settings, whiteboard state, notes, polls
-- Automatic cleanup timer removes empty rooms after inactivity period
+- Automatic cleanup timer removes empty rooms after 5 minutes of inactivity
 - Router pool pre-creates routers for instant room joining
+- **Session Management**: Each room maintains sessions with unique IDs
+  - When all users leave, the current session is closed and all data is saved to DynamoDB
+  - When users rejoin an empty room, a new session is automatically created
+  - Session history includes: participant join/leave times, duration, all activity
 
-### Real-time Features
-- **Chat**: Messages broadcast to room with optional S3 transcript persistence
-- **Whiteboard**: Drawing strokes synced in real-time across participants
-- **Notes**: Collaborative note-taking synced to all room members
-- **Polls**: Host can create polls, all members can vote, results broadcast live
-- **Transcription**: Audio streams sent to AWS Transcribe, results broadcast with speaker attribution
-- **Translation**: Transcribed text translated via AWS Translate to each user's target language
+### Real-time Features & Auto-Save
+- **Chat**: Messages broadcast to room and **auto-saved to DynamoDB in real-time**
+- **Whiteboard**: Drawing strokes synced in real-time and auto-saved
+- **Notes**: Collaborative note-taking with debounced auto-save (2 second delay)
+- **Polls**: Create/vote/close polls with **real-time saving of all poll state changes**
+- **Transcription**: Audio streams sent to AWS Transcribe, full transcripts saved to DynamoDB
+- **Translation**: Transcribed text translated via AWS Translate to each user's preferred language
+- **User Events**: All join/leave events logged with timestamps and session duration
+
+### History API (`/:roomId/history`)
+- **Raw History**: `GET /api/room/:roomId/history` - returns all DynamoDB records
+- **Organized History**: `GET /api/room/:roomId/history?organized=true` - returns data grouped by session with:
+  - User joins and leaves with timestamps
+  - Complete chat transcripts
+  - All poll data with final results
+  - Notes content
+  - Transcription data
+  - Session summary (duration, participant count, etc.)
+- **Session-Specific**: `GET /api/room/:roomId/history?sessionId=SESS-xxx` - returns data for specific session
 
 ### Configuration
 - `src/config/index.js` defines MediaSoup codecs, transport options, and quality presets
