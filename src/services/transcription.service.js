@@ -33,7 +33,7 @@ const AWS_TO_SHORT_CODE = Object.fromEntries(
 const transcriptionSessions = new Map();
 
 async function handleTranscription(socket, io, rooms, recordingSessions, { roomId, username, targetLanguage = 'en', speakingLanguage = 'en' }) {
-  // Use the explicitly provided speakingLanguage from the user
+
   const actualSpeakingLanguage = speakingLanguage === 'auto' ? 'en' : speakingLanguage;
   console.log(`[Transcription] Starting for ${username} in room ${roomId}, speaking: ${actualSpeakingLanguage}, target: ${targetLanguage}`);
 
@@ -50,7 +50,7 @@ async function handleTranscription(socket, io, rooms, recordingSessions, { roomI
     roomId,
     username,
     targetLanguage,
-    speakingLanguage: actualSpeakingLanguage, // Store what the user actually said they are speaking
+    speakingLanguage: actualSpeakingLanguage,
     audioStream,
     isActive: true,
   };
@@ -92,10 +92,8 @@ async function handleTranscription(socket, io, rooms, recordingSessions, { roomI
 
         if (!transcript || transcript.trim() === '') continue;
 
-        // CRITICAL: Use the language the speaker is actually using, not a default
         const speakerLanguage = currentSession.speakingLanguage;
 
-        // Send to each peer with their own translation
         for (const [peerId, peer] of room.peers.entries()) {
           const peerSession = transcriptionSessions.get(peerId);
           const peerTargetLang = peerSession?.targetLanguage || 'en';
@@ -119,7 +117,6 @@ async function handleTranscription(socket, io, rooms, recordingSessions, { roomI
             }
           }
 
-          // Force self-transcription to always show original spoken text
           const finalDisplayedText = (peerId === socket.id) ? transcript : (shouldTranslate ? translatedText : transcript);
 
           if (isFinal && peerId === socket.id) {
@@ -137,7 +134,7 @@ async function handleTranscription(socket, io, rooms, recordingSessions, { roomI
             username,
             originalText: transcript,
             translatedText: (peerId === socket.id) ? undefined : (shouldTranslate && translatedText !== transcript ? translatedText : undefined),
-            displayedText: finalDisplayedText, // UI should use this for main display
+            displayedText: finalDisplayedText,
             originalLanguage: speakerLanguage,
             targetLanguage: (peerId === socket.id) ? speakerLanguage : peerTargetLang,
             isFinal,
