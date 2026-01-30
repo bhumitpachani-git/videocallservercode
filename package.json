@@ -23,6 +23,7 @@
     "@aws-sdk/client-translate": "^3.965.0",
     "@aws-sdk/lib-dynamodb": "^3.975.0",
     "@aws-sdk/lib-storage": "^3.975.0",
+    "compression": "^1.8.1",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "express": "^4.18.2",

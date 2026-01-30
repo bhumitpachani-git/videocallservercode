@@ -62,5 +62,14 @@ module.exports = {
     listenIp: { ip: '127.0.0.1', announcedIp: null },
     rtcpMux: false,
     comedia: true
+  },
+  mediasoup: {
+    numWorkers: Object.keys(require('os').cpus()).length,
+    workerSettings: {
+      logLevel: 'warn',
+      logTags: ['info', 'ice', 'dtls', 'rtp', 'srtp', 'rtcp'],
+      rtcMinPort: process.env.RTC_MIN_PORT || 10000,
+      rtcMaxPort: process.env.RTC_MAX_PORT || 10100,
+    }
   }
 };

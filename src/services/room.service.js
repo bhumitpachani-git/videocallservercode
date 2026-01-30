@@ -6,37 +6,43 @@ const logger = require('../utils/logger');
 class RoomManager {
   constructor() {
     this.rooms = new Map();
-    this.worker = null;
+    this.workers = [];
+    this.workerIdx = 0;
     this.globalRtpCapabilities = null;
     this.routerPool = [];
-    this.POOL_SIZE = 5;
+    this.POOL_SIZE = 10; // Increased for better production readiness
   }
 
-  async initialize(worker) {
-    this.worker = worker;
-    const tempRouter = await this.worker.createRouter({ mediaCodecs: config.mediaCodecs });
-    this.globalRtpCapabilities = tempRouter.rtpCapabilities;
-    tempRouter.close();
+  async initialize(workers) {
+    this.workers = workers;
     
-    // Fill router pool
+    // Get capabilities from first worker
+    this.globalRtpCapabilities = this.workers[0].rtpCapabilities;
+    
+    // Fill router pool across all workers
     for (let i = 0; i < this.POOL_SIZE; i++) {
-      this.worker.createRouter({ mediaCodecs: config.mediaCodecs })
+      const worker = this.getNextWorker();
+      worker.createRouter({ mediaCodecs: config.mediaCodecs })
         .then(router => this.routerPool.push(router))
         .catch(err => logger.error('Router pool creation failed:', err));
     }
     
-    logger.info('RoomManager initialized with global capabilities and router pool');
+    logger.info(`RoomManager initialized with ${this.workers.length} workers and pool size ${this.POOL_SIZE}`);
+  }
+
+  getNextWorker() {
+    const worker = this.workers[this.workerIdx];
+    this.workerIdx = (this.workerIdx + 1) % this.workers.length;
+    return worker;
   }
 
   async getOrCreateRoom(roomId, password = null) {
     let room = this.rooms.get(roomId);
     if (!room) {
-      // Use router from pool or create new one if pool is empty
-      const router = this.routerPool.pop() || await this.worker.createRouter({ mediaCodecs: config.mediaCodecs });
+      const router = this.routerPool.pop() || await this.getNextWorker().createRouter({ mediaCodecs: config.mediaCodecs });
       
-      // Refill pool asynchronously
       if (this.routerPool.length < this.POOL_SIZE) {
-        this.worker.createRouter({ mediaCodecs: config.mediaCodecs })
+        this.getNextWorker().createRouter({ mediaCodecs: config.mediaCodecs })
           .then(r => this.routerPool.push(r))
           .catch(err => logger.error('Router pool refill failed:', err));
       }

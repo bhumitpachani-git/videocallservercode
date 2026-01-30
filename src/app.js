@@ -13,9 +13,11 @@ const socketHandler = require('./services/socket.handler');
 
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
+const compression = require('compression');
 
 const app = express();
 app.set('trust proxy', 1);
+app.use(compression()); // Compress responses for faster signaling
 app.use(helmet());
 app.use(cors());
 app.use(express.json());
@@ -41,16 +43,26 @@ socketHandler(io, roomManager);
 
 async function bootstrap() {
   try {
-    const worker = await mediasoup.createWorker({
-      logLevel: config.mediasoup?.logLevel || 'warn',
-      rtcMinPort: parseInt(process.env.RTC_MIN_PORT) || 10000,
-      rtcMaxPort: parseInt(process.env.RTC_MAX_PORT) || 10100,
-    });
+    const workers = [];
+    const numWorkers = config.mediasoup.numWorkers || 1;
+    
+    logger.info(`Starting ${numWorkers} MediaSoup workers...`);
+    
+    for (let i = 0; i < numWorkers; i++) {
+      const worker = await mediasoup.createWorker(config.mediasoup.workerSettings);
+      
+      worker.on('died', () => {
+        logger.error(`MediaSoup worker ${i} died, exiting...`);
+        process.exit(1);
+      });
+      
+      workers.push(worker);
+    }
 
-    await roomManager.initialize(worker);
+    await roomManager.initialize(workers);
 
     server.listen(config.PORT, '0.0.0.0', () => {
-      logger.info(`🚀 Powerful Backend running on port ${config.PORT}`);
+      logger.info(`🚀 Production-Ready Backend running on port ${config.PORT}`);
     });
   } catch (error) {
     logger.error(`Bootstrap failed: ${error.message}`);
