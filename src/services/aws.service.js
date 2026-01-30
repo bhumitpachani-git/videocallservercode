@@ -460,10 +460,8 @@ async function getRoomHistory(roomId) {
     try {
         const command = new QueryCommand({
             TableName: DYNAMO_TABLE,
-            KeyConditionExpression: "aavrtiadmin = :admin",
-            FilterExpression: "pk = :pk",
+            KeyConditionExpression: "pk = :pk",
             ExpressionAttributeValues: {
-                ":admin": "aavrtiadmin",
                 ":pk": `ROOM#${roomId}`
             },
             ScanIndexForward: false 
@@ -480,10 +478,8 @@ async function getSessionHistory(roomId, sessionId) {
     try {
         const command = new QueryCommand({
             TableName: DYNAMO_TABLE,
-            KeyConditionExpression: "aavrtiadmin = :admin AND begins_with(sk, :sessionPrefix)",
-            FilterExpression: "pk = :pk",
+            KeyConditionExpression: "pk = :pk AND begins_with(sk, :sessionPrefix)",
             ExpressionAttributeValues: {
-                ":admin": "aavrtiadmin",
                 ":pk": `ROOM#${roomId}`,
                 ":sessionPrefix": `SESSION#${sessionId}`
             },
