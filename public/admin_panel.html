@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Room Admin Control</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; background: #f4f4f4; }
+        .container { max-width: 800px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        h1 { color: #333; }
+        .section { margin-bottom: 30px; border-bottom: 1px solid #eee; padding-bottom: 20px; }
+        input { padding: 8px; border: 1px solid #ccc; border-radius: 4px; width: 200px; }
+        button { padding: 8px 15px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        button:hover { background: #0056b3; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        th { background: #f8f9fa; }
+        pre { background: #f8f9fa; padding: 10px; border-radius: 4px; max-height: 400px; overflow-y: auto; font-size: 12px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Admin Room Control</h1>
+        
+        <div class="section">
+            <h2>Active Rooms</h2>
+            <button onclick="fetchActiveRooms()">Refresh Active Rooms</button>
+            <table id="active-rooms-table">
+                <thead>
+                    <tr>
+                        <th>Room ID</th>
+                        <th>Peers</th>
+                        <th>Created At</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2>Room History</h2>
+            <input type="text" id="history-room-id" placeholder="Enter Room ID">
+            <button onclick="fetchHistory()">View History</button>
+            <div id="history-result">
+                <pre id="history-content"></pre>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function fetchActiveRooms() {
+            try {
+                const res = await fetch('/api/admin/active');
+                const data = await res.json();
+                const tbody = document.querySelector('#active-rooms-table tbody');
+                tbody.innerHTML = '';
+                data.rooms.forEach(room => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${room.id}</td>
+                        <td>${room.peersCount}</td>
+                        <td>${new Date(room.createdAt).toLocaleString()}</td>
+                        <td>
+                            <button onclick="controlRoom('${room.id}', 'closeRoom')">Close</button>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            } catch (err) { alert('Error fetching rooms'); }
+        }
+
+        async function fetchHistory() {
+            const roomId = document.getElementById('history-room-id').value;
+            if (!roomId) return alert('Please enter a room ID');
+            try {
+                const res = await fetch(`/api/admin/history/${roomId}`);
+                const data = await res.json();
+                document.getElementById('history-content').textContent = JSON.stringify(data.history, null, 2);
+            } catch (err) { alert('Error fetching history'); }
+        }
+
+        async function controlRoom(roomId, action) {
+            if (!confirm(`Are you sure you want to ${action} for ${roomId}?`)) return;
+            try {
+                const res = await fetch('/api/admin/control', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ roomId, action })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    alert('Action successful');
+                    fetchActiveRooms();
+                } else {
+                    alert('Action failed: ' + data.error);
+                }
+            } catch (err) { alert('Error controlling room'); }
+        }
+
+        fetchActiveRooms();
+    </script>
+</body>
+</html>

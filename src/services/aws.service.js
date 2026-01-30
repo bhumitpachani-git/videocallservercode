@@ -456,6 +456,177 @@ async function getOrganizedRoomHistory(roomId) {
     }
 }
 
+async function getRoomHistory(roomId) {
+    try {
+        const command = new QueryCommand({
+            TableName: DYNAMO_TABLE,
+            KeyConditionExpression: "aavrtiadmin = :admin",
+            FilterExpression: "pk = :pk",
+            ExpressionAttributeValues: {
+                ":admin": "aavrtiadmin",
+                ":pk": `ROOM#${roomId}`
+            },
+            ScanIndexForward: false 
+        });
+        const response = await docClient.send(command);
+        return response.Items || [];
+    } catch (error) {
+        console.error('[AWS] Error fetching room history:', error);
+        return [];
+    }
+}
+
+async function getSessionHistory(roomId, sessionId) {
+    try {
+        const command = new QueryCommand({
+            TableName: DYNAMO_TABLE,
+            KeyConditionExpression: "aavrtiadmin = :admin AND begins_with(sk, :sessionPrefix)",
+            FilterExpression: "pk = :pk",
+            ExpressionAttributeValues: {
+                ":admin": "aavrtiadmin",
+                ":pk": `ROOM#${roomId}`,
+                ":sessionPrefix": `SESSION#${sessionId}`
+            },
+            ScanIndexForward: true
+        });
+        const response = await docClient.send(command);
+        return response.Items || [];
+    } catch (error) {
+        console.error('[AWS] Error fetching session history:', error);
+        return [];
+    }
+}
+
+async function getOrganizedRoomHistory(roomId) {
+    try {
+        const allItems = await getRoomHistory(roomId);
+        
+        const sessions = {};
+        
+        allItems.forEach(item => {
+            const sessionMatch = item.sk?.match(/SESSION#([^#]+)/);
+            const sessionId = sessionMatch ? sessionMatch[1] : null;
+            
+            if (sessionId) {
+                if (!sessions[sessionId]) {
+                    sessions[sessionId] = {
+                        sessionId,
+                        userJoins: [],
+                        userLeaves: [],
+                        chatMessages: [],
+                        polls: [],
+                        notes: [],
+                        transcripts: [],
+                        whiteboardUpdates: [],
+                        events: [],
+                        metadata: null,
+                        closedAt: null
+                    };
+                }
+                
+                switch (item.type) {
+                    case 'USER_JOIN':
+                        sessions[sessionId].userJoins.push({
+                            username: item.username,
+                            socketId: item.socketId,
+                            joinedAt: item.timestamp
+                        });
+                        break;
+                    case 'USER_LEAVE':
+                        sessions[sessionId].userLeaves.push({
+                            username: item.username,
+                            socketId: item.socketId,
+                            leftAt: item.leftAt || item.timestamp,
+                            duration: item.duration
+                        });
+                        break;
+                    case 'CHAT_TRANSCRIPT':
+                        sessions[sessionId].chatMessages.push({
+                            messages: item.messages || item.transcript,
+                            messageCount: item.messageCount,
+                            savedAt: item.timestamp
+                        });
+                        break;
+                    case 'POLL_DATA':
+                        sessions[sessionId].polls.push({
+                            pollId: item.pollId,
+                            question: item.question,
+                            options: item.options,
+                            results: item.results,
+                            totalVotes: item.totalVotes,
+                            creatorUsername: item.creatorUsername,
+                            action: item.action,
+                            active: item.active,
+                            createdAt: item.createdAt,
+                            savedAt: item.timestamp
+                        });
+                        break;
+                    case 'NOTES_DATA':
+                        sessions[sessionId].notes.push({
+                            content: item.content,
+                            contentLength: item.contentLength,
+                            savedAt: item.timestamp
+                        });
+                        break;
+                    case 'LIVE_TRANSCRIPTION':
+                    case 'FULL_TRANSCRIPT':
+                        sessions[sessionId].transcripts.push({
+                            type: item.type,
+                            transcript: item.transcript || item.transcripts,
+                            savedAt: item.timestamp
+                        });
+                        break;
+                    case 'ROOM_METADATA':
+                        if (item.action === 'WHITEBOARD_UPDATE' || item.action === 'WHITEBOARD_UNDO') {
+                            sessions[sessionId].whiteboardUpdates.push({
+                                action: item.action,
+                                savedAt: item.updatedAt
+                            });
+                        } else {
+                            sessions[sessionId].metadata = item;
+                        }
+                        break;
+                    case 'SESSION_EVENT':
+                        sessions[sessionId].events.push({
+                            eventType: item.eventType,
+                            timestamp: item.timestamp,
+                            details: item
+                        });
+                        break;
+                    case 'SESSION_CLOSED':
+                        sessions[sessionId].closedAt = item.closedAt;
+                        sessions[sessionId].summary = {
+                            startedAt: item.startedAt,
+                            duration: item.duration,
+                            totalParticipants: item.totalParticipants,
+                            totalMessages: item.totalMessages,
+                            totalPolls: item.totalPolls,
+                            hasNotes: item.hasNotes,
+                            hasWhiteboard: item.hasWhiteboard,
+                            participants: item.participants
+                        };
+                        break;
+                }
+            }
+        });
+        
+        const sessionsArray = Object.values(sessions).sort((a, b) => {
+            const aTime = a.metadata?.updatedAt || a.userJoins[0]?.joinedAt || '';
+            const bTime = b.metadata?.updatedAt || b.userJoins[0]?.joinedAt || '';
+            return bTime.localeCompare(aTime);
+        });
+        
+        return {
+            roomId,
+            totalSessions: sessionsArray.length,
+            sessions: sessionsArray
+        };
+    } catch (error) {
+        console.error('[AWS] Error organizing room history:', error);
+        return { roomId, totalSessions: 0, sessions: [] };
+    }
+}
+
 module.exports = {
     logUserJoin,
     logUserLeave,

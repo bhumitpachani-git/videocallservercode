@@ -27,6 +27,7 @@ const limiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 100 });
 app.use(limiter);
 
 app.use('/api/rooms', roomRoutes);
+app.use('/api/admin', require('./routes/admin.routes'));
 app.get('/health', (req, res) => res.json({ status: 'ok', uptime: process.uptime() }));
 
 const server = http.createServer(app);

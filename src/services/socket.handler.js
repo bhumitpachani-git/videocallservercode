@@ -379,6 +379,7 @@ module.exports = (io, roomManager) => {
           username: currentUsername
         });
         
+        // Find the producer for this peer's camera/audio to restore it for others
         const producers = [];
         for (const [peerId, peer] of room.peers.entries()) {
           for (const [producerId, producer] of peer.producers.entries()) {
@@ -390,7 +391,10 @@ module.exports = (io, roomManager) => {
             });
           }
         }
+        
+        // Broadcast active producers and specifically notify peers to re-consume
         io.to(roomId).emit('active-producers', producers);
+        io.to(roomId).emit('re-sync-consumers');
 
         logger.info(`${currentUsername} stopped screen sharing in room ${roomId}. Re-syncing producers.`);
       }
