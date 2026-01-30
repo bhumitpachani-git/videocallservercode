@@ -3,6 +3,52 @@ const roomManager = require('../services/room.service');
 const { getRoomHistory } = require('../services/aws.service');
 const logger = require('../utils/logger');
 
+exports.getAllRoomIds = async (req, res) => {
+  try {
+    const rooms = Array.from(roomManager.rooms.keys());
+    res.json({ roomIds: rooms });
+  } catch (error) {
+    logger.error(`Get all room IDs error: ${error.message}`);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+exports.getRoomDetails = async (req, res) => {
+  try {
+    const { roomId } = req.params;
+    const room = roomManager.rooms.get(roomId);
+    
+    if (!room) {
+      return res.status(404).json({ error: 'Room not found' });
+    }
+
+    const details = {
+      id: room.id,
+      sessionId: room.sessionId,
+      hostId: room.hostId,
+      createdAt: room.createdAt,
+      settings: room.settings,
+      currentVibe: room.currentVibe,
+      userCount: room.peers.size,
+      peers: Array.from(room.peers.values()).map(p => ({
+        id: p.id,
+        username: p.username,
+        isHost: p.id === room.hostId,
+        joinedAt: p.joinedAt,
+        producerCount: p.producers.size
+      })),
+      chatMessageCount: room.chatMessages?.length || 0,
+      hasWhiteboard: room.whiteboard?.strokes.length > 0,
+      isRecording: !!room.recordingId
+    };
+
+    res.json(details);
+  } catch (error) {
+    logger.error(`Get room details error: ${error.message}`);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
 exports.getSystemMetrics = async (req, res) => {
   try {
     const rooms = Array.from(roomManager.rooms.values()).map(room => ({
