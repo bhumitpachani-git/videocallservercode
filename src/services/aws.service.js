@@ -154,6 +154,26 @@ async function saveTranscription(roomId, sessionId, transcriptData) {
     }
 }
 
+async function saveFullTranscription(roomId, sessionId, transcript) {
+    try {
+        const command = new PutCommand({
+            TableName: DYNAMO_TABLE,
+            Item: {
+                aavrtiadmin: "aavrtiadmin",
+                pk: `ROOM#${roomId}`,
+                sk: `SESSION#${sessionId}#FULL_TRANSCRIPT`,
+                type: 'FULL_TRANSCRIPT',
+                sessionId,
+                transcript,
+                timestamp: new Date().toISOString()
+            }
+        });
+        await docClient.send(command);
+    } catch (error) {
+        console.error('[AWS] Error saving full transcription:', error);
+    }
+}
+
 async function logUserLeave(roomId, sessionId, userDetails) {
     try {
         const command = new PutCommand({
@@ -180,6 +200,7 @@ module.exports = {
     saveChatTranscript,
     saveRoomDetails,
     saveTranscription,
+    saveFullTranscription,
     uploadFileToS3,
     getRoomHistory
 };

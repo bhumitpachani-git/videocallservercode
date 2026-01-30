@@ -120,6 +120,10 @@ async function handleTranscription(socket, io, rooms, recordingSessions, { roomI
           const finalDisplayedText = (peerId === socket.id) ? transcript : (shouldTranslate ? translatedText : transcript);
 
           if (isFinal && peerId === socket.id) {
+            // Accumulate full transcript for session-end save
+            if (!currentSession.fullTranscript) currentSession.fullTranscript = '';
+            currentSession.fullTranscript += `${username}: ${transcript}\n`;
+
             saveTranscription(roomId, room.sessionId, {
               socketId: socket.id,
               username,

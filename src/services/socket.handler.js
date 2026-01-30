@@ -1,7 +1,7 @@
 const { joinRoomSchema, transportSchema, recordingSchema } = require('../utils/validation');
 const logger = require('../utils/logger');
 const { startRecording, stopRecording, recordingSessions } = require('./recording.service');
-const { saveRoomDetails, saveChatTranscript, getRoomHistory } = require('./aws.service');
+const { saveRoomDetails, saveChatTranscript, getRoomHistory, logUserJoin, logUserLeave, saveFullTranscription } = require('./aws.service');
 const { handleTranscription, transcriptionSessions } = require('./transcription.service');
 
 module.exports = (io, roomManager) => {
@@ -19,6 +19,13 @@ module.exports = (io, roomManager) => {
         const room = await roomManager.getOrCreateRoom(roomId, password);
         currentRoomId = roomId;
         currentUsername = username;
+
+        // Log user join (season/session wise)
+        logUserJoin(roomId, room.sessionId, {
+          socketId: socket.id,
+          username,
+          joinedAt: new Date().toISOString()
+        }).catch(err => logger.error('User join log failed:', err));
 
         const result = await roomManager.joinRoom(socket, validated);
         
@@ -629,12 +636,31 @@ module.exports = (io, roomManager) => {
       if (session) {
         session.isActive = false;
         if (session.audioStream) session.audioStream.end();
+        
+        // Save final transcription if active and has content
+        if (session.fullTranscript) {
+           const room = Array.from(roomManager.rooms.values()).find(r => r.peers.has(socket.id));
+           if (room) {
+             saveFullTranscription(room.id, room.sessionId, session.fullTranscript)
+               .catch(err => logger.error('Full transcription save failed:', err));
+           }
+        }
+        
         transcriptionSessions.delete(socket.id);
       }
 
       const room = Array.from(roomManager.rooms.values()).find(r => r.peers.has(socket.id));
       const roomId = room?.id;
       
+      if (room && currentUsername) {
+        // Log user leave session-wise
+        logUserLeave(roomId, room.sessionId, {
+          socketId: socket.id,
+          username: currentUsername,
+          leftAt: new Date().toISOString()
+        }).catch(err => logger.error('User leave log failed:', err));
+      }
+
       roomManager.handleDisconnect(socket.id);
 
       if (roomId) {
