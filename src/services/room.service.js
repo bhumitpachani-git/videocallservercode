@@ -16,8 +16,10 @@ class RoomManager {
   async initialize(workers) {
     this.workers = workers;
     
-    // Get capabilities from first worker
-    this.globalRtpCapabilities = this.workers[0].rtpCapabilities;
+    // Create a temporary router to get global capabilities
+    const tempRouter = await this.workers[0].createRouter({ mediaCodecs: config.mediaCodecs });
+    this.globalRtpCapabilities = tempRouter.rtpCapabilities;
+    tempRouter.close();
     
     // Fill router pool across all workers
     for (let i = 0; i < this.POOL_SIZE; i++) {
