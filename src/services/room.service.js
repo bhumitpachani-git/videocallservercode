@@ -317,33 +317,39 @@ class RoomManager {
         }
         
         if (room.peers.size === 0) {
-          logger.info(`Room ${roomId} is empty, closing session and starting cleanup timer`);
+          logger.info(`Room ${roomId} is empty - IMMEDIATELY saving all session data to DynamoDB`);
           
           const { stopRecording, recordingSessions } = require('./recording.service');
-          if (recordingSessions.has(roomId)) {
-            logger.info(`[Recording] Auto-stopping recording for empty room ${roomId}`);
-            stopRecording(roomId).then(async (result) => {
-              logger.info(`[Recording] Auto-stop and upload successful for room ${roomId}: ${result.recordingId}`);
-              
-              if (result.metadata && result.metadata.transcripts && result.metadata.transcripts.length > 0) {
-                const { saveTranscription } = require('./aws.service');
-                await saveTranscription(roomId, room.sessionId, {
-                  type: 'FULL_SESSION_TRANSCRIPT',
-                  transcripts: result.metadata.transcripts
-                }).catch(err => logger.error('[AWS] Full transcription save failed:', err));
+          
+          (async () => {
+            try {
+              if (recordingSessions.has(roomId)) {
+                logger.info(`[Recording] Auto-stopping recording for empty room ${roomId}`);
+                const result = await stopRecording(roomId);
+                logger.info(`[Recording] Auto-stop and upload successful for room ${roomId}: ${result.recordingId}`);
+                
+                if (result.metadata && result.metadata.transcripts && result.metadata.transcripts.length > 0) {
+                  const { saveTranscription } = require('./aws.service');
+                  await saveTranscription(roomId, room.sessionId, {
+                    type: 'FULL_SESSION_TRANSCRIPT',
+                    transcripts: result.metadata.transcripts
+                  });
+                }
               }
-            }).catch(err => logger.error(`Auto-stop recording failed for room ${roomId}:`, err));
-          }
 
-          this.closeCurrentSession(room).catch(err => 
-            logger.error(`Session close failed for room ${roomId}:`, err)
-          );
+              await this.closeCurrentSession(room);
+              logger.info(`Session ${room.sessionId} data SAVED IMMEDIATELY for room ${roomId}`);
+              
+            } catch (err) {
+              logger.error(`Error during immediate session save for room ${roomId}:`, err);
+            }
+          })();
 
           room.cleanupTimeout = setTimeout(() => {
             if (room.peers.size === 0) {
               room.router.close();
               this.rooms.delete(roomId);
-              logger.info(`Room ${roomId} cleaned up due to inactivity`);
+              logger.info(`Room ${roomId} cleaned up from memory after 5 minutes`);
             }
           }, 5 * 60 * 1000);
         }
