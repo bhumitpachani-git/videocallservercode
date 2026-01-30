@@ -230,7 +230,6 @@ async function startRecordingForPeer(roomId, peerId, peer, router, session, reco
         logger.error(`[Recording] Failed to start recording for peer ${peerId}:`, error);
     }
 }
-}
 
 async function stopRecording(roomId) {
     const session = recordingSessions.get(roomId);
@@ -314,16 +313,18 @@ async function stopRecording(roomId) {
 
     fs.writeFileSync(metadataPath, JSON.stringify(metadata, null, 2));
 
+    let metadataS3Url = null;
     if (process.env.S3_BUCKET_NAME) {
         const dateStr = new Date().toISOString().split('T')[0];
         const s3Key = `recordings/${roomId}/${dateStr}/${session.recordingId}-metadata.json`;
-        await uploadFileToS3(metadataPath, s3Key).catch(() => {});
+        metadataS3Url = await uploadFileToS3(metadataPath, s3Key).catch(() => {});
     }
 
     await saveRoomDetails(roomId, session.sessionId || 'N/A', {
         roomId,
         lastRecording: metadata,
-        type: 'RECORDING_COMPLETED'
+        type: 'RECORDING_COMPLETED',
+        metadataUrl: metadataS3Url
     });
 
     recordingSessions.delete(roomId);
