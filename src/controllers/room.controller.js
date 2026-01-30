@@ -1,6 +1,6 @@
 const os = require('os');
 const roomManager = require('../services/room.service');
-const { getRoomHistory } = require('../services/aws.service');
+const { getRoomHistory, getOrganizedRoomHistory, getSessionHistory } = require('../services/aws.service');
 const logger = require('../utils/logger');
 
 exports.getAllRoomIds = async (req, res) => {
@@ -25,8 +25,10 @@ exports.getRoomDetails = async (req, res) => {
     const details = {
       id: room.id,
       sessionId: room.sessionId,
+      sessionNumber: room.sessionNumber,
       hostId: room.hostId,
       createdAt: room.createdAt,
+      sessionStartedAt: room.sessionStartedAt,
       settings: room.settings,
       currentVibe: room.currentVibe,
       userCount: room.peers.size,
@@ -38,6 +40,8 @@ exports.getRoomDetails = async (req, res) => {
         producerCount: p.producers.size
       })),
       chatMessageCount: room.chatMessages?.length || 0,
+      pollCount: room.polls?.size || 0,
+      hasNotes: !!(room.notes && room.notes.length > 0),
       hasWhiteboard: room.whiteboard?.strokes.length > 0,
       isRecording: !!room.recordingId
     };
@@ -53,11 +57,14 @@ exports.getSystemMetrics = async (req, res) => {
   try {
     const rooms = Array.from(roomManager.rooms.values()).map(room => ({
       id: room.id,
+      sessionId: room.sessionId,
+      sessionNumber: room.sessionNumber,
       hostUsername: room.peers.get(room.hostId)?.username || 'No Host',
       userCount: room.peers.size,
       isRecording: !!room.recordingId,
       hasWhiteboard: room.whiteboard?.strokes.length > 0,
       createdAt: room.createdAt,
+      sessionStartedAt: room.sessionStartedAt,
       participants: Array.from(room.peers.values()).map(p => ({
         username: p.username,
         joinedAt: p.joinedAt,
@@ -78,7 +85,7 @@ exports.getSystemMetrics = async (req, res) => {
       uptime: process.uptime(),
       cpuLoad: os.loadavg()[0].toFixed(2),
       memory: {
-        rss: (mem.rss / 1024 / 1024).toFixed(2), // Resident Set Size
+        rss: (mem.rss / 1024 / 1024).toFixed(2),
         heapTotal: (mem.heapTotal / 1024 / 1024).toFixed(2),
         heapUsed: (mem.heapUsed / 1024 / 1024).toFixed(2),
         external: (mem.external / 1024 / 1024).toFixed(2),
@@ -96,7 +103,24 @@ exports.getSystemMetrics = async (req, res) => {
 
 exports.getHistory = async (req, res) => {
   try {
-    const history = await getRoomHistory(req.params.roomId);
+    const { roomId } = req.params;
+    const { organized, sessionId } = req.query;
+    
+    if (sessionId) {
+      const sessionHistory = await getSessionHistory(roomId, sessionId);
+      return res.json({
+        roomId,
+        sessionId,
+        events: sessionHistory
+      });
+    }
+    
+    if (organized === 'true') {
+      const organizedHistory = await getOrganizedRoomHistory(roomId);
+      return res.json(organizedHistory);
+    }
+    
+    const history = await getRoomHistory(roomId);
     res.json(history);
   } catch (error) {
     logger.error(`Error fetching history for room ${req.params.roomId}:`, error);
@@ -108,9 +132,12 @@ exports.getAllRooms = async (req, res) => {
   try {
     const activeRooms = Array.from(roomManager.rooms.entries()).map(([id, room]) => ({
       roomId: id,
+      sessionId: room.sessionId,
+      sessionNumber: room.sessionNumber,
       activeParticipants: room.peers.size,
       hostId: room.hostId,
       createdAt: room.createdAt,
+      sessionStartedAt: room.sessionStartedAt,
       settings: room.settings
     }));
 
@@ -128,25 +155,29 @@ exports.getAdminRoom = async (req, res) => {
   try {
     const { roomId } = req.params;
     const liveRoom = roomManager.rooms.get(roomId);
-    const history = await getRoomHistory(roomId);
+    const organizedHistory = await getOrganizedRoomHistory(roomId);
 
     const adminData = {
       roomId,
       isLive: !!liveRoom,
       liveDetails: liveRoom ? {
+        sessionId: liveRoom.sessionId,
+        sessionNumber: liveRoom.sessionNumber,
         activeParticipants: liveRoom.peers.size,
         participants: Array.from(liveRoom.peers.values()).map(p => ({
           username: p.username,
-          joinedAt: p.joinedAt
+          joinedAt: p.joinedAt,
+          isHost: p.id === liveRoom.hostId
         })),
         createdAt: liveRoom.createdAt,
-        settings: liveRoom.settings
+        sessionStartedAt: liveRoom.sessionStartedAt,
+        settings: liveRoom.settings,
+        chatMessageCount: liveRoom.chatMessages?.length || 0,
+        pollCount: liveRoom.polls?.size || 0,
+        hasNotes: !!(liveRoom.notes && liveRoom.notes.length > 0),
+        hasWhiteboard: liveRoom.whiteboard?.strokes?.length > 0
       } : null,
-      history: history.map(item => ({
-        type: item.type,
-        timestamp: item.timestamp,
-        details: item
-      }))
+      history: organizedHistory
     };
 
     res.json(adminData);
@@ -161,10 +192,13 @@ exports.getRoom = async (req, res) => {
     const room = await roomManager.getOrCreateRoom(req.params.roomId);
     res.json({
       roomId: room.id,
+      sessionId: room.sessionId,
+      sessionNumber: room.sessionNumber,
       hasPassword: !!room.password,
       settings: room.settings,
       activeParticipants: room.peers.size,
-      createdAt: room.createdAt
+      createdAt: room.createdAt,
+      sessionStartedAt: room.sessionStartedAt
     });
   } catch (error) {
     res.status(500).json({ error: 'Internal Server Error' });
@@ -185,7 +219,11 @@ exports.updateSettings = async (req, res) => {
 exports.saveTranscript = async (req, res) => {
   try {
     const { roomId } = req.params;
-    await saveChatTranscript(roomId, req.body.transcript);
+    const { saveChatTranscript } = require('../services/aws.service');
+    const room = roomManager.rooms.get(roomId);
+    if (room) {
+      await saveChatTranscript(roomId, room.sessionId, req.body.transcript);
+    }
     res.json({ success: true });
   } catch (error) {
     res.status(500).json({ error: 'Internal Server Error' });

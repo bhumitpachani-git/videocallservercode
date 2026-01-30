@@ -1,6 +1,16 @@
 const mediasoup = require('mediasoup');
 const config = require('../config');
-const { logUserJoin, saveRoomDetails, logUserLeave } = require('./aws.service');
+const { 
+  logUserJoin, 
+  saveRoomDetails, 
+  logUserLeave, 
+  closeSession, 
+  saveChatTranscript, 
+  savePollData,
+  saveNotesData,
+  saveFullTranscription,
+  saveSessionEvent
+} = require('./aws.service');
 const logger = require('../utils/logger');
 
 class RoomManager {
@@ -10,18 +20,17 @@ class RoomManager {
     this.workerIdx = 0;
     this.globalRtpCapabilities = null;
     this.routerPool = [];
-    this.POOL_SIZE = 10; // Increased for better production readiness
+    this.POOL_SIZE = 10;
+    this.participantHistory = new Map();
   }
 
   async initialize(workers) {
     this.workers = workers;
     
-    // Create a temporary router to get global capabilities
     const tempRouter = await this.workers[0].createRouter({ mediaCodecs: config.mediaCodecs });
     this.globalRtpCapabilities = tempRouter.rtpCapabilities;
     tempRouter.close();
     
-    // Fill router pool across all workers
     for (let i = 0; i < this.POOL_SIZE; i++) {
       const worker = this.getNextWorker();
       worker.createRouter({ mediaCodecs: config.mediaCodecs })
@@ -52,6 +61,7 @@ class RoomManager {
       room = {
         id: roomId,
         sessionId: `SESS-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+        sessionNumber: 1,
         router,
         peers: new Map(),
         password,
@@ -61,6 +71,8 @@ class RoomManager {
         polls: new Map(),
         chatMessages: [],
         createdAt: new Date(),
+        sessionStartedAt: new Date(),
+        participantHistory: [],
         settings: {
           video: { res: '720p', fps: 30, bitrate: 2500 },
           audio: { rate: 48000, channels: 2, echoCancellation: true }
@@ -73,21 +85,99 @@ class RoomManager {
       setImmediate(() => {
         saveRoomDetails(roomId, room.sessionId, {
             action: 'ROOM_CREATED',
+            sessionNumber: room.sessionNumber,
             hasPassword: !!password,
             timestamp: new Date().toISOString()
         }).catch(err => logger.error(`DynamoDB logging failed for room ${roomId}:`, err));
       });
       
-      logger.info(`New room created instantly from pool: ${roomId}`);
+      logger.info(`New room created with session ${room.sessionId}: ${roomId}`);
     }
     return room;
   }
 
+  async startNewSession(room) {
+    const newSessionId = `SESS-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    const newSessionNumber = (room.sessionNumber || 1) + 1;
+    
+    logger.info(`Starting new session ${newSessionId} (session #${newSessionNumber}) for room ${room.id}`);
+    
+    room.sessionId = newSessionId;
+    room.sessionNumber = newSessionNumber;
+    room.sessionStartedAt = new Date();
+    room.chatMessages = [];
+    room.polls = new Map();
+    room.notes = '';
+    room.whiteboard = { strokes: [], background: '#ffffff' };
+    room.participantHistory = [];
+    
+    setImmediate(() => {
+      saveRoomDetails(room.id, room.sessionId, {
+        action: 'SESSION_STARTED',
+        sessionNumber: newSessionNumber,
+        timestamp: new Date().toISOString()
+      }).catch(err => logger.error(`New session logging failed for room ${room.id}:`, err));
+    });
+    
+    return newSessionId;
+  }
+
+  async closeCurrentSession(room) {
+    if (!room || !room.sessionId) return;
+    
+    logger.info(`Closing session ${room.sessionId} for room ${room.id}`);
+    
+    const sessionDuration = Date.now() - new Date(room.sessionStartedAt).getTime();
+    
+    try {
+      if (room.chatMessages && room.chatMessages.length > 0) {
+        await saveChatTranscript(room.id, room.sessionId, room.chatMessages);
+      }
+      
+      if (room.notes && room.notes.length > 0) {
+        await saveNotesData(room.id, room.sessionId, room.notes);
+      }
+      
+      if (room.polls && room.polls.size > 0) {
+        for (const [pollId, poll] of room.polls.entries()) {
+          const totalVotes = Array.from(poll.votes.values()).reduce((sum, arr) => sum + arr.length, 0);
+          await savePollData(room.id, room.sessionId, {
+            id: pollId,
+            question: poll.question,
+            options: poll.options.map(o => o.text),
+            results: poll.options.map(o => o.votes),
+            totalVotes,
+            creatorUsername: poll.creatorUsername,
+            isAnonymous: poll.isAnonymous,
+            allowMultiple: poll.allowMultiple,
+            active: poll.active,
+            action: 'SESSION_FINAL',
+            createdAt: poll.createdAt
+          });
+        }
+      }
+      
+      await closeSession(room.id, room.sessionId, {
+        startedAt: room.sessionStartedAt,
+        duration: sessionDuration,
+        totalParticipants: room.participantHistory?.length || 0,
+        totalMessages: room.chatMessages?.length || 0,
+        totalPolls: room.polls?.size || 0,
+        hasNotes: !!(room.notes && room.notes.length > 0),
+        hasWhiteboard: !!(room.whiteboard?.strokes?.length > 0),
+        hasTranscript: false,
+        participants: room.participantHistory || []
+      });
+      
+      logger.info(`Session ${room.sessionId} closed successfully for room ${room.id}`);
+    } catch (error) {
+      logger.error(`Error closing session ${room.sessionId}:`, error);
+    }
+  }
+
   async joinRoom(socket, { roomId, username, password, recorder = false }) {
-    // START GETTING ROOM (Router creation is the bottleneck)
     const roomPromise = this.getOrCreateRoom(roomId, password);
     
-    // WHILE WAITING, SETUP PEER DATA
     const peerData = {
       id: socket.id,
       username: recorder ? 'System Recorder' : username,
@@ -109,6 +199,10 @@ class RoomManager {
       throw new Error('Invalid password');
     }
 
+    if (room.peers.size === 0 && room.sessionId) {
+      await this.startNewSession(room);
+    }
+
     peerData.isHost = room.hostId === null && !recorder;
     if (peerData.isHost) {
       room.hostId = socket.id;
@@ -117,9 +211,15 @@ class RoomManager {
     room.peers.set(socket.id, peerData);
     socket.join(roomId);
 
-    // BACKGROUND DATA SYNC
+    if (!room.participantHistory) room.participantHistory = [];
+    room.participantHistory.push({
+      socketId: socket.id,
+      username: peerData.username,
+      joinedAt: peerData.joinedAt,
+      isHost: peerData.isHost
+    });
+
     setImmediate(() => {
-      // 1. Sync State
       socket.emit('sync-state', {
         whiteboard: room.whiteboard,
         notes: room.notes,
@@ -132,7 +232,6 @@ class RoomManager {
         chatMessages: room.chatMessages || []
       });
 
-      // 2. Sync Producers
       const activeProducers = [];
       for (const [peerId, peer] of room.peers.entries()) {
         if (peerId !== socket.id) {
@@ -150,7 +249,6 @@ class RoomManager {
         socket.emit('active-producers', activeProducers);
       }
 
-      // 3. Log Join
       logUserJoin(roomId, room.sessionId, {
         socketId: socket.id,
         username: peerData.username,
@@ -172,7 +270,12 @@ class RoomManager {
         room.peers.delete(socketId);
         logger.info(`User ${socketId} removed from room ${roomId}`);
 
-        // Log Leave to DynamoDB
+        const participantIdx = room.participantHistory?.findIndex(p => p.socketId === socketId);
+        if (participantIdx !== -1 && room.participantHistory[participantIdx]) {
+          room.participantHistory[participantIdx].leftAt = new Date();
+          room.participantHistory[participantIdx].duration = Date.now() - new Date(peer.joinedAt).getTime();
+        }
+
         logUserLeave(roomId, room.sessionId, {
           socketId: socketId,
           username: peer.username,
@@ -180,7 +283,6 @@ class RoomManager {
           duration: Date.now() - new Date(peer.joinedAt).getTime()
         }).catch(() => {});
 
-        // Handle Host Migration
         if (room.hostId === socketId) {
           room.hostId = null;
           if (room.peers.size > 0) {
@@ -200,26 +302,29 @@ class RoomManager {
           }
         }
 
-        // Cleanup transcription session if exists
         const { transcriptionSessions } = require('./transcription.service');
         const session = transcriptionSessions.get(socketId);
         if (session) {
           session.isActive = false;
           if (session.audioStream) session.audioStream.end();
+          
+          if (session.fullTranscript) {
+            saveFullTranscription(roomId, room.sessionId, session.fullTranscript)
+              .catch(err => logger.error('[AWS] Full transcription save failed:', err));
+          }
+          
           transcriptionSessions.delete(socketId);
         }
         
         if (room.peers.size === 0) {
-          logger.info(`Room ${roomId} is empty, starting cleanup timer`);
+          logger.info(`Room ${roomId} is empty, closing session and starting cleanup timer`);
           
-          // Auto-stop recording if in progress
           const { stopRecording, recordingSessions } = require('./recording.service');
           if (recordingSessions.has(roomId)) {
             logger.info(`[Recording] Auto-stopping recording for empty room ${roomId}`);
             stopRecording(roomId).then(async (result) => {
               logger.info(`[Recording] Auto-stop and upload successful for room ${roomId}: ${result.recordingId}`);
               
-              // Save full transcription JSON to DynamoDB at end of session
               if (result.metadata && result.metadata.transcripts && result.metadata.transcripts.length > 0) {
                 const { saveTranscription } = require('./aws.service');
                 await saveTranscription(roomId, room.sessionId, {
@@ -230,13 +335,17 @@ class RoomManager {
             }).catch(err => logger.error(`Auto-stop recording failed for room ${roomId}:`, err));
           }
 
+          this.closeCurrentSession(room).catch(err => 
+            logger.error(`Session close failed for room ${roomId}:`, err)
+          );
+
           room.cleanupTimeout = setTimeout(() => {
             if (room.peers.size === 0) {
               room.router.close();
               this.rooms.delete(roomId);
               logger.info(`Room ${roomId} cleaned up due to inactivity`);
             }
-          }, 5 * 60 * 1000); // 5 minutes
+          }, 5 * 60 * 1000);
         }
         break;
       }

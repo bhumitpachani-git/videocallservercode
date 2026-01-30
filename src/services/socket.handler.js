@@ -1,7 +1,17 @@
 const { joinRoomSchema, transportSchema, recordingSchema } = require('../utils/validation');
 const logger = require('../utils/logger');
 const { startRecording, stopRecording, recordingSessions } = require('./recording.service');
-const { saveRoomDetails, saveChatTranscript, getRoomHistory, logUserJoin, logUserLeave, saveFullTranscription } = require('./aws.service');
+const { 
+  saveRoomDetails, 
+  saveChatTranscript, 
+  getRoomHistory, 
+  logUserJoin, 
+  logUserLeave, 
+  saveFullTranscription,
+  savePollData,
+  saveNotesData,
+  saveSessionEvent
+} = require('./aws.service');
 const { handleTranscription, transcriptionSessions } = require('./transcription.service');
 
 module.exports = (io, roomManager) => {
@@ -10,6 +20,7 @@ module.exports = (io, roomManager) => {
 
     let currentRoomId = null;
     let currentUsername = null;
+    let notesDebounceTimer = null;
 
     socket.on('join-room', async (data, callback) => {
       try {
@@ -20,7 +31,6 @@ module.exports = (io, roomManager) => {
         currentRoomId = roomId;
         currentUsername = username;
 
-        // Log user join (season/session wise)
         logUserJoin(roomId, room.sessionId, {
           socketId: socket.id,
           username,
@@ -106,6 +116,12 @@ module.exports = (io, roomManager) => {
         io.to(roomId).emit('recording-started', response);
         if (callback) callback(response);
 
+        saveSessionEvent(roomId, room.sessionId, {
+          eventType: 'RECORDING_STARTED',
+          startedBy: username || currentUsername,
+          recordingId: session.recordingId
+        }).catch(err => logger.error('Recording start event log failed:', err));
+
         logger.info(`Recording started successfully for room ${roomId}`);
       } catch (error) {
         logger.error(`Start recording error: ${error.message}`);
@@ -119,6 +135,7 @@ module.exports = (io, roomManager) => {
       logger.info(`Recording stop request for room ${roomId}`);
 
       try {
+        const room = roomManager.rooms.get(roomId);
         const result = await stopRecording(roomId);
 
         const response = {
@@ -140,6 +157,13 @@ module.exports = (io, roomManager) => {
 
         io.to(roomId).emit('recording-stopped', response);
         if (callback) callback(response);
+
+        if (room) {
+          saveSessionEvent(roomId, room.sessionId, {
+            eventType: 'RECORDING_STOPPED',
+            recordingId: result.recordingId
+          }).catch(err => logger.error('Recording stop event log failed:', err));
+        }
 
         logger.info(`Recording stopped successfully for room ${roomId}`);
       } catch (error) {
@@ -275,12 +299,6 @@ module.exports = (io, roomManager) => {
 
         peer.consumers.set(consumer.id, consumer);
 
-        // Explicitly resume if the producer is already active
-        // This helps the host who might be joining slightly after or during a burst of producers
-        if (consumer.kind === 'video') {
-           // Video often needs explicit resume on some clients
-        }
-
         callback({
           id: consumer.id,
           producerId: consumer.producerId,
@@ -361,7 +379,6 @@ module.exports = (io, roomManager) => {
           username: currentUsername
         });
         
-        // Re-sync all producers in the room to ensure video recovery
         const producers = [];
         for (const [peerId, peer] of room.peers.entries()) {
           for (const [producerId, producer] of peer.producers.entries()) {
@@ -395,7 +412,6 @@ module.exports = (io, roomManager) => {
 
         io.to(roomId).emit('chat-message', chatMessage);
         
-        // Ensure non-blocking persistent storage
         saveChatTranscript(roomId, room.sessionId, room.chatMessages).catch(err => logger.error('Chat auto-save failed:', err));
       }
     });
@@ -416,7 +432,6 @@ module.exports = (io, roomManager) => {
 
         io.to(roomId).emit('chat-message', chatMessage);
 
-        // Ensure non-blocking persistent storage
         saveChatTranscript(roomId, room.sessionId, room.chatMessages).catch(err => logger.error('Chat auto-save failed:', err));
       }
     });
@@ -433,7 +448,7 @@ module.exports = (io, roomManager) => {
       }
     });
 
-    socket.on('create-poll', ({ roomId, question, options, isAnonymous, allowMultiple }) => {
+    socket.on('create-poll', async ({ roomId, question, options, isAnonymous, allowMultiple }) => {
       try {
         const room = roomManager.rooms.get(roomId);
         if (!room) return;
@@ -465,6 +480,20 @@ module.exports = (io, roomManager) => {
           createdAt: poll.createdAt
         });
 
+        savePollData(roomId, room.sessionId, {
+          id: pollId,
+          question,
+          options: poll.options.map(o => o.text),
+          results: poll.options.map(o => o.votes),
+          totalVotes: 0,
+          creatorUsername: currentUsername,
+          isAnonymous: poll.isAnonymous,
+          allowMultiple: poll.allowMultiple,
+          active: true,
+          action: 'CREATED',
+          createdAt: poll.createdAt
+        }).catch(err => logger.error('Poll create save failed:', err));
+
         logger.info(`Poll created in ${roomId}: ${question}`);
       } catch (error) {
         logger.error(`Create poll error: ${error.message}`);
@@ -472,7 +501,7 @@ module.exports = (io, roomManager) => {
       }
     });
 
-    socket.on('submit-vote', ({ roomId, pollId, selectedOptions }) => {
+    socket.on('submit-vote', async ({ roomId, pollId, selectedOptions }) => {
       try {
         const room = roomManager.rooms.get(roomId);
         if (!room || !room.polls?.has(pollId)) {
@@ -507,20 +536,36 @@ module.exports = (io, roomManager) => {
 
         poll.votes.set(socket.id, selectedOptions);
 
+        const totalVotes = Array.from(poll.votes.values()).reduce((sum, arr) => sum + arr.length, 0);
+
         io.to(roomId).emit('poll-updated', {
           pollId,
           results: poll.options.map(o => o.votes),
-          totalVotes: Array.from(poll.votes.values()).reduce((sum, arr) => sum + arr.length, 0)
+          totalVotes
         });
 
         socket.emit('vote-received', { pollId });
+
+        savePollData(roomId, room.sessionId, {
+          id: pollId,
+          question: poll.question,
+          options: poll.options.map(o => o.text),
+          results: poll.options.map(o => o.votes),
+          totalVotes,
+          creatorUsername: poll.creatorUsername,
+          isAnonymous: poll.isAnonymous,
+          allowMultiple: poll.allowMultiple,
+          active: poll.active,
+          action: 'VOTE_SUBMITTED',
+          createdAt: poll.createdAt
+        }).catch(err => logger.error('Poll vote save failed:', err));
       } catch (error) {
         logger.error(`Submit vote error: ${error.message}`);
         socket.emit('poll-error', { error: error.message });
       }
     });
 
-    socket.on('close-poll', ({ roomId, pollId }) => {
+    socket.on('close-poll', async ({ roomId, pollId }) => {
       try {
         const room = roomManager.rooms.get(roomId);
         if (!room || !room.polls?.has(pollId)) return;
@@ -531,12 +576,27 @@ module.exports = (io, roomManager) => {
         }
 
         poll.active = false;
+        const totalVotes = Array.from(poll.votes.values()).reduce((sum, arr) => sum + arr.length, 0);
 
         io.to(roomId).emit('poll-closed', {
           pollId,
           finalResults: poll.options.map(o => o.votes),
-          totalVotes: Array.from(poll.votes.values()).reduce((sum, arr) => sum + arr.length, 0)
+          totalVotes
         });
+
+        savePollData(roomId, room.sessionId, {
+          id: pollId,
+          question: poll.question,
+          options: poll.options.map(o => o.text),
+          results: poll.options.map(o => o.votes),
+          totalVotes,
+          creatorUsername: poll.creatorUsername,
+          isAnonymous: poll.isAnonymous,
+          allowMultiple: poll.allowMultiple,
+          active: false,
+          action: 'CLOSED',
+          createdAt: poll.createdAt
+        }).catch(err => logger.error('Poll close save failed:', err));
 
         logger.info(`Poll closed in ${roomId}: ${poll.question}`);
       } catch (error) {
@@ -559,7 +619,6 @@ module.exports = (io, roomManager) => {
       room.whiteboard.strokes.push(stroke);
       socket.to(roomId).emit('whiteboard-draw', stroke);
       
-      // Auto-save room details (whiteboard state)
       await saveRoomDetails(roomId, room.sessionId, { whiteboard: room.whiteboard, action: 'WHITEBOARD_UPDATE' })
         .catch(err => logger.error('Whiteboard auto-save failed:', err));
     });
@@ -571,7 +630,6 @@ module.exports = (io, roomManager) => {
       room.whiteboard.strokes.pop();
       io.to(roomId).emit('whiteboard-undo');
 
-      // Auto-save room details (whiteboard state)
       await saveRoomDetails(roomId, room.sessionId, { whiteboard: room.whiteboard, action: 'WHITEBOARD_UNDO' })
         .catch(err => logger.error('Whiteboard undo auto-save failed:', err));
     });
@@ -592,9 +650,11 @@ module.exports = (io, roomManager) => {
       room.notes = content;
       socket.to(roomId).emit('notes-updated', { content });
 
-      // Auto-save room details (notes state)
-      await saveRoomDetails(roomId, room.sessionId, { notes: room.notes, action: 'NOTES_UPDATE' })
-        .catch(err => logger.error('Notes auto-save failed:', err));
+      if (notesDebounceTimer) clearTimeout(notesDebounceTimer);
+      notesDebounceTimer = setTimeout(() => {
+        saveNotesData(roomId, room.sessionId, room.notes)
+          .catch(err => logger.error('Notes auto-save failed:', err));
+      }, 2000);
     });
 
     socket.on('notes-present', ({ roomId, isPresenting }) => {
@@ -619,9 +679,7 @@ module.exports = (io, roomManager) => {
       }
     });
 
-    // Global broadcast for admin announcements
     socket.on('admin-broadcast', ({ message }) => {
-      // Security: This would typically check for an admin token
       io.emit('system-announcement', {
         message,
         timestamp: new Date().toISOString()
@@ -632,12 +690,20 @@ module.exports = (io, roomManager) => {
     socket.on('disconnect', () => {
       logger.info(`Client disconnected: ${socket.id}`);
 
+      if (notesDebounceTimer) {
+        clearTimeout(notesDebounceTimer);
+        const room = currentRoomId ? roomManager.rooms.get(currentRoomId) : null;
+        if (room && room.notes) {
+          saveNotesData(currentRoomId, room.sessionId, room.notes)
+            .catch(err => logger.error('Notes final save failed:', err));
+        }
+      }
+
       const session = transcriptionSessions.get(socket.id);
       if (session) {
         session.isActive = false;
         if (session.audioStream) session.audioStream.end();
         
-        // Save final transcription if active and has content
         if (session.fullTranscript) {
            const room = Array.from(roomManager.rooms.values()).find(r => r.peers.has(socket.id));
            if (room) {
@@ -650,32 +716,14 @@ module.exports = (io, roomManager) => {
       }
 
       const room = Array.from(roomManager.rooms.values()).find(r => r.peers.has(socket.id));
-      const roomId = room?.id;
-      
-      if (room && currentUsername) {
-        // Log user leave session-wise
-        logUserLeave(roomId, room.sessionId, {
-          socketId: socket.id,
-          username: currentUsername,
-          leftAt: new Date().toISOString()
-        }).catch(err => logger.error('User leave log failed:', err));
-      }
-
-      roomManager.handleDisconnect(socket.id);
-
-      if (roomId) {
-        const updatedRoom = roomManager.rooms.get(roomId);
-        if (updatedRoom && updatedRoom.hostId) {
-          io.to(roomId).emit('host-changed', { 
-            newHostId: updatedRoom.hostId,
-            username: updatedRoom.peers.get(updatedRoom.hostId)?.username
-          });
-        }
-        socket.to(roomId).emit('user-left', { 
+      if (room) {
+        socket.to(room.id).emit('user-left', {
           socketId: socket.id,
           username: currentUsername
         });
       }
+
+      roomManager.handleDisconnect(socket.id);
     });
   });
 };
