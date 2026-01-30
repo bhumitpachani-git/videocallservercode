@@ -34,8 +34,8 @@ const mediaCodecs = [
 const webRtcTransportOptions = {
   listenIps: [
     {
-      ip: "127.0.0.1",
-      announcedIp:"18.188.251.4"
+      ip: "0.0.0.0",
+      announcedIp: process.env.ANNOUNCED_IP
     }
   ],
   initialAvailableOutgoingBitrate: 4000000, // 4Mbps for 1080p
@@ -59,7 +59,7 @@ module.exports = {
   mediaCodecs,
   webRtcTransportOptions,
   plainTransportOptions: {
-    listenIp: { ip: '127.0.0.1', announcedIp: null },
+    listenIp: { ip: '0.0.0.0.0', announcedIp: process.env.ANNOUNCED_IP },
     rtcpMux: false,
     comedia: true
   },

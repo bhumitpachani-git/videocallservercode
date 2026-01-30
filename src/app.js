@@ -61,7 +61,7 @@ async function bootstrap() {
 
     await roomManager.initialize(workers);
 
-    server.listen(config.PORT, () => {
+    server.listen(config.PORT, '0.0.0.0', () => {
       logger.info(`🚀 Production-Ready Backend running on port ${config.PORT}`);
     });
   } catch (error) {
