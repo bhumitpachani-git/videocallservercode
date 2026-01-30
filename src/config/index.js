@@ -35,7 +35,7 @@ const webRtcTransportOptions = {
   listenIps: [
     {
       ip: "127.0.0.1",
-      announcedIp: process.env.ANNOUNCED_IP || "127.0.0.1"
+      announcedIp:"18.188.251.4"
     }
   ],
   initialAvailableOutgoingBitrate: 4000000, // 4Mbps for 1080p

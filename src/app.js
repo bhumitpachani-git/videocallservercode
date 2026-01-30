@@ -17,7 +17,7 @@ const compression = require('compression');
 
 const app = express();
 app.set('trust proxy', 1);
-app.use(compression()); // Compress responses for faster signaling
+app.use(compression()); 
 app.use(helmet());
 app.use(cors());
 app.use(express.json());
@@ -61,7 +61,7 @@ async function bootstrap() {
 
     await roomManager.initialize(workers);
 
-    server.listen(config.PORT, '0.0.0.0', () => {
+    server.listen(config.PORT, () => {
       logger.info(`🚀 Production-Ready Backend running on port ${config.PORT}`);
     });
   } catch (error) {
