@@ -7,7 +7,7 @@ This is a professional video conferencing server built with Node.js that provide
 **Core capabilities:**
 - WebRTC video/audio streaming via MediaSoup SFU (Selective Forwarding Unit)
 - Real-time recording with FFmpeg to WebM format
-- Live transcription using AWS Transcribe Streaming
+- Live transcription using **Browser Web Speech API** (FREE - no API costs!)
 - Real-time translation using AWS Translate
 - Room-based collaboration with host controls, whiteboard, notes, and polls
 - Professional recording with S3 upload and DynamoDB metadata storage
@@ -50,7 +50,7 @@ Preferred communication style: Simple, everyday language.
 - **Whiteboard**: Drawing strokes synced in real-time and auto-saved
 - **Notes**: Collaborative note-taking with debounced auto-save (2 second delay)
 - **Polls**: Create/vote/close polls with **real-time saving of all poll state changes**
-- **Transcription**: Audio streams sent to AWS Transcribe, full transcripts saved to DynamoDB
+- **Transcription**: Uses browser's built-in Web Speech API (FREE), results broadcast to room and saved to DynamoDB
 - **Translation**: Transcribed text translated via AWS Translate to each user's preferred language
 - **User Events**: All join/leave events logged with timestamps and session duration
 
@@ -75,8 +75,14 @@ Preferred communication style: Simple, everyday language.
 ### AWS Services (Required for full functionality)
 - **AWS S3**: Stores recording files and chat transcripts
 - **AWS DynamoDB**: Stores room metadata, user join logs, and recording details
-- **AWS Transcribe Streaming**: Real-time speech-to-text for live captions
 - **AWS Translate**: Translates transcribed text to user's preferred language
+
+### Browser-based Transcription (FREE)
+- Uses the **Web Speech API** built into modern browsers (Chrome, Edge, Safari)
+- No API costs - completely free speech-to-text
+- Client does speech recognition, sends text to server via Socket.IO
+- Server broadcasts transcriptions to all room participants
+- Socket events: `start-transcription`, `browser-transcription`, `stop-transcription`
 
 ### Core NPM Packages
 - **mediasoup**: WebRTC SFU for video/audio routing (requires native compilation)

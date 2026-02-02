@@ -12,7 +12,7 @@ const {
   saveNotesData,
   saveSessionEvent
 } = require('./aws.service');
-const { handleTranscription, transcriptionSessions } = require('./transcription.service');
+const { handleTranscription, handleBrowserTranscription, stopTranscription, transcriptionSessions } = require('./transcription.service');
 
 module.exports = (io, roomManager) => {
   io.on('connection', (socket) => {
@@ -182,26 +182,23 @@ module.exports = (io, roomManager) => {
       }
     });
 
-    socket.on('audio-chunk', ({ roomId, username, audioData }) => {
-      const session = transcriptionSessions.get(socket.id);
-      if (session && session.audioStream && session.isActive) {
-        try {
-          const buffer = Buffer.from(new Int16Array(audioData).buffer);
-          session.audioStream.write(buffer);
-        } catch (error) {
-          logger.error(`Audio chunk error: ${error.message}`);
-        }
+    socket.on('browser-transcription', async (data) => {
+      try {
+        await handleBrowserTranscription(socket, io, roomManager.rooms, {
+          roomId: data.roomId,
+          username: data.username,
+          text: data.text,
+          isFinal: data.isFinal,
+          targetLanguage: data.targetLanguage,
+          speakingLanguage: data.speakingLanguage
+        });
+      } catch (error) {
+        logger.error(`Browser transcription error: ${error.message}`);
       }
     });
 
     socket.on('stop-transcription', ({ roomId }) => {
-      const session = transcriptionSessions.get(socket.id);
-      if (session) {
-        session.isActive = false;
-        if (session.audioStream) session.audioStream.end();
-        transcriptionSessions.delete(socket.id);
-        logger.info(`Transcription stopped for socket ${socket.id}`);
-      }
+      stopTranscription(socket.id);
     });
 
     socket.on('set-target-language', ({ roomId, targetLanguage }) => {
