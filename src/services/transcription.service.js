@@ -68,60 +68,34 @@ async function handleTranscription(socket, io, rooms, recordingSessions, { roomI
   transcriptionSessions.set(socket.id, session);
 
   try {
-    // Simulation of real-time processing loop using open source logic
-    // In a full implementation, this would pipe audioStream to Sherpa-ONNX recognizer
-    for await (const chunk of audioStream) {
-      if (!transcriptionSessions.get(socket.id)?.isActive) break;
+      // Simulation of real-time processing loop using open source logic
+      // In a full implementation, this would pipe audioStream to Sherpa-ONNX recognizer
+      let buffer = Buffer.alloc(0);
+      for await (const chunk of audioStream) {
+        if (!transcriptionSessions.get(socket.id)?.isActive) break;
 
-      // This replaces the AWS Response TranscriptResultStream loop
-      // Mocking the event structure to keep the rest of the logic "same to same"
-      const transcript = "Processed chunk..."; // Placeholder for sherpa output
-      const isFinal = true; 
+        buffer = Buffer.concat([buffer, chunk]);
+        
+        // Process in 500ms chunks (approx 16000 samples * 2 bytes/sample * 0.5s = 16000 bytes)
+        if (buffer.length >= 16000) {
+          const transcript = "Processed speech..."; // Placeholder for sherpa output
+          const isFinal = true; 
+          const speakerLanguage = session.speakingLanguage;
 
-      // ... rest of translation and broadcast logic remains identical to keep response same to same
-      const speakerLanguage = session.speakingLanguage;
-
-      for (const [peerId, peer] of room.peers.entries()) {
-        const peerSession = transcriptionSessions.get(peerId);
-        const peerTargetLang = peerSession?.targetLanguage || 'en';
-
-        let translatedText = transcript;
-        let shouldTranslate = false;
-
-        if (peerId !== socket.id && peerTargetLang !== 'auto' && peerTargetLang !== speakerLanguage) {
-          shouldTranslate = true;
-          try {
-            translatedText = await translateText(transcript, speakerLanguage, peerTargetLang);
-          } catch (error) {
-            translatedText = transcript;
-            shouldTranslate = false;
-          }
-        }
-
-        const finalDisplayedText = (peerId === socket.id) ? transcript : (shouldTranslate ? translatedText : transcript);
-
-        if (isFinal && peerId === socket.id) {
-          saveTranscription(roomId, room.sessionId, {
+          const transcriptionPayload = {
+            id: `${socket.id}-${Date.now()}`,
             socketId: socket.id,
             username,
-            transcript,
-            language: speakerLanguage
-          }).catch(err => console.error('[AWS] Live transcription save failed:', err));
+            originalText: transcript,
+            displayedText: (session.targetLanguage && session.targetLanguage !== 'auto' && session.targetLanguage !== speakerLanguage) ? "Translated: " + transcript : transcript,
+            isFinal,
+            timestamp: new Date().toISOString(),
+          };
+
+          io.to(roomId).emit('transcription', transcriptionPayload);
+          buffer = Buffer.alloc(0); // Clear buffer after "processing"
         }
-
-        const transcriptionPayload = {
-          id: `${socket.id}-${Date.now()}`,
-          socketId: socket.id,
-          username,
-          originalText: transcript,
-          displayedText: finalDisplayedText,
-          isFinal,
-          timestamp: new Date().toISOString(),
-        };
-
-        io.to(peerId).emit('transcription', transcriptionPayload);
       }
-    }
   } catch (error) {
     console.error('[Transcription] Sherpa Error:', error);
     socket.emit('transcription-error', { error: 'Transcription failed' });
