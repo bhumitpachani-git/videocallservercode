@@ -36,6 +36,7 @@
     "puppeteer": "^19.0.0",
     "puppeteer-screen-recorder": "^3.0.6",
     "puppeteer-stream": "^3.0.22",
+    "sherpa-onnx-node": "^1.12.23",
     "socket.io": "^4.5.4",
     "uuid": "^13.0.0",
     "winston": "^3.19.0",
